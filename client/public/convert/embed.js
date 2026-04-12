@@ -130,22 +130,102 @@
   }
 
   // ─── Load form definition ───
+  //
+  // Phase E: if the public endpoint returns an A/B test config, pick a variant
+  // via localStorage-sticky random assignment and re-fetch that variant's form
+  // definition before rendering. We still use the originally-requested slug
+  // for the "/start" and "/submit" endpoints if the embed script is asked to
+  // track against the visible form — but since each variant is its own
+  // convert_forms row with its own counters, we track against whichever slug
+  // we ended up rendering.
+
+  var renderedSlug = formSlug; // updated if A/B splits us to a variant
+
+  function pickVariantSlug(abTest) {
+    if (!abTest || !Array.isArray(abTest.variants) || abTest.variants.length === 0) return null;
+    var storageKey = "bb_ab_" + abTest.testId;
+    if (storageAvailable("local")) {
+      var stored = window.localStorage.getItem(storageKey);
+      if (stored) {
+        var storedVariant = abTest.variants.find(function (v) { return String(v.formId) === stored; });
+        if (storedVariant && storedVariant.slug) return storedVariant.slug;
+      }
+    }
+    // Weighted random assignment
+    var rand = Math.random() * 100;
+    var cumulative = 0;
+    for (var i = 0; i < abTest.variants.length; i++) {
+      var v = abTest.variants[i];
+      cumulative += Number(v.percentage || 0);
+      if (rand <= cumulative) {
+        if (storageAvailable("local")) {
+          try { window.localStorage.setItem(storageKey, String(v.formId)); } catch (e) {}
+        }
+        return v.slug || null;
+      }
+    }
+    // Fallback: last variant
+    var last = abTest.variants[abTest.variants.length - 1];
+    return last ? (last.slug || null) : null;
+  }
+
+  function fetchFormDefinition(slug) {
+    var url = apiBase + "/api/convert/public/" + encodeURIComponent(clientId) + "/" + encodeURIComponent(slug);
+    return fetch(url).then(function (res) {
+      if (!res.ok) throw new Error("Form not found or not published (HTTP " + res.status + ")");
+      return res.json();
+    });
+  }
 
   function loadForm() {
-    var url = apiBase + "/api/convert/public/" + encodeURIComponent(clientId) + "/" + encodeURIComponent(formSlug);
-    return fetch(url)
-      .then(function (res) {
-        if (!res.ok) throw new Error("Form not found or not published (HTTP " + res.status + ")");
-        return res.json();
-      })
-      .then(function (data) {
-        if (!data || !data.success || !data.form) throw new Error("Invalid API response");
-        formDef = data.form;
-        fields = Array.isArray(data.fields) ? data.fields : [];
-        design = formDef.design || {};
-        settings = formDef.settings || {};
-        clientInfo = data.client || {};
-      });
+    return fetchFormDefinition(formSlug).then(function (data) {
+      if (!data || !data.success || !data.form) throw new Error("Invalid API response");
+
+      // Phase E: A/B traffic split
+      if (data.abTest) {
+        var variantSlug = pickVariantSlug(data.abTest);
+        if (variantSlug && variantSlug !== formSlug) {
+          renderedSlug = variantSlug;
+          return fetchFormDefinition(variantSlug).then(function (variantData) {
+            if (!variantData || !variantData.success || !variantData.form) {
+              // Variant fetch failed — fall back to original
+              renderedSlug = formSlug;
+              formDef = data.form;
+              fields = Array.isArray(data.fields) ? data.fields : [];
+              design = formDef.design || {};
+              settings = formDef.settings || {};
+              clientInfo = data.client || {};
+              return;
+            }
+            formDef = variantData.form;
+            fields = Array.isArray(variantData.fields) ? variantData.fields : [];
+            design = formDef.design || {};
+            settings = formDef.settings || {};
+            clientInfo = variantData.client || {};
+          });
+        }
+      }
+
+      formDef = data.form;
+      fields = Array.isArray(data.fields) ? data.fields : [];
+      design = formDef.design || {};
+      settings = formDef.settings || {};
+      clientInfo = data.client || {};
+    });
+  }
+
+  // Phase E: fire-and-forget "start" tracking — call once per form load on
+  // first field focus. Uses renderedSlug so A/B variants track correctly.
+  var startTracked = false;
+  function trackStart() {
+    if (startTracked) return;
+    startTracked = true;
+    try {
+      fetch(apiBase + "/api/convert/public/" + encodeURIComponent(clientId) + "/" + encodeURIComponent(renderedSlug) + "/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      }).catch(function () {});
+    } catch (e) { /* ignore */ }
   }
 
   // ─── Scoped CSS ───
@@ -678,6 +758,9 @@
     var container = el("div", "bb-convert-form");
     formElement = container;
 
+    // Phase E: first field focus = funnel "start" event
+    container.addEventListener("focusin", trackStart);
+
     var maxStep = getMaxStep();
 
     if (maxStep > 1) {
@@ -801,7 +884,7 @@
       submitBtn.textContent = "Submitting...";
     }
 
-    var url = apiBase + "/api/convert/submit/" + encodeURIComponent(clientId) + "/" + encodeURIComponent(formSlug);
+    var url = apiBase + "/api/convert/submit/" + encodeURIComponent(clientId) + "/" + encodeURIComponent(renderedSlug);
     fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -852,7 +935,7 @@
       }
     });
 
-    var url = apiBase + "/api/convert/public/" + encodeURIComponent(clientId) + "/" + encodeURIComponent(formSlug) + "/checkout";
+    var url = apiBase + "/api/convert/public/" + encodeURIComponent(clientId) + "/" + encodeURIComponent(renderedSlug) + "/checkout";
     var payload = {
       amount: Math.round(amount * 100),
       currency: currency,

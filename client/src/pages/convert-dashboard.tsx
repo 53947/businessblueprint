@@ -30,6 +30,9 @@ import {
 } from "lucide-react";
 import { TemplateModal } from "@/components/convert/template-modal";
 import { EmbedCodePanel } from "@/components/convert/embed-code-panel";
+import { AnalyticsTab } from "@/components/convert/analytics-tab";
+import { AbTestPanel } from "@/components/convert/ab-test-panel";
+import { PremiumUpgradeModal } from "@/components/convert/premium-upgrade-modal";
 
 const ACCENT = CONVERT_FORM.color; // #8000FF
 
@@ -49,6 +52,7 @@ interface ConvertForm {
   notifyEnabled?: boolean | null;
   viewCount?: number | null;
   submissionCount?: number | null;
+  abTestId?: number | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -301,6 +305,7 @@ export default function ConvertDashboard() {
               <TabsTrigger value="forms">Forms</TabsTrigger>
               <TabsTrigger value="submissions">Submissions</TabsTrigger>
               <TabsTrigger value="templates">Templates</TabsTrigger>
+              <TabsTrigger value="analytics">Analytics</TabsTrigger>
             </TabsList>
 
             {/* ─── OVERVIEW ─── */}
@@ -565,6 +570,11 @@ export default function ConvertDashboard() {
                 </div>
               )}
             </TabsContent>
+
+            {/* ─── ANALYTICS (Phase E) ─── */}
+            <TabsContent value="analytics">
+              <AnalyticsTab clientId={clientId} />
+            </TabsContent>
           </Tabs>
         )}
       </div>
@@ -663,9 +673,25 @@ function FormDetailView({
 }) {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const queryClient = useQueryClient();
   const [newFieldType, setNewFieldType] = useState("text");
   const [newFieldLabel, setNewFieldLabel] = useState("");
   const [newFieldRequired, setNewFieldRequired] = useState(false);
+
+  // Phase E: premium status for A/B test gating
+  const premiumQuery = useQuery<{ success: boolean; isPremium: boolean }>({
+    queryKey: [`/api/convert/${clientId}/premium-status`],
+    enabled: !!clientId,
+  });
+  const isPremium = !!premiumQuery.data?.isPremium;
+
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+  const [upgradeFeature, setUpgradeFeature] = useState<string | undefined>(undefined);
+
+  const openUpgradeModal = (feature: string) => {
+    setUpgradeFeature(feature);
+    setUpgradeModalOpen(true);
+  };
 
   const addField = async () => {
     if (!newFieldLabel.trim()) return;
@@ -848,6 +874,21 @@ function FormDetailView({
         <EmbedCodePanel clientId={clientId} formId={form.id} formStatus={form.status} />
       </div>
 
+      <div className="mb-6">
+        <AbTestPanel
+          clientId={clientId}
+          formId={form.id}
+          abTestId={form.abTestId ?? null}
+          formStatus={form.status}
+          isPremium={isPremium}
+          onRequireUpgrade={openUpgradeModal}
+          onTestChanged={() => {
+            queryClient.invalidateQueries({ queryKey: [`/api/convert/${clientId}/forms/${form.id}`] });
+            queryClient.invalidateQueries({ queryKey: [`/api/convert/${clientId}/forms`] });
+          }}
+        />
+      </div>
+
       <Card className="border border-gray-200 bg-white">
         <CardContent className="pt-6">
           <h3 className="text-lg font-bold text-gray-900 mb-4">Thank-you message</h3>
@@ -859,6 +900,8 @@ function FormDetailView({
           </p>
         </CardContent>
       </Card>
+
+      <PremiumUpgradeModal open={upgradeModalOpen} onOpenChange={setUpgradeModalOpen} feature={upgradeFeature} />
     </div>
   );
 }

@@ -31,6 +31,7 @@ import { BuilderCanvas } from "@/components/convert/builder-canvas";
 import { PropertiesPanel } from "@/components/convert/properties-panel";
 import { DesignPanel } from "@/components/convert/design-panel";
 import { SettingsPanel } from "@/components/convert/settings-panel";
+import { PremiumUpgradeModal } from "@/components/convert/premium-upgrade-modal";
 
 const ACCENT = "#8000FF";
 
@@ -80,6 +81,16 @@ export default function ConvertBuilder() {
   const [rightPanel, setRightPanel] = useState<"field" | "design">("field");
   const [dirty, setDirty] = useState<boolean>(false);
   const [saving, setSaving] = useState<boolean>(false);
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState<boolean>(false);
+  const [upgradeFeature, setUpgradeFeature] = useState<string | undefined>(undefined);
+
+  // Phase E: premium status query — the builder uses this to surface the
+  // upgrade modal client-side before the server rejects a premium action.
+  const premiumQuery = useQuery<{ success: boolean; isPremium: boolean }>({
+    queryKey: [`/api/convert/${clientId}/premium-status`],
+    enabled: !!clientId,
+  });
+  const isPremium = !!premiumQuery.data?.isPremium;
   const [publishing, setPublishing] = useState<boolean>(false);
 
   const autoSaveTimer = useRef<NodeJS.Timeout | null>(null);
@@ -201,6 +212,21 @@ export default function ConvertBuilder() {
       if (!options.silent) toast({ title: "Draft saved" });
       return true;
     } catch (err: any) {
+      // Phase E: a 403 with a premium feature code means the server rejected
+      // the save because the client tried to use a premium-only feature.
+      // apiRequest throws errors with "STATUS: BODY" format — parse the body
+      // to surface the upgrade modal.
+      const message: string = err?.message || "";
+      if (message.startsWith("403:")) {
+        try {
+          const body = JSON.parse(message.slice(4).trim());
+          if (body && body.feature) {
+            setUpgradeFeature(body.feature);
+            setUpgradeModalOpen(true);
+            return false;
+          }
+        } catch { /* fall through to generic toast */ }
+      }
       toast({ title: "Save failed", description: err?.message, variant: "destructive" });
       return false;
     } finally {
@@ -467,6 +493,15 @@ export default function ConvertBuilder() {
           </>
         )}
       </div>
+
+      {/* Phase E: premium upgrade modal — opens when the server rejects a save
+          with a 403 premium feature error, or when a client-side action needs
+          to intercept (e.g., dragging a locked field). */}
+      <PremiumUpgradeModal
+        open={upgradeModalOpen}
+        onOpenChange={(o) => { setUpgradeModalOpen(o); if (!o) setUpgradeFeature(undefined); }}
+        feature={upgradeFeature}
+      />
     </div>
   );
 }

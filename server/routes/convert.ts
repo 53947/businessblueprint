@@ -10,13 +10,15 @@
 
 import express, { Router, Request, Response, NextFunction } from "express";
 import { randomBytes, createHmac, timingSafeEqual } from "crypto";
-import { eq, and, desc, sql } from "drizzle-orm";
+import { eq, and, desc, sql, inArray } from "drizzle-orm";
 import { db } from "../db";
 import {
   convertForms,
   convertFormFields,
   convertSubmissions,
   convertTemplates,
+  convertAnalyticsDaily,
+  convertAbTests,
   crmContacts,
   sendContacts,
   clients,
@@ -282,6 +284,95 @@ async function runPostSubmissionPipeline(submissionId: number): Promise<void> {
   console.log(`[Convert] Pipeline completed for submission ${submission.id} on form "${form.name}" (client ${clientId})`);
 }
 
+// ─── Phase E: premium tier enforcement ───
+
+const PRESET_THEME_COLORS = new Set([
+  "#008060", "#8000FF", "#064A6C", "#E9B307", "#374151",
+  "#97ACCA", "#1844A6", "#001882", "#660099", "#FF44CC",
+]);
+
+const PREMIUM_FIELD_TYPES = new Set([
+  "file", "signature", "date", "rating", "hidden", "payment", "page_break",
+]);
+
+/**
+ * Returns true if the client has an active / convert Premium subscription.
+ * Checks both the boolean flag and the expiration timestamp.
+ */
+async function isConvertPremium(clientId: number): Promise<boolean> {
+  const [client] = await db.select({
+    convertPremium: clients.convertPremium,
+    convertPremiumExpiresAt: clients.convertPremiumExpiresAt,
+  }).from(clients).where(eq(clients.id, clientId)).limit(1);
+
+  if (!client?.convertPremium) return false;
+  if (client.convertPremiumExpiresAt && client.convertPremiumExpiresAt < new Date()) return false;
+  return true;
+}
+
+// ─── Phase E: analytics tracking ───
+
+/**
+ * Increments daily analytics counters for a form. Upserts by (formId, date):
+ * first hit of the day creates the row, subsequent hits bump the counter.
+ * Fails silently so a tracking failure never breaks the end user's experience.
+ */
+async function trackAnalyticsEvent(
+  formId: number,
+  clientId: number,
+  eventType: "view" | "start" | "submission",
+  source?: string | null,
+  medium?: string | null,
+): Promise<void> {
+  try {
+    const today = new Date().toISOString().split("T")[0];
+
+    const [existing] = await db.select().from(convertAnalyticsDaily)
+      .where(and(
+        eq(convertAnalyticsDaily.formId, formId),
+        eq(convertAnalyticsDaily.date, today),
+      )).limit(1);
+
+    if (existing) {
+      const updates: Record<string, any> = {};
+      if (eventType === "view") updates.views = (existing.views || 0) + 1;
+      if (eventType === "start") updates.starts = (existing.starts || 0) + 1;
+      if (eventType === "submission") updates.submissions = (existing.submissions || 0) + 1;
+
+      // Merge source breakdown on submission events
+      if (eventType === "submission" && source) {
+        const breakdown: Array<{ source: string; medium: string; count: number }> =
+          Array.isArray(existing.sourceBreakdown) ? (existing.sourceBreakdown as any[]) : [];
+        const key = `${source}|${medium || "none"}`;
+        const match = breakdown.find((b) => `${b.source}|${b.medium}` === key);
+        if (match) match.count = (match.count || 0) + 1;
+        else breakdown.push({ source: String(source), medium: String(medium || "none"), count: 1 });
+        updates.sourceBreakdown = breakdown;
+      }
+
+      await db.update(convertAnalyticsDaily)
+        .set(updates)
+        .where(eq(convertAnalyticsDaily.id, existing.id));
+    } else {
+      const initialBreakdown = eventType === "submission" && source
+        ? [{ source: String(source), medium: String(medium || "none"), count: 1 }]
+        : null;
+
+      await db.insert(convertAnalyticsDaily).values({
+        formId,
+        clientId,
+        date: today,
+        views: eventType === "view" ? 1 : 0,
+        starts: eventType === "start" ? 1 : 0,
+        submissions: eventType === "submission" ? 1 : 0,
+        sourceBreakdown: initialBreakdown,
+      });
+    }
+  } catch (err) {
+    console.error(`[Convert] trackAnalyticsEvent failed (form ${formId}, ${eventType}):`, err);
+  }
+}
+
 // ─── TEMPLATES (authenticated — any logged-in client can browse) ───
 
 router.get("/templates", requireAuth, async (_req: AuthenticatedRequest, res: Response) => {
@@ -530,14 +621,108 @@ router.put("/:clientId/forms/:formId/builder", requireAuth, requireClientMatch, 
 
     const body = req.body || {};
     const incomingFields: any[] = Array.isArray(body.fields) ? body.fields : [];
+    const incomingDesign = body.design || null;
+    const incomingSettings = body.settings || null;
+
+    // ─── Phase E: premium tier enforcement ───
+    const premium = await isConvertPremium(clientId);
+    if (!premium) {
+      // Premium field types
+      const hasPremiumField = incomingFields.some((f: any) => f?.type && PREMIUM_FIELD_TYPES.has(String(f.type)));
+      if (hasPremiumField) {
+        return res.status(403).json({
+          error: "Premium field types require / convert Premium ($59/year)",
+          feature: "premium_fields",
+          upgradeUrl: "/convert",
+        });
+      }
+
+      // Conditional logic
+      const hasConditions = incomingFields.some((f: any) => {
+        const c = f?.conditions;
+        return c && typeof c === "object" && Array.isArray(c.conditions) && c.conditions.length > 0;
+      });
+      if (hasConditions) {
+        return res.status(403).json({
+          error: "Conditional logic requires / convert Premium ($59/year)",
+          feature: "conditional_logic",
+          upgradeUrl: "/convert",
+        });
+      }
+
+      // Multi-step forms
+      const hasMultiStep = incomingFields.some((f: any) => Number(f?.step || 1) > 1);
+      if (hasMultiStep) {
+        return res.status(403).json({
+          error: "Multi-step forms require / convert Premium ($59/year)",
+          feature: "multi_step",
+          upgradeUrl: "/convert",
+        });
+      }
+
+      // Custom design (not one of the 10 preset themes)
+      if (incomingDesign && typeof incomingDesign === "object") {
+        const d = incomingDesign as any;
+        const themePresetMissing = d.themePreset == null;
+        const customColor = d.primaryColor && !PRESET_THEME_COLORS.has(d.primaryColor);
+        if (themePresetMissing && customColor) {
+          return res.status(403).json({
+            error: "Custom colors require / convert Premium ($59/year)",
+            feature: "custom_design",
+            upgradeUrl: "/convert",
+          });
+        }
+      }
+
+      // Settings-level premium features
+      if (incomingSettings && typeof incomingSettings === "object") {
+        const s = incomingSettings as any;
+        if (s.doubleOptin === true) {
+          return res.status(403).json({
+            error: "Double opt-in requires / convert Premium ($59/year)",
+            feature: "double_optin",
+            upgradeUrl: "/convert",
+          });
+        }
+        if (s.recaptcha === true) {
+          return res.status(403).json({
+            error: "reCAPTCHA requires / convert Premium ($59/year)",
+            feature: "recaptcha",
+            upgradeUrl: "/convert",
+          });
+        }
+        if (Number(s.submissionLimit || 0) > 0) {
+          return res.status(403).json({
+            error: "Submission limits require / convert Premium ($59/year)",
+            feature: "submission_limit",
+            upgradeUrl: "/convert",
+          });
+        }
+        if (s.closeDate) {
+          return res.status(403).json({
+            error: "Close dates require / convert Premium ($59/year)",
+            feature: "close_date",
+            upgradeUrl: "/convert",
+          });
+        }
+      }
+    }
 
     // Update form-level builder state
     const formUpdates: Record<string, any> = { updatedAt: new Date() };
     if (typeof body.name === "string" && body.name.trim() !== "") {
       formUpdates.name = body.name.trim();
     }
-    if (body.design !== undefined) formUpdates.design = body.design;
+    if (body.design !== undefined) {
+      // Phase E: force showBranding=true for non-premium clients even if the
+      // payload tried to turn it off. showBranding lives on convert_forms, not
+      // on the design JSON, so handle it separately below.
+      formUpdates.design = body.design;
+    }
     if (body.settings !== undefined) formUpdates.settings = body.settings;
+    if (!premium) {
+      formUpdates.showBranding = true;
+    }
     await db.update(convertForms).set(formUpdates).where(eq(convertForms.id, formId));
 
     // Diff existing fields vs incoming. Match by fieldId.
@@ -865,9 +1050,61 @@ router.get("/:clientId/analytics", requireAuth, requireClientMatch, async (req: 
     const totalSubmissions = forms.reduce((sum, f) => sum + (f.submissionCount || 0), 0);
     const conversionRate = totalViews > 0 ? Number(((totalSubmissions / totalViews) * 100).toFixed(1)) : 0;
 
+    // Phase E: top 5 forms by submission count + recent submissions across all forms
+    const topForms = [...forms]
+      .sort((a, b) => (b.submissionCount || 0) - (a.submissionCount || 0))
+      .slice(0, 5)
+      .map((f) => ({
+        id: f.id,
+        name: f.name,
+        submissions: f.submissionCount || 0,
+        views: f.viewCount || 0,
+        conversionRate: f.viewCount ? Number((((f.submissionCount || 0) / f.viewCount) * 100).toFixed(1)) : 0,
+      }));
+
+    const recentSubmissionRows = await db
+      .select({
+        id: convertSubmissions.id,
+        formId: convertSubmissions.formId,
+        data: convertSubmissions.data,
+        createdAt: convertSubmissions.createdAt,
+      })
+      .from(convertSubmissions)
+      .where(eq(convertSubmissions.clientId, clientId))
+      .orderBy(desc(convertSubmissions.createdAt))
+      .limit(10);
+
+    const formNameById = new Map(forms.map((f) => [f.id, f.name]));
+    const recentSubmissions = recentSubmissionRows.map((s) => {
+      const data = (s.data as any) || {};
+      let email: string | null = null;
+      let displayName: string | null = null;
+      for (const v of Object.values(data)) {
+        if (typeof v === "string") {
+          if (!email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) email = v;
+          if (!displayName && v.length > 1 && v.length < 80 && !v.includes("@")) displayName = v;
+        }
+      }
+      return {
+        id: s.id,
+        formName: formNameById.get(s.formId) || `Form ${s.formId}`,
+        email,
+        displayName,
+        createdAt: s.createdAt,
+      };
+    });
+
     res.json({
       success: true,
-      analytics: { totalForms, publishedForms, totalViews, totalSubmissions, conversionRate },
+      analytics: {
+        totalForms,
+        publishedForms,
+        totalViews,
+        totalSubmissions,
+        conversionRate,
+        topForms,
+        recentSubmissions,
+      },
     });
   } catch (error: any) {
     console.error("[Convert] Analytics error:", error);
@@ -875,11 +1112,472 @@ router.get("/:clientId/analytics", requireAuth, requireClientMatch, async (req: 
   }
 });
 
+router.get("/:clientId/premium-status", requireAuth, requireClientMatch, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const [client] = await db.select({
+      convertPremium: clients.convertPremium,
+      convertPremiumExpiresAt: clients.convertPremiumExpiresAt,
+    }).from(clients).where(eq(clients.id, clientId)).limit(1);
+
+    const isPremium = !!client?.convertPremium &&
+      (!client?.convertPremiumExpiresAt || client.convertPremiumExpiresAt > new Date());
+
+    res.json({
+      success: true,
+      isPremium,
+      expiresAt: client?.convertPremiumExpiresAt || null,
+    });
+  } catch (error: any) {
+    console.error("[Convert] Premium status error:", error);
+    res.status(500).json({ error: "Failed to check premium status" });
+  }
+});
+
+router.get("/:clientId/forms/:formId/analytics", requireAuth, requireClientMatch, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const formId = parseInt(req.params.formId);
+    const period = String(req.query.period || "30d");
+
+    const [form] = await db.select().from(convertForms)
+      .where(and(eq(convertForms.id, formId), eq(convertForms.clientId, clientId)))
+      .limit(1);
+    if (!form) return res.status(404).json({ error: "Form not found" });
+
+    const views = form.viewCount || 0;
+    const starts = form.startCount || 0;
+    const submissions = form.submissionCount || 0;
+    const viewToStartRate = views > 0 ? Number(((starts / views) * 100).toFixed(1)) : 0;
+    const startToSubmitRate = starts > 0 ? Number(((submissions / starts) * 100).toFixed(1)) : 0;
+    const overallConversionRate = views > 0 ? Number(((submissions / views) * 100).toFixed(1)) : 0;
+
+    const days = period === "7d" ? 7 : period === "90d" ? 90 : period === "all" ? 3650 : 30;
+    const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+
+    const dailyRows = await db.select().from(convertAnalyticsDaily)
+      .where(and(
+        eq(convertAnalyticsDaily.formId, formId),
+        sql`${convertAnalyticsDaily.date} >= ${cutoff}`,
+      ))
+      .orderBy(convertAnalyticsDaily.date);
+
+    const timeline = dailyRows.map((row) => ({
+      date: row.date,
+      views: row.views || 0,
+      starts: row.starts || 0,
+      submissions: row.submissions || 0,
+    }));
+
+    const sourceMap = new Map<string, { source: string; medium: string; submissions: number }>();
+    for (const row of dailyRows) {
+      const breakdown = Array.isArray(row.sourceBreakdown) ? (row.sourceBreakdown as any[]) : [];
+      for (const b of breakdown) {
+        const key = `${b.source || "direct"}|${b.medium || "none"}`;
+        const existing = sourceMap.get(key);
+        if (existing) {
+          existing.submissions += Number(b.count || 0);
+        } else {
+          sourceMap.set(key, {
+            source: String(b.source || "direct"),
+            medium: String(b.medium || "none"),
+            submissions: Number(b.count || 0),
+          });
+        }
+      }
+    }
+    const sources = Array.from(sourceMap.values()).sort((a, b) => b.submissions - a.submissions);
+
+    const stepDropOff = [
+      { step: 1, label: form.name || "Form", reached: starts, completed: submissions },
+    ];
+
+    res.json({
+      success: true,
+      form: { id: form.id, name: form.name, slug: form.slug },
+      funnel: { views, starts, submissions, viewToStartRate, startToSubmitRate, overallConversionRate },
+      timeline,
+      sources,
+      stepDropOff,
+      period,
+    });
+  } catch (error: any) {
+    console.error("[Convert] Per-form analytics error:", error);
+    res.status(500).json({ error: "Failed to get form analytics" });
+  }
+});
+
+// ─── Phase E: A/B TESTS ───
+
+/**
+ * POST /api/convert/:clientId/ab-tests
+ * Body: { originalFormId, name?, trafficSplit? }
+ *
+ * Creates an A/B test by duplicating the original form as Variant B. Both the
+ * original and the duplicate get abTestId set so the embed script can find
+ * them. Returns the test with both form IDs so the UI can open the variant in
+ * the builder.
+ *
+ * Premium-gated: free-tier clients get 403.
+ */
+router.post("/:clientId/ab-tests", requireAuth, requireClientMatch, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const premium = await isConvertPremium(clientId);
+    if (!premium) {
+      return res.status(403).json({
+        error: "A/B testing requires / convert Premium ($59/year)",
+        feature: "ab_testing",
+        upgradeUrl: "/convert",
+      });
+    }
+
+    const { originalFormId, name } = req.body || {};
+    if (!Number.isFinite(originalFormId)) {
+      return res.status(400).json({ error: "originalFormId is required" });
+    }
+
+    const [original] = await db.select().from(convertForms)
+      .where(and(eq(convertForms.id, originalFormId), eq(convertForms.clientId, clientId)))
+      .limit(1);
+    if (!original) return res.status(404).json({ error: "Original form not found" });
+    if (original.status !== "published") {
+      return res.status(400).json({ error: "Original form must be published before creating an A/B test" });
+    }
+
+    // Duplicate the form row for Variant B
+    const variantSlug = generateSlug(`${original.name}-variant-b`);
+    const [variant] = await db.insert(convertForms).values({
+      clientId,
+      name: `${original.name} — Variant B`,
+      slug: variantSlug,
+      formType: original.formType,
+      deployTarget: original.deployTarget || "website",
+      status: "draft",
+      templateId: original.templateId,
+      brandColor: original.brandColor,
+      showBranding: original.showBranding,
+      logoUrl: original.logoUrl,
+      popupTrigger: original.popupTrigger,
+      popupDelaySeconds: original.popupDelaySeconds,
+      popupScrollPercent: original.popupScrollPercent,
+      popupPosition: original.popupPosition,
+      popupShowFrequency: original.popupShowFrequency,
+      optinType: original.optinType,
+      consentTextEmail: original.consentTextEmail,
+      consentTextSms: original.consentTextSms,
+      thankYouType: original.thankYouType,
+      thankYouMessage: original.thankYouMessage,
+      thankYouRedirectUrl: original.thankYouRedirectUrl,
+      notifyEmail: original.notifyEmail,
+      notifyEnabled: original.notifyEnabled,
+      design: original.design,
+      settings: original.settings,
+    }).returning();
+
+    // Duplicate all the original's fields into the variant
+    const originalFields = await db.select().from(convertFormFields)
+      .where(eq(convertFormFields.formId, original.id));
+    for (const f of originalFields) {
+      await db.insert(convertFormFields).values({
+        formId: variant.id,
+        fieldType: f.fieldType,
+        label: f.label,
+        placeholder: f.placeholder,
+        helpText: f.helpText,
+        isRequired: f.isRequired,
+        validationPattern: f.validationPattern,
+        validationMessage: f.validationMessage,
+        minLength: f.minLength,
+        maxLength: f.maxLength,
+        options: f.options,
+        conditionalRules: f.conditionalRules,
+        sortOrder: f.sortOrder,
+        columnSpan: f.columnSpan,
+        pageNumber: f.pageNumber,
+        defaultValue: f.defaultValue,
+        mapsTo: f.mapsTo,
+        config: f.config,
+      });
+    }
+
+    // Create the A/B test row with a 50/50 traffic split
+    const [test] = await db.insert(convertAbTests).values({
+      clientId,
+      name: name || `Test: ${original.name}`,
+      status: "draft",
+      originalFormId: original.id,
+      trafficSplit: [
+        { formId: original.id, percentage: 50 },
+        { formId: variant.id, percentage: 50 },
+      ],
+      winnerMetric: "conversion_rate",
+    }).returning();
+
+    // Link both forms back to the test
+    await db.update(convertForms).set({ abTestId: test.id }).where(eq(convertForms.id, original.id));
+    await db.update(convertForms).set({ abTestId: test.id }).where(eq(convertForms.id, variant.id));
+
+    res.json({
+      success: true,
+      test,
+      originalFormId: original.id,
+      variantFormId: variant.id,
+      variantSlug: variant.slug,
+    });
+  } catch (error: any) {
+    console.error("[Convert] AB test create error:", error);
+    res.status(500).json({ error: "Failed to create A/B test" });
+  }
+});
+
+router.get("/:clientId/ab-tests", requireAuth, requireClientMatch, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const tests = await db.select().from(convertAbTests)
+      .where(eq(convertAbTests.clientId, clientId))
+      .orderBy(desc(convertAbTests.createdAt));
+    res.json({ success: true, tests });
+  } catch (error: any) {
+    console.error("[Convert] AB test list error:", error);
+    res.status(500).json({ error: "Failed to list A/B tests" });
+  }
+});
+
+/**
+ * GET /api/convert/:clientId/ab-tests/:testId
+ * Returns the test + per-variant live stats (views, starts, submissions,
+ * conversion rate) + a simple confidence indicator when both variants have at
+ * least minSampleSize views.
+ */
+router.get("/:clientId/ab-tests/:testId", requireAuth, requireClientMatch, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const testId = parseInt(req.params.testId);
+
+    const [test] = await db.select().from(convertAbTests)
+      .where(and(eq(convertAbTests.id, testId), eq(convertAbTests.clientId, clientId)))
+      .limit(1);
+    if (!test) return res.status(404).json({ error: "A/B test not found" });
+
+    const split = (test.trafficSplit as Array<{ formId: number; percentage: number }>) || [];
+    const variantIds = split.map((s) => s.formId);
+
+    const variantForms = variantIds.length > 0
+      ? await db.select().from(convertForms).where(inArray(convertForms.id, variantIds))
+      : [];
+
+    const variants = variantForms.map((f) => {
+      const views = f.viewCount || 0;
+      const starts = f.startCount || 0;
+      const submissions = f.submissionCount || 0;
+      const conversionRate = views > 0 ? Number(((submissions / views) * 100).toFixed(1)) : 0;
+      return {
+        formId: f.id,
+        name: f.name,
+        slug: f.slug,
+        isOriginal: f.id === test.originalFormId,
+        views,
+        starts,
+        submissions,
+        conversionRate,
+        percentage: split.find((s) => s.formId === f.id)?.percentage ?? 0,
+      };
+    });
+
+    // Winner confidence (simple two-proportion z-test approximation)
+    // Only returned when both variants have >= minSampleSize views
+    let confidence: { leader: number | null; confidencePercent: number; ready: boolean } = {
+      leader: null,
+      confidencePercent: 0,
+      ready: false,
+    };
+    const minSample = test.minSampleSize || 100;
+    if (variants.length === 2 && variants[0].views >= minSample && variants[1].views >= minSample) {
+      const a = variants[0];
+      const b = variants[1];
+      const pA = a.submissions / a.views;
+      const pB = b.submissions / b.views;
+      const pPooled = (a.submissions + b.submissions) / (a.views + b.views);
+      const se = Math.sqrt(pPooled * (1 - pPooled) * (1 / a.views + 1 / b.views));
+      const z = se > 0 ? Math.abs(pA - pB) / se : 0;
+      // Normal CDF approximation (Abramowitz & Stegun 7.1.26)
+      const p = 0.3275911;
+      const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741, a4 = -1.453152027, a5 = 1.061405429;
+      const sign = z < 0 ? -1 : 1;
+      const zAbs = Math.abs(z) / Math.sqrt(2);
+      const t = 1 / (1 + p * zAbs);
+      const erf = sign * (1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-zAbs * zAbs));
+      const confidencePercent = Number((erf * 100).toFixed(1));
+      confidence = {
+        leader: pA > pB ? a.formId : b.formId,
+        confidencePercent: Math.max(0, confidencePercent),
+        ready: confidencePercent >= 95,
+      };
+    }
+
+    res.json({ success: true, test, variants, confidence });
+  } catch (error: any) {
+    console.error("[Convert] AB test detail error:", error);
+    res.status(500).json({ error: "Failed to get A/B test details" });
+  }
+});
+
+router.patch("/:clientId/ab-tests/:testId/start", requireAuth, requireClientMatch, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const testId = parseInt(req.params.testId);
+    const [test] = await db.select().from(convertAbTests)
+      .where(and(eq(convertAbTests.id, testId), eq(convertAbTests.clientId, clientId)))
+      .limit(1);
+    if (!test) return res.status(404).json({ error: "Test not found" });
+
+    // Publish the variant if it's still a draft (the user has presumably
+    // finished editing it by now)
+    const split = (test.trafficSplit as Array<{ formId: number; percentage: number }>) || [];
+    for (const v of split) {
+      await db.update(convertForms)
+        .set({ status: "published", publishedAt: new Date() })
+        .where(eq(convertForms.id, v.formId));
+    }
+
+    const [updated] = await db.update(convertAbTests)
+      .set({ status: "running", startedAt: new Date(), updatedAt: new Date() })
+      .where(eq(convertAbTests.id, testId))
+      .returning();
+    res.json({ success: true, test: updated });
+  } catch (error: any) {
+    console.error("[Convert] AB test start error:", error);
+    res.status(500).json({ error: "Failed to start test" });
+  }
+});
+
+router.patch("/:clientId/ab-tests/:testId/stop", requireAuth, requireClientMatch, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const testId = parseInt(req.params.testId);
+    const [updated] = await db.update(convertAbTests)
+      .set({ status: "completed", endedAt: new Date(), updatedAt: new Date() })
+      .where(and(eq(convertAbTests.id, testId), eq(convertAbTests.clientId, clientId)))
+      .returning();
+    if (!updated) return res.status(404).json({ error: "Test not found" });
+    res.json({ success: true, test: updated });
+  } catch (error: any) {
+    console.error("[Convert] AB test stop error:", error);
+    res.status(500).json({ error: "Failed to stop test" });
+  }
+});
+
+router.patch("/:clientId/ab-tests/:testId/winner", requireAuth, requireClientMatch, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const testId = parseInt(req.params.testId);
+    const { formId } = req.body || {};
+    if (!Number.isFinite(formId)) return res.status(400).json({ error: "formId is required" });
+
+    const [test] = await db.select().from(convertAbTests)
+      .where(and(eq(convertAbTests.id, testId), eq(convertAbTests.clientId, clientId)))
+      .limit(1);
+    if (!test) return res.status(404).json({ error: "Test not found" });
+
+    const split = (test.trafficSplit as Array<{ formId: number; percentage: number }>) || [];
+    if (!split.some((v) => v.formId === formId)) {
+      return res.status(400).json({ error: "formId is not a variant of this test" });
+    }
+
+    // Archive losing variants
+    for (const v of split) {
+      if (v.formId !== formId) {
+        await db.update(convertForms)
+          .set({ status: "archived", updatedAt: new Date() })
+          .where(eq(convertForms.id, v.formId));
+      }
+    }
+
+    const [updated] = await db.update(convertAbTests)
+      .set({
+        status: "completed",
+        winnerFormId: formId,
+        winnerDeclaredAt: new Date(),
+        endedAt: test.endedAt || new Date(),
+        updatedAt: new Date(),
+      })
+      .where(eq(convertAbTests.id, testId))
+      .returning();
+    res.json({ success: true, test: updated });
+  } catch (error: any) {
+    console.error("[Convert] AB test winner error:", error);
+    res.status(500).json({ error: "Failed to declare winner" });
+  }
+});
+
+router.delete("/:clientId/ab-tests/:testId", requireAuth, requireClientMatch, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const testId = parseInt(req.params.testId);
+    const [test] = await db.select().from(convertAbTests)
+      .where(and(eq(convertAbTests.id, testId), eq(convertAbTests.clientId, clientId)))
+      .limit(1);
+    if (!test) return res.status(404).json({ error: "Test not found" });
+
+    // Unlink forms from this test
+    const split = (test.trafficSplit as Array<{ formId: number; percentage: number }>) || [];
+    for (const v of split) {
+      await db.update(convertForms)
+        .set({ abTestId: null, updatedAt: new Date() })
+        .where(eq(convertForms.id, v.formId));
+    }
+
+    await db.delete(convertAbTests).where(eq(convertAbTests.id, testId));
+    res.json({ success: true, message: "A/B test deleted" });
+  } catch (error: any) {
+    console.error("[Convert] AB test delete error:", error);
+    res.status(500).json({ error: "Failed to delete A/B test" });
+  }
+});
+
+
 // ─── PUBLIC ENDPOINTS (no auth) ───
 
-// Preflight for both public endpoints
+// Preflight for public endpoints
 router.options("/public/:clientId/:formSlug", convertPublicCors, (_req, res) => res.sendStatus(200));
 router.options("/submit/:clientId/:formSlug", convertPublicCors, (_req, res) => res.sendStatus(200));
+router.options("/public/:clientId/:formSlug/start", convertPublicCors, (_req, res) => res.sendStatus(200));
+
+/**
+ * POST /api/convert/public/:clientId/:formSlug/start
+ *
+ * Phase E: tracks the middle of the funnel. The embed script calls this once
+ * per form load when the user first focuses a field. Bumps form.startCount
+ * and adds a "start" event to the daily analytics table.
+ */
+router.post("/public/:clientId/:formSlug/start", convertPublicCors, async (req: Request, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const formSlug = req.params.formSlug;
+    if (isNaN(clientId)) return res.status(400).json({ error: "Invalid client ID" });
+
+    const [form] = await db.select().from(convertForms)
+      .where(and(
+        eq(convertForms.clientId, clientId),
+        eq(convertForms.slug, formSlug),
+        eq(convertForms.status, "published"),
+      ))
+      .limit(1);
+    if (!form) return res.status(404).json({ error: "Form not found" });
+
+    await db.update(convertForms)
+      .set({ startCount: (form.startCount || 0) + 1 })
+      .where(eq(convertForms.id, form.id));
+
+    trackAnalyticsEvent(form.id, clientId, "start").catch(() => {});
+
+    res.json({ success: true });
+  } catch (error: any) {
+    console.error("[Convert] Start tracking error:", error);
+    res.status(500).json({ error: "Failed to track start" });
+  }
+});
 
 router.get("/public/:clientId/:formSlug", convertPublicCors, async (req: Request, res: Response) => {
   try {
@@ -904,6 +1602,39 @@ router.get("/public/:clientId/:formSlug", convertPublicCors, async (req: Request
       .set({ viewCount: (form.viewCount || 0) + 1 })
       .where(eq(convertForms.id, form.id));
 
+    // Phase E: daily analytics view tracking (fire-and-forget)
+    trackAnalyticsEvent(form.id, clientId, "view").catch(() => {});
+
+    // Phase E: enforce branding for free-tier clients regardless of stored value
+    const premium = await isConvertPremium(clientId);
+    const enforcedShowBranding = premium ? form.showBranding : true;
+
+    // Phase E: if this form is part of a running A/B test, return the test's
+    // traffic-split configuration + the slug of each variant so the embed
+    // script can assign the visitor client-side and re-fetch the assigned form.
+    let abTestInfo: { testId: number; variants: Array<{ formId: number; percentage: number; slug: string | null }> } | null = null;
+    if (form.abTestId) {
+      const [runningTest] = await db.select().from(convertAbTests)
+        .where(and(eq(convertAbTests.id, form.abTestId), eq(convertAbTests.status, "running")))
+        .limit(1);
+      if (runningTest) {
+        const split = (runningTest.trafficSplit as Array<{ formId: number; percentage: number }>) || [];
+        const variantFormRows = split.length > 0
+          ? await db.select({ id: convertForms.id, slug: convertForms.slug }).from(convertForms)
+              .where(inArray(convertForms.id, split.map((v) => v.formId)))
+          : [];
+        const slugByFormId = new Map(variantFormRows.map((r) => [r.id, r.slug]));
+        abTestInfo = {
+          testId: runningTest.id,
+          variants: split.map((v) => ({
+            formId: v.formId,
+            percentage: v.percentage,
+            slug: slugByFormId.get(v.formId) || null,
+          })),
+        };
+      }
+    }
+
     const [client] = await db.select({
       companyName: clients.companyName,
       website: clients.website,
@@ -917,7 +1648,7 @@ router.get("/public/:clientId/:formSlug", convertPublicCors, async (req: Request
         slug: form.slug,
         formType: form.formType,
         brandColor: form.brandColor,
-        showBranding: form.showBranding,
+        showBranding: enforcedShowBranding,
         logoUrl: form.logoUrl,
         thankYouType: form.thankYouType,
         thankYouMessage: form.thankYouMessage,
@@ -935,6 +1666,8 @@ router.get("/public/:clientId/:formSlug", convertPublicCors, async (req: Request
         design: form.design,
         settings: form.settings,
       },
+      // Phase E: A/B test info (null when not part of a running test)
+      abTest: abTestInfo,
       fields: fields.map((f) => ({
         id: f.id,
         fieldType: f.fieldType,
@@ -1034,6 +1767,9 @@ router.post("/submit/:clientId/:formSlug", convertPublicCors, async (req: Reques
     await db.update(convertForms)
       .set({ submissionCount: (form.submissionCount || 0) + 1 })
       .where(eq(convertForms.id, form.id));
+
+    // Phase E: daily analytics submission tracking with source breakdown
+    trackAnalyticsEvent(form.id, clientId, "submission", effectiveUtmSource, utmMedium || form.utmMedium).catch(() => {});
 
     await runPostSubmissionPipeline(submission.id);
 
@@ -1316,6 +2052,15 @@ router.post(
         await db.update(convertForms)
           .set({ submissionCount: sql`${convertForms.submissionCount} + 1` })
           .where(eq(convertForms.id, submission.formId));
+
+        // Phase E: daily analytics submission tracking for payment flows
+        trackAnalyticsEvent(
+          submission.formId,
+          submission.clientId,
+          "submission",
+          submission.utmSource,
+          submission.utmMedium,
+        ).catch(() => {});
 
         await runPostSubmissionPipeline(submission.id);
 
