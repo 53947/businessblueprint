@@ -334,11 +334,19 @@ export default function ConnectDashboard() {
           <button
             onClick={() => setLocation("/portal/dashboard")}
             className="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg w-full transition-colors"
-            data-testid="btn-exit-to-dashboard"
+            data-testid="btn-return-to-dashboard"
           >
             <LayoutDashboard className="w-4 h-4" />
-            Exit to Dashboard
+            Return to Dashboard
           </button>
+          <a
+            href="/"
+            className="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg w-full transition-colors"
+            data-testid="btn-return-to-homepage"
+          >
+            <img src={bbLogo} alt="businessblueprint.io" className="h-4 object-contain" />
+            Return to Homepage
+          </a>
           <button
             onClick={() => {
               sessionStorage.clear();
@@ -351,14 +359,6 @@ export default function ConnectDashboard() {
             <LogOut className="w-4 h-4" />
             Logout
           </button>
-          <a
-            href="/"
-            className="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg w-full transition-colors"
-            data-testid="btn-exit-to-portal"
-          >
-            <img src={bbLogo} alt="businessblueprint.io" className="h-4 object-contain" />
-            Exit to Portal
-          </a>
         </div>
       </aside>
 
