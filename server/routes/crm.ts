@@ -500,8 +500,17 @@ crmRouter.delete("/contacts/:id", async (req, res) => {
     // Get the contact first to get clientId for webhook
     const [contact] = await db.select().from(crmContacts).where(eq(crmContacts.id, id));
     
+    // Clean up all FK-linked rows before deleting the contact itself
+    await db.delete(crmTimeline).where(eq(crmTimeline.contactId, id));
+    await db.delete(crmNotes).where(eq(crmNotes.contactId, id));
+    await db.delete(crmTasks).where(eq(crmTasks.contactId, id));
+    await db.delete(crmSegmentMembers).where(eq(crmSegmentMembers.contactId, id));
+    await db.delete(crmAppointments).where(eq(crmAppointments.contactId, id));
+    await db.delete(crmAutomationExecutions).where(eq(crmAutomationExecutions.contactId, id));
+    await db.delete(crmDeals).where(eq(crmDeals.contactId, id));
+
     await db.delete(crmContacts).where(eq(crmContacts.id, id));
-    
+
     // Dispatch webhook event
     if (contact) {
       dispatchWebhookEvent(contact.clientId, 'contact.deleted', { id, email: contact.email });

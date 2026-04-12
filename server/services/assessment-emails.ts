@@ -76,6 +76,8 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light only">
+  <meta name="supported-color-schemes" content="light only">
   <title>Assessment Received</title>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Archivo+Semi+Expanded:wght@600;700&display=swap" rel="stylesheet">
   <style>
@@ -93,7 +95,7 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
       background: #EEFBFF;
     }
     .email-outline {
-      border: 2px solid #09080E;
+      border: 2px solid #F97316;
       border-radius: 8px;
       overflow: hidden;
     }
@@ -305,7 +307,7 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
 
       <div style="text-align: center; margin: 30px 0;">
         <a href="https://businessblueprint.io/auth/signup"
-           style="display: inline-block; background: #008060; color: white; border: 2px solid #008060; padding: 14px 32px; text-decoration: none; border-radius: 8px; margin: 10px 0; font-weight: 700; font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;">
+           style="display: inline-block; background: transparent; color: #F97316; border: 2px solid #F97316; padding: 14px 32px; text-decoration: none; border-radius: 8px; margin: 10px 0; font-weight: 700; font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;">
           Create Your Free Account →
         </a>
         <br/>
