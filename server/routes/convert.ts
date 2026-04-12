@@ -17,6 +17,8 @@ import {
   convertFormFields,
   convertSubmissions,
   convertTemplates,
+  convertAnalyticsDaily,
+  convertAbTests,
   crmContacts,
   sendContacts,
   clients,
@@ -282,6 +284,95 @@ async function runPostSubmissionPipeline(submissionId: number): Promise<void> {
   console.log(`[Convert] Pipeline completed for submission ${submission.id} on form "${form.name}" (client ${clientId})`);
 }
 
+// ─── Phase E: premium tier enforcement ───
+
+const PRESET_THEME_COLORS = new Set([
+  "#008060", "#8000FF", "#064A6C", "#E9B307", "#374151",
+  "#97ACCA", "#1844A6", "#001882", "#660099", "#FF44CC",
+]);
+
+const PREMIUM_FIELD_TYPES = new Set([
+  "file", "signature", "date", "rating", "hidden", "payment", "page_break",
+]);
+
+/**
+ * Returns true if the client has an active / convert Premium subscription.
+ * Checks both the boolean flag and the expiration timestamp.
+ */
+async function isConvertPremium(clientId: number): Promise<boolean> {
+  const [client] = await db.select({
+    convertPremium: clients.convertPremium,
+    convertPremiumExpiresAt: clients.convertPremiumExpiresAt,
+  }).from(clients).where(eq(clients.id, clientId)).limit(1);
+
+  if (!client?.convertPremium) return false;
+  if (client.convertPremiumExpiresAt && client.convertPremiumExpiresAt < new Date()) return false;
+  return true;
+}
+
+// ─── Phase E: analytics tracking ───
+
+/**
+ * Increments daily analytics counters for a form. Upserts by (formId, date):
+ * first hit of the day creates the row, subsequent hits bump the counter.
+ * Fails silently so a tracking failure never breaks the end user's experience.
+ */
+async function trackAnalyticsEvent(
+  formId: number,
+  clientId: number,
+  eventType: "view" | "start" | "submission",
+  source?: string | null,
+  medium?: string | null,
+): Promise<void> {
+  try {
+    const today = new Date().toISOString().split("T")[0];
+
+    const [existing] = await db.select().from(convertAnalyticsDaily)
+      .where(and(
+        eq(convertAnalyticsDaily.formId, formId),
+        eq(convertAnalyticsDaily.date, today),
+      )).limit(1);
+
+    if (existing) {
+      const updates: Record<string, any> = {};
+      if (eventType === "view") updates.views = (existing.views || 0) + 1;
+      if (eventType === "start") updates.starts = (existing.starts || 0) + 1;
+      if (eventType === "submission") updates.submissions = (existing.submissions || 0) + 1;
+
+      // Merge source breakdown on submission events
+      if (eventType === "submission" && source) {
+        const breakdown: Array<{ source: string; medium: string; count: number }> =
+          Array.isArray(existing.sourceBreakdown) ? (existing.sourceBreakdown as any[]) : [];
+        const key = `${source}|${medium || "none"}`;
+        const match = breakdown.find((b) => `${b.source}|${b.medium}` === key);
+        if (match) match.count = (match.count || 0) + 1;
+        else breakdown.push({ source: String(source), medium: String(medium || "none"), count: 1 });
+        updates.sourceBreakdown = breakdown;
+      }
+
+      await db.update(convertAnalyticsDaily)
+        .set(updates)
+        .where(eq(convertAnalyticsDaily.id, existing.id));
+    } else {
+      const initialBreakdown = eventType === "submission" && source
+        ? [{ source: String(source), medium: String(medium || "none"), count: 1 }]
+        : null;
+
+      await db.insert(convertAnalyticsDaily).values({
+        formId,
+        clientId,
+        date: today,
+        views: eventType === "view" ? 1 : 0,
+        starts: eventType === "start" ? 1 : 0,
+        submissions: eventType === "submission" ? 1 : 0,
+        sourceBreakdown: initialBreakdown,
+      });
+    }
+  } catch (err) {
+    console.error(`[Convert] trackAnalyticsEvent failed (form ${formId}, ${eventType}):`, err);
+  }
+}
+
 // ─── TEMPLATES (authenticated — any logged-in client can browse) ───
 
 router.get("/templates", requireAuth, async (_req: AuthenticatedRequest, res: Response) => {
@@ -530,14 +621,108 @@ router.put("/:clientId/forms/:formId/builder", requireAuth, requireClientMatch, 
 
     const body = req.body || {};
     const incomingFields: any[] = Array.isArray(body.fields) ? body.fields : [];
+    const incomingDesign = body.design || null;
+    const incomingSettings = body.settings || null;
+
+    // ─── Phase E: premium tier enforcement ───
+    const premium = await isConvertPremium(clientId);
+    if (!premium) {
+      // Premium field types
+      const hasPremiumField = incomingFields.some((f: any) => f?.type && PREMIUM_FIELD_TYPES.has(String(f.type)));
+      if (hasPremiumField) {
+        return res.status(403).json({
+          error: "Premium field types require / convert Premium ($59/year)",
+          feature: "premium_fields",
+          upgradeUrl: "/convert",
+        });
+      }
+
+      // Conditional logic
+      const hasConditions = incomingFields.some((f: any) => {
+        const c = f?.conditions;
+        return c && typeof c === "object" && Array.isArray(c.conditions) && c.conditions.length > 0;
+      });
+      if (hasConditions) {
+        return res.status(403).json({
+          error: "Conditional logic requires / convert Premium ($59/year)",
+          feature: "conditional_logic",
+          upgradeUrl: "/convert",
+        });
+      }
+
+      // Multi-step forms
+      const hasMultiStep = incomingFields.some((f: any) => Number(f?.step || 1) > 1);
+      if (hasMultiStep) {
+        return res.status(403).json({
+          error: "Multi-step forms require / convert Premium ($59/year)",
+          feature: "multi_step",
+          upgradeUrl: "/convert",
+        });
+      }
+
+      // Custom design (not one of the 10 preset themes)
+      if (incomingDesign && typeof incomingDesign === "object") {
+        const d = incomingDesign as any;
+        const themePresetMissing = d.themePreset == null;
+        const customColor = d.primaryColor && !PRESET_THEME_COLORS.has(d.primaryColor);
+        if (themePresetMissing && customColor) {
+          return res.status(403).json({
+            error: "Custom colors require / convert Premium ($59/year)",
+            feature: "custom_design",
+            upgradeUrl: "/convert",
+          });
+        }
+      }
+
+      // Settings-level premium features
+      if (incomingSettings && typeof incomingSettings === "object") {
+        const s = incomingSettings as any;
+        if (s.doubleOptin === true) {
+          return res.status(403).json({
+            error: "Double opt-in requires / convert Premium ($59/year)",
+            feature: "double_optin",
+            upgradeUrl: "/convert",
+          });
+        }
+        if (s.recaptcha === true) {
+          return res.status(403).json({
+            error: "reCAPTCHA requires / convert Premium ($59/year)",
+            feature: "recaptcha",
+            upgradeUrl: "/convert",
+          });
+        }
+        if (Number(s.submissionLimit || 0) > 0) {
+          return res.status(403).json({
+            error: "Submission limits require / convert Premium ($59/year)",
+            feature: "submission_limit",
+            upgradeUrl: "/convert",
+          });
+        }
+        if (s.closeDate) {
+          return res.status(403).json({
+            error: "Close dates require / convert Premium ($59/year)",
+            feature: "close_date",
+            upgradeUrl: "/convert",
+          });
+        }
+      }
+    }
 
     // Update form-level builder state
     const formUpdates: Record<string, any> = { updatedAt: new Date() };
     if (typeof body.name === "string" && body.name.trim() !== "") {
       formUpdates.name = body.name.trim();
     }
-    if (body.design !== undefined) formUpdates.design = body.design;
+    if (body.design !== undefined) {
+      // Phase E: force showBranding=true for non-premium clients even if the
+      // payload tried to turn it off. showBranding lives on convert_forms, not
+      // on the design JSON, so handle it separately below.
+      formUpdates.design = body.design;
+    }
     if (body.settings !== undefined) formUpdates.settings = body.settings;
+    if (!premium) {
+      formUpdates.showBranding = true;
+    }
     await db.update(convertForms).set(formUpdates).where(eq(convertForms.id, formId));
 
     // Diff existing fields vs incoming. Match by fieldId.
@@ -865,9 +1050,61 @@ router.get("/:clientId/analytics", requireAuth, requireClientMatch, async (req: 
     const totalSubmissions = forms.reduce((sum, f) => sum + (f.submissionCount || 0), 0);
     const conversionRate = totalViews > 0 ? Number(((totalSubmissions / totalViews) * 100).toFixed(1)) : 0;
 
+    // Phase E: top 5 forms by submission count + recent submissions across all forms
+    const topForms = [...forms]
+      .sort((a, b) => (b.submissionCount || 0) - (a.submissionCount || 0))
+      .slice(0, 5)
+      .map((f) => ({
+        id: f.id,
+        name: f.name,
+        submissions: f.submissionCount || 0,
+        views: f.viewCount || 0,
+        conversionRate: f.viewCount ? Number((((f.submissionCount || 0) / f.viewCount) * 100).toFixed(1)) : 0,
+      }));
+
+    const recentSubmissionRows = await db
+      .select({
+        id: convertSubmissions.id,
+        formId: convertSubmissions.formId,
+        data: convertSubmissions.data,
+        createdAt: convertSubmissions.createdAt,
+      })
+      .from(convertSubmissions)
+      .where(eq(convertSubmissions.clientId, clientId))
+      .orderBy(desc(convertSubmissions.createdAt))
+      .limit(10);
+
+    const formNameById = new Map(forms.map((f) => [f.id, f.name]));
+    const recentSubmissions = recentSubmissionRows.map((s) => {
+      const data = (s.data as any) || {};
+      let email: string | null = null;
+      let displayName: string | null = null;
+      for (const v of Object.values(data)) {
+        if (typeof v === "string") {
+          if (!email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) email = v;
+          if (!displayName && v.length > 1 && v.length < 80 && !v.includes("@")) displayName = v;
+        }
+      }
+      return {
+        id: s.id,
+        formName: formNameById.get(s.formId) || `Form ${s.formId}`,
+        email,
+        displayName,
+        createdAt: s.createdAt,
+      };
+    });
+
     res.json({
       success: true,
-      analytics: { totalForms, publishedForms, totalViews, totalSubmissions, conversionRate },
+      analytics: {
+        totalForms,
+        publishedForms,
+        totalViews,
+        totalSubmissions,
+        conversionRate,
+        topForms,
+        recentSubmissions,
+      },
     });
   } catch (error: any) {
     console.error("[Convert] Analytics error:", error);
@@ -875,11 +1112,142 @@ router.get("/:clientId/analytics", requireAuth, requireClientMatch, async (req: 
   }
 });
 
+router.get("/:clientId/premium-status", requireAuth, requireClientMatch, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const [client] = await db.select({
+      convertPremium: clients.convertPremium,
+      convertPremiumExpiresAt: clients.convertPremiumExpiresAt,
+    }).from(clients).where(eq(clients.id, clientId)).limit(1);
+
+    const isPremium = !!client?.convertPremium &&
+      (!client?.convertPremiumExpiresAt || client.convertPremiumExpiresAt > new Date());
+
+    res.json({
+      success: true,
+      isPremium,
+      expiresAt: client?.convertPremiumExpiresAt || null,
+    });
+  } catch (error: any) {
+    console.error("[Convert] Premium status error:", error);
+    res.status(500).json({ error: "Failed to check premium status" });
+  }
+});
+
+router.get("/:clientId/forms/:formId/analytics", requireAuth, requireClientMatch, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const formId = parseInt(req.params.formId);
+    const period = String(req.query.period || "30d");
+
+    const [form] = await db.select().from(convertForms)
+      .where(and(eq(convertForms.id, formId), eq(convertForms.clientId, clientId)))
+      .limit(1);
+    if (!form) return res.status(404).json({ error: "Form not found" });
+
+    const views = form.viewCount || 0;
+    const starts = form.startCount || 0;
+    const submissions = form.submissionCount || 0;
+    const viewToStartRate = views > 0 ? Number(((starts / views) * 100).toFixed(1)) : 0;
+    const startToSubmitRate = starts > 0 ? Number(((submissions / starts) * 100).toFixed(1)) : 0;
+    const overallConversionRate = views > 0 ? Number(((submissions / views) * 100).toFixed(1)) : 0;
+
+    const days = period === "7d" ? 7 : period === "90d" ? 90 : period === "all" ? 3650 : 30;
+    const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+
+    const dailyRows = await db.select().from(convertAnalyticsDaily)
+      .where(and(
+        eq(convertAnalyticsDaily.formId, formId),
+        sql`${convertAnalyticsDaily.date} >= ${cutoff}`,
+      ))
+      .orderBy(convertAnalyticsDaily.date);
+
+    const timeline = dailyRows.map((row) => ({
+      date: row.date,
+      views: row.views || 0,
+      starts: row.starts || 0,
+      submissions: row.submissions || 0,
+    }));
+
+    const sourceMap = new Map<string, { source: string; medium: string; submissions: number }>();
+    for (const row of dailyRows) {
+      const breakdown = Array.isArray(row.sourceBreakdown) ? (row.sourceBreakdown as any[]) : [];
+      for (const b of breakdown) {
+        const key = `${b.source || "direct"}|${b.medium || "none"}`;
+        const existing = sourceMap.get(key);
+        if (existing) {
+          existing.submissions += Number(b.count || 0);
+        } else {
+          sourceMap.set(key, {
+            source: String(b.source || "direct"),
+            medium: String(b.medium || "none"),
+            submissions: Number(b.count || 0),
+          });
+        }
+      }
+    }
+    const sources = Array.from(sourceMap.values()).sort((a, b) => b.submissions - a.submissions);
+
+    const stepDropOff = [
+      { step: 1, label: form.name || "Form", reached: starts, completed: submissions },
+    ];
+
+    res.json({
+      success: true,
+      form: { id: form.id, name: form.name, slug: form.slug },
+      funnel: { views, starts, submissions, viewToStartRate, startToSubmitRate, overallConversionRate },
+      timeline,
+      sources,
+      stepDropOff,
+      period,
+    });
+  } catch (error: any) {
+    console.error("[Convert] Per-form analytics error:", error);
+    res.status(500).json({ error: "Failed to get form analytics" });
+  }
+});
+
 // ─── PUBLIC ENDPOINTS (no auth) ───
 
-// Preflight for both public endpoints
+// Preflight for public endpoints
 router.options("/public/:clientId/:formSlug", convertPublicCors, (_req, res) => res.sendStatus(200));
 router.options("/submit/:clientId/:formSlug", convertPublicCors, (_req, res) => res.sendStatus(200));
+router.options("/public/:clientId/:formSlug/start", convertPublicCors, (_req, res) => res.sendStatus(200));
+
+/**
+ * POST /api/convert/public/:clientId/:formSlug/start
+ *
+ * Phase E: tracks the middle of the funnel. The embed script calls this once
+ * per form load when the user first focuses a field. Bumps form.startCount
+ * and adds a "start" event to the daily analytics table.
+ */
+router.post("/public/:clientId/:formSlug/start", convertPublicCors, async (req: Request, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const formSlug = req.params.formSlug;
+    if (isNaN(clientId)) return res.status(400).json({ error: "Invalid client ID" });
+
+    const [form] = await db.select().from(convertForms)
+      .where(and(
+        eq(convertForms.clientId, clientId),
+        eq(convertForms.slug, formSlug),
+        eq(convertForms.status, "published"),
+      ))
+      .limit(1);
+    if (!form) return res.status(404).json({ error: "Form not found" });
+
+    await db.update(convertForms)
+      .set({ startCount: (form.startCount || 0) + 1 })
+      .where(eq(convertForms.id, form.id));
+
+    trackAnalyticsEvent(form.id, clientId, "start").catch(() => {});
+
+    res.json({ success: true });
+  } catch (error: any) {
+    console.error("[Convert] Start tracking error:", error);
+    res.status(500).json({ error: "Failed to track start" });
+  }
+});
 
 router.get("/public/:clientId/:formSlug", convertPublicCors, async (req: Request, res: Response) => {
   try {
@@ -904,6 +1272,13 @@ router.get("/public/:clientId/:formSlug", convertPublicCors, async (req: Request
       .set({ viewCount: (form.viewCount || 0) + 1 })
       .where(eq(convertForms.id, form.id));
 
+    // Phase E: daily analytics view tracking (fire-and-forget)
+    trackAnalyticsEvent(form.id, clientId, "view").catch(() => {});
+
+    // Phase E: enforce branding for free-tier clients regardless of stored value
+    const premium = await isConvertPremium(clientId);
+    const enforcedShowBranding = premium ? form.showBranding : true;
+
     const [client] = await db.select({
       companyName: clients.companyName,
       website: clients.website,
@@ -917,7 +1292,7 @@ router.get("/public/:clientId/:formSlug", convertPublicCors, async (req: Request
         slug: form.slug,
         formType: form.formType,
         brandColor: form.brandColor,
-        showBranding: form.showBranding,
+        showBranding: enforcedShowBranding,
         logoUrl: form.logoUrl,
         thankYouType: form.thankYouType,
         thankYouMessage: form.thankYouMessage,
@@ -1034,6 +1409,9 @@ router.post("/submit/:clientId/:formSlug", convertPublicCors, async (req: Reques
     await db.update(convertForms)
       .set({ submissionCount: (form.submissionCount || 0) + 1 })
       .where(eq(convertForms.id, form.id));
+
+    // Phase E: daily analytics submission tracking with source breakdown
+    trackAnalyticsEvent(form.id, clientId, "submission", effectiveUtmSource, utmMedium || form.utmMedium).catch(() => {});
 
     await runPostSubmissionPipeline(submission.id);
 
@@ -1316,6 +1694,15 @@ router.post(
         await db.update(convertForms)
           .set({ submissionCount: sql`${convertForms.submissionCount} + 1` })
           .where(eq(convertForms.id, submission.formId));
+
+        // Phase E: daily analytics submission tracking for payment flows
+        trackAnalyticsEvent(
+          submission.formId,
+          submission.clientId,
+          "submission",
+          submission.utmSource,
+          submission.utmMedium,
+        ).catch(() => {});
 
         await runPostSubmissionPipeline(submission.id);
 

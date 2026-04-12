@@ -9,7 +9,8 @@ import {
   integer,
   boolean,
   decimal,
-  unique
+  unique,
+  date
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
@@ -278,6 +279,12 @@ export const clients = pgTable("clients", {
   // Directions for Use tracking
   setupProgress: integer("setup_progress").default(0),
   setupPhase: varchar("setup_phase", { length: 30 }).default("not_started"), // not_started, in_progress, complete, engagement
+
+  // Phase E: / convert Premium subscription ($59/year). Unlocks advanced field
+  // types, conditional logic, multi-step, A/B testing, custom design, and
+  // "remove branding". Enforced server-side by isConvertPremium() helper.
+  convertPremium: boolean("convert_premium").default(false),
+  convertPremiumExpiresAt: timestamp("convert_premium_expires_at"),
 
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -4289,6 +4296,10 @@ export const convertForms = pgTable("convert_forms", {
   design: jsonb("design"),
   settings: jsonb("settings"),
 
+  // Phase E: links this form to a convert_ab_tests row when it's a variant
+  // (the original form and the duplicated Variant B both have the same abTestId)
+  abTestId: integer("ab_test_id"),
+
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
   publishedAt: timestamp("published_at"),
@@ -4296,6 +4307,7 @@ export const convertForms = pgTable("convert_forms", {
   unique().on(table.clientId, table.slug),
   index("idx_convert_forms_client").on(table.clientId),
   index("idx_convert_forms_status").on(table.status),
+  index("idx_convert_forms_ab_test").on(table.abTestId),
 ]);
 
 export const convertFormFields = pgTable("convert_form_fields", {
@@ -4416,10 +4428,70 @@ export const convertTemplates = pgTable("convert_templates", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// ═══════════════════════════════════════
+// / convert — Phase E: Analytics + A/B testing
+// ═══════════════════════════════════════
+
+// Daily aggregated analytics — one row per form per day. Populated incrementally
+// by the /public, /start, and /submit endpoints via trackAnalyticsEvent().
+export const convertAnalyticsDaily = pgTable("convert_analytics_daily", {
+  id: serial("id").primaryKey(),
+  formId: integer("form_id").references(() => convertForms.id, { onDelete: "cascade" }).notNull(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  date: date("date").notNull(),
+
+  views: integer("views").default(0),
+  starts: integer("starts").default(0),
+  submissions: integer("submissions").default(0),
+
+  // Source breakdown: [{source, medium, count}]
+  sourceBreakdown: jsonb("source_breakdown"),
+
+  // Multi-step drop-off: [{step, reached, completed}]
+  stepData: jsonb("step_data"),
+
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_convert_analytics_form_date").on(table.formId, table.date),
+  index("idx_convert_analytics_client").on(table.clientId),
+  unique().on(table.formId, table.date),
+]);
+
+// A/B tests — each test splits traffic between the original form and one or
+// more variants. Variant forms live in convert_forms with abTestId set.
+export const convertAbTests = pgTable("convert_ab_tests", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  status: varchar("status", { length: 20 }).notNull().default("draft"), // draft, running, completed, cancelled
+  originalFormId: integer("original_form_id").references(() => convertForms.id).notNull(),
+
+  // Traffic split — array of {formId, percentage}. Percentages sum to 100.
+  trafficSplit: jsonb("traffic_split").notNull(),
+
+  // Winner declaration
+  winnerMetric: varchar("winner_metric", { length: 30 }).notNull().default("conversion_rate"), // conversion_rate, submissions, start_rate
+  winnerFormId: integer("winner_form_id").references(() => convertForms.id),
+  winnerDeclaredAt: timestamp("winner_declared_at"),
+
+  // Timing
+  startedAt: timestamp("started_at"),
+  endedAt: timestamp("ended_at"),
+  minSampleSize: integer("min_sample_size").default(100),
+
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_convert_ab_client").on(table.clientId),
+  index("idx_convert_ab_original").on(table.originalFormId),
+]);
+
 export const insertConvertFormSchema = createInsertSchema(convertForms);
 export const insertConvertFieldSchema = createInsertSchema(convertFormFields);
 export const insertConvertSubmissionSchema = createInsertSchema(convertSubmissions);
 export const insertConvertTemplateSchema = createInsertSchema(convertTemplates);
+export const insertConvertAnalyticsDailySchema = createInsertSchema(convertAnalyticsDaily);
+export const insertConvertAbTestSchema = createInsertSchema(convertAbTests);
 
 export type ConvertForm = typeof convertForms.$inferSelect;
 export type InsertConvertForm = z.infer<typeof insertConvertFormSchema>;
@@ -4429,3 +4501,7 @@ export type ConvertSubmission = typeof convertSubmissions.$inferSelect;
 export type InsertConvertSubmission = z.infer<typeof insertConvertSubmissionSchema>;
 export type ConvertTemplate = typeof convertTemplates.$inferSelect;
 export type InsertConvertTemplate = z.infer<typeof insertConvertTemplateSchema>;
+export type ConvertAnalyticsDaily = typeof convertAnalyticsDaily.$inferSelect;
+export type InsertConvertAnalyticsDaily = z.infer<typeof insertConvertAnalyticsDailySchema>;
+export type ConvertAbTest = typeof convertAbTests.$inferSelect;
+export type InsertConvertAbTest = z.infer<typeof insertConvertAbTestSchema>;
