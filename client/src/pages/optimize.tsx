@@ -4616,7 +4616,7 @@ function SchemaTab() {
           </div>
           <div className="space-y-2">
             <Label className="text-sm">Phone</Label>
-            <Input value={formData.phone || ''} onChange={(e) => updateField('phone', e.target.value)} placeholder="+1-555-123-4567" />
+            <Input value={formData.phone || ''} onChange={(e) => updateField('phone', e.target.value)} placeholder="+1 (555) 000-0000" />
           </div>
           <div className="space-y-2 md:col-span-2">
             <Label className="text-sm">Description</Label>

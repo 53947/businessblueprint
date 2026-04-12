@@ -212,7 +212,7 @@ export default function BIIF() {
                         </FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="(555) 123-4567"
+                            placeholder="+1 (555) 000-0000"
                             {...field}
                             data-testid="input-phone"
                           />
