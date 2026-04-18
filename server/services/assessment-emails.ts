@@ -247,7 +247,7 @@ export function generateAssessmentConfirmationHTML(assessment: AssessmentData): 
   <div class="email-container">
     <div class="email-outline">
       <div class="header">
-        <img src="https://businessblueprint.io/1-Master_business_blueprint_icon_and_logo.png" alt="businessblueprint.io" class="logo" />
+        <img src="https://cdn.triadblue.com/brands/businessblueprint/logo-lockup.png" alt="businessblueprint.io" class="logo" />
       </div>
       
       <div class="content">

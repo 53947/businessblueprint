@@ -92,25 +92,16 @@ export default function Tour() {
       subtitle: "You've already completed this",
       description: "Your Digital IQ Assessment analyzed your online presence across multiple dimensions — your listings, reviews, website, social media, and local SEO.",
       icon: <ScanLine className="w-12 h-12" />,
-      color: "#E00420",
+      color: "#960D71",
       content: (
         <div className="space-y-6">
-          <div className="border-2 rounded-xl p-6 text-center" style={{ borderColor: "#E00420", backgroundColor: "#FEF2F2" }}>
+          <div className="border-2 rounded-xl p-6 text-center" style={{ borderColor: "#960D71", backgroundColor: "#E9ECF0" }}>
             <CheckCircle2 className="w-16 h-16 mx-auto mb-4" style={{ color: "#4E7C63" }} />
             <h3 className="text-2xl font-bold mb-2" style={{ color: "#09080E" }}>Assessment Complete</h3>
             <p style={{ color: "#09080E" }}>You have taken the first step toward understanding where your business stands online.</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
-            <Card className="border-2" style={{ borderColor: "#960D71" }}>
-              <CardContent className="p-5">
-                <div className="flex items-center gap-3 mb-3">
-                  <BarChart3 className="w-8 h-8" style={{ color: "#960D71" }} />
-                  <h4 className="font-semibold"><SlashApp name="assess" /></h4>
-                </div>
-                <p className="text-sm" style={{ color: "#09080E" }}>Digital IQ Assessment — your Presence Scan (0-70) and Operational score (0-70) combined into a single Digital IQ Score on a 70-140 scale.</p>
-              </CardContent>
-            </Card>
             <Card className="border-2" style={{ borderColor: "#E00420" }}>
               <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-3">
@@ -118,6 +109,15 @@ export default function Tour() {
                   <h4 className="font-semibold"><SlashApp name="scan" /></h4>
                 </div>
                 <p className="text-sm" style={{ color: "#09080E" }}>Website and presence scanner — analyzes your digital footprint across directories, reviews, social media, and website performance.</p>
+              </CardContent>
+            </Card>
+            <Card className="border-2" style={{ borderColor: "#960D71" }}>
+              <CardContent className="p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <BarChart3 className="w-8 h-8" style={{ color: "#960D71" }} />
+                  <h4 className="font-semibold"><SlashApp name="assess" /></h4>
+                </div>
+                <p className="text-sm" style={{ color: "#09080E" }}>Digital IQ Assessment — your Presence Scan (0-70) and Operational score (0-70) combined into a single Digital IQ Score on a 70-140 scale.</p>
               </CardContent>
             </Card>
           </div>
@@ -418,7 +418,7 @@ export default function Tour() {
         <div className="space-y-6">
           <div className="rounded-xl p-6 text-center" style={{ backgroundColor: "#001BB2" }}>
             <img
-              src="/coachblue/coachblue-portrait.png"
+              src="https://cdn.triadblue.com/brands/businessblueprint/logo-image.png"
               alt="Coach Blue"
               className="w-48 h-48 mx-auto mb-4"
             />
@@ -503,7 +503,7 @@ export default function Tour() {
         <Header />
         <div className="max-w-4xl mx-auto px-4 py-16">
           <div className="text-center mb-12">
-            <img src="/businessblueprint-logo.png" alt="businessblueprint.io" className="h-12 mx-auto mb-6" />
+            <img src="https://cdn.triadblue.com/brands/businessblueprint/logo-lockup.png" alt="businessblueprint.io" className="h-12 mx-auto mb-6" />
             <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "#09080E" }}>
               Your Platform Tour
             </h1>
@@ -564,7 +564,7 @@ export default function Tour() {
       <div className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-2">
-            <img src="/businessblueprint-text-logo.png" alt="businessblueprint.io" className="h-8" />
+            <img src="https://cdn.triadblue.com/brands/businessblueprint/logo-text.png" alt="businessblueprint.io" className="h-8" />
             <div className="flex items-center gap-4">
               <Button
                 variant="ghost"
@@ -630,7 +630,7 @@ export default function Tour() {
                   </div>
                 </div>
               </div>
-              <CardContent className="p-6">
+              <CardContent className="p-6" style={{ backgroundColor: "#E9ECF0" }}>
                 <p className="mb-6" style={{ color: "#09080E" }}>{currentTourStep.description}</p>
                 {currentTourStep.content}
               </CardContent>

@@ -257,7 +257,7 @@ export default function Journey() {
           <div className="flex items-start gap-6 mb-6">
             <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: "#001BB2" }}>6</div>
             <div className="flex items-center gap-3">
-              <img src="/coachblue/coachblue-portrait.png" alt="Coach Blue" width={56} height={56} style={{ borderRadius: 8, objectFit: "contain" }} />
+              <img src="https://cdn.triadblue.com/brands/businessblueprint/logo-image.png" alt="Coach Blue" width={56} height={56} style={{ borderRadius: 8, objectFit: "contain" }} />
               <h2 className="text-3xl font-bold text-gray-900">Never Grow Alone — Coach Blue</h2>
             </div>
           </div>

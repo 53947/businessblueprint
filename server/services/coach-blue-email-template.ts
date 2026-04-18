@@ -17,8 +17,8 @@ const baseUrl = () => process.env.FRONTEND_URL || 'https://businessblueprint.io'
 
 export function renderCoachBlueEmail(slots: CoachBlueEmailSlots): string {
   const base = baseUrl();
-  const logoUrl = `${base}/businessblueprint-text-logo.png`;
-  const portraitUrl = `${base}/coachblue/coachblue-portrait.png`;
+  const logoUrl = 'https://cdn.triadblue.com/brands/businessblueprint/logo-text.png';
+  const portraitUrl = 'https://cdn.triadblue.com/brands/businessblueprint/logo-image.png';
 
   const bullets = slots.highlightBullets
     .map(b => `<li style="margin: 10px 0; font-size: 13px; color: #09080E; font-family: 'Allerta Stencil', sans-serif; letter-spacing: 0.5px;">${b}</li>`)
@@ -86,10 +86,10 @@ export function renderCoachBlueEmail(slots: CoachBlueEmailSlots): string {
 
       <!-- FOOTER -->
       <div style="background: #f2f4f6; background-image: linear-gradient(0deg, transparent 24%, rgba(0, 0, 255, 0.08) 25%, rgba(0, 0, 255, 0.08) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.08) 75%, rgba(0, 0, 255, 0.08) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0, 0, 255, 0.08) 25%, rgba(0, 0, 255, 0.08) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.08) 75%, rgba(0, 0, 255, 0.08) 76%, transparent 77%, transparent); background-size: 50px 50px; background-color: #f2f4f6; color: #09080E; padding: 30px; text-align: center; border-top: 4px solid #F97316;">
-        <img src="${base}/businessblueprint-text-logo.png" alt="businessblueprint.io" style="height: 28px; margin-bottom: 8px;" />
+        <img src="https://cdn.triadblue.com/brands/businessblueprint/logo-text.png" alt="businessblueprint.io" style="height: 28px; margin-bottom: 8px;" />
         <p style="margin: 8px 0 0 0; font-size: 14px; font-family: Copperplate, 'Copperplate Gothic', serif;">Your Partner in Local Business Growth</p>
         <p style="margin-top: 16px; font-size: 11px; opacity: 0.6; font-family: Copperplate, 'Copperplate Gothic', serif;">a product of</p>
-        <img src="${base}/triadblue-logo.png" alt="TRIADBLUE.COM" style="height: 20px; margin-top: 4px;" />
+        <img src="https://cdn.triadblue.com/brands/triadblue/logo-lockup.png" alt="TRIADBLUE.COM" style="height: 20px; margin-top: 4px;" />
         <p style="margin-top: 16px; font-size: 12px; opacity: 0.7; font-family: Copperplate, 'Copperplate Gothic', serif;">&copy; 2026 TRIADBLUE Inc.</p>
         <p style="margin-top: 12px; font-size: 11px; color: #666; line-height: 1.5; font-family: Copperplate, 'Copperplate Gothic', serif;">
           You are receiving this email because you completed a Digital IQ Assessment on businessblueprint.io.<br>

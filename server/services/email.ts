@@ -884,7 +884,7 @@ export class EmailService {
         ${data.fastCheck ? `
         <div style="background: #ffffff; border: 2px solid #09080E; border-radius: 8px; padding: 25px; margin: 25px 0;">
           <div style="margin-bottom: 15px;">
-            <img src="${baseUrl}/scansblue-icon.png" alt="ScansBlue" style="width: 48px; height: 48px; vertical-align: middle; margin-right: 15px;" />
+            <img src="https://cdn.triadblue.com/brands/scansblue/logo-image.png" alt="ScansBlue" style="width: 48px; height: 48px; vertical-align: middle; margin-right: 15px;" />
             <h3 style="display: inline; vertical-align: middle; margin: 0; color: #09080E; font-family: 'Archivo Semi Expanded', sans-serif;">Website Technical Analysis</h3>
           </div>
           
@@ -942,7 +942,7 @@ export class EmailService {
           </div>
           
           <div style="text-align: center; margin: 20px 0;">
-            <a href="${baseUrl}/scansblue/purchase?assessment=${data.assessmentId}" style="display: inline-block; background: #09080E; color: #EEFBFF; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-family: 'Archivo Semi Expanded', sans-serif; font-size: 16px; border: 2px solid #09080E;">
+            <a href="https://scansblue.com/purchase?source=bbp&assessment=${data.assessmentId}" style="display: inline-block; background: #09080E; color: #EEFBFF; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-family: 'Archivo Semi Expanded', sans-serif; font-size: 16px; border: 2px solid #09080E;">
               Get Full Website Audit - $10
             </a>
           </div>
@@ -955,7 +955,7 @@ export class EmailService {
         <!-- SCANSBLUE FULL REPORT UPSELL (no Fast Check data available) -->
         <div style="background: #ffffff; border: 2px solid #09080E; border-radius: 8px; padding: 25px; margin: 25px 0;">
           <div style="margin-bottom: 15px;">
-            <img src="${baseUrl}/scansblue-icon.png" alt="ScansBlue" style="width: 48px; height: 48px; vertical-align: middle; margin-right: 15px;" />
+            <img src="https://cdn.triadblue.com/brands/scansblue/logo-image.png" alt="ScansBlue" style="width: 48px; height: 48px; vertical-align: middle; margin-right: 15px;" />
             <h3 style="display: inline; vertical-align: middle; margin: 0; color: #09080E; font-family: 'Archivo Semi Expanded', sans-serif;">Want a Complete Website Audit?</h3>
           </div>
           
@@ -974,7 +974,7 @@ export class EmailService {
           </p>
           
           <div style="text-align: center; margin: 20px 0;">
-            <a href="${baseUrl}/scansblue/purchase?assessment=${data.assessmentId}" style="display: inline-block; background: #09080E; color: #EEFBFF; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-family: 'Archivo Semi Expanded', sans-serif; font-size: 16px; border: 2px solid #09080E;">
+            <a href="https://scansblue.com/purchase?source=bbp&assessment=${data.assessmentId}" style="display: inline-block; background: #09080E; color: #EEFBFF; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-family: 'Archivo Semi Expanded', sans-serif; font-size: 16px; border: 2px solid #09080E;">
               Get Full Website Audit - $10
             </a>
           </div>
@@ -1399,7 +1399,7 @@ export class EmailService {
     assessmentId: number;
   }): string {
     const baseUrl = process.env.FRONTEND_URL || 'https://businessblueprint.io';
-    const coachBlueIcon = `${baseUrl}/4-AI_Business_Coach_-_Coach_Blue.png`;
+    const coachBlueIcon = `https://cdn.triadblue.com/brands/businessblueprint/logo-image.png`;
     const tourUrl = `${baseUrl}/tour?assessmentId=${data.assessmentId}`;
     const prescriptionUrl = `${baseUrl}/portal/prescriptions`;
     

@@ -4761,15 +4761,9 @@ async function registerInboxRoutes(app: Express) {
           const customerEmail = purchase?.email || assessment.email;
           
           if (customerEmail) {
-            console.log(`[Webhook] Sending full report email to ${customerEmail}`);
-            const emailService = new ResendEmailService();
-            await emailService.sendScansBlueFullReport(customerEmail, {
-              businessName: assessment.businessName,
-              websiteUrl: url || assessment.website || '',
-              assessmentId: parsedAssessmentId,
-              reportData: reportData || summary || {}
-            });
-            
+            // ScansBlue full report email removed — scansblue.com owns its own email delivery
+            console.log(`[Webhook] ScansBlue report for ${customerEmail} — email delivery handled by scansblue.com`);
+
             if (purchase) {
               await db.update(scansBluePurchases)
                 .set({ reportDeliveredAt: new Date() })
@@ -4785,6 +4779,12 @@ async function registerInboxRoutes(app: Express) {
       console.error('[Webhook] Error processing ScansBlue webhook:', error);
       res.status(500).json({ success: false, error: 'Webhook processing failed' });
     }
+  });
+
+  // 301 redirect — ScansBlue purchase now handled by scansblue.com
+  app.get('/scansblue/purchase', (req, res) => {
+    const qs = new URLSearchParams(req.query as Record<string, string>).toString();
+    res.redirect(301, `https://scansblue.com/purchase${qs ? '?' + qs : ''}`);
   });
 
   // Coach Blue triggers Auditor (internal use for technical analysis)
