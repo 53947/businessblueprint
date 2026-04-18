@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
 import { getProductIconSvg } from './email-icons';
+import { generateEmail1_MeetCoachBlue } from './onboarding-emails';
 
 async function getResendCredentials(): Promise<{ apiKey: string; fromEmail: string } | null> {
   // Check ONBOARDING_RESEND_API_KEY env var FIRST (works on Railway, Replit, and all deployments)
@@ -294,12 +295,12 @@ export class ResendEmailService {
         return false;
       }
       console.log(`[ResendEmailService] Generating Coach Blue HTML...`);
-      const htmlContent = this.generateThankYouIntroductionHTML(data);
+      const htmlContent = generateEmail1_MeetCoachBlue(data);
       console.log(`[ResendEmailService] Sending Coach Blue email to ${email}...`);
       const result = await resendClient.client.emails.send({
         from: resendClient.fromEmail,
         to: email,
-        subject: `Meet Coach Blue 🤖 - Your AI Guide to Digital Success`,
+        subject: 'Meet Coach Blue - Your AI Guide to Digital Success',
         html: htmlContent,
       });
       console.log(`[ResendEmailService] Coach Blue email SENT to ${email}, Resend ID: ${(result as any).data?.id || 'unknown'}`);
