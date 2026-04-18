@@ -1,19 +1,40 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle2, ChevronRight, ChevronLeft, Play, RotateCcw, Star, MessageSquare, Mail, FileText, Users, MapPin, Award, Bot, Sparkles, ArrowRight } from "lucide-react";
+import {
+  CheckCircle2, ChevronRight, ChevronLeft, Play, RotateCcw, ArrowRight,
+  ScanLine, BarChart3, FileText, Users, ArrowRightLeft,
+  BookOpen, Star, Target, Megaphone, Anchor,
+  Mail, Inbox, MessageCircle, Share2, Compass, Bot,
+} from "lucide-react";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 
 const TOUR_STORAGE_KEY = "blueprintTourProgress";
 
+const APP_COLORS: Record<string, string> = {
+  publish: "#064A6C", elevate: "#E9B307", optimize: "#374151", amplify: "#97ACCA",
+  promote: "#1844A6", respond: "#001882", engage: "#660099", post: "#FF44CC",
+  connect: "#008060", convert: "#8000FF", scan: "#E00420", assess: "#960D71",
+};
+
+function SlashApp({ name, onDark }: { name: string; onDark?: boolean }) {
+  const color = APP_COLORS[name] || "#09080E";
+  return (
+    <span style={{ fontWeight: 700 }}>
+      <span style={{ color: onDark ? "#E9ECF0" : "#09080E" }}>/ </span>
+      <span style={{ color }}>{name}</span>
+    </span>
+  );
+}
+
 interface TourStep {
   id: number;
   title: string;
-  subtitle: string;
+  subtitle: string | JSX.Element;
   description: string;
   content: JSX.Element;
   icon: JSX.Element;
@@ -67,41 +88,48 @@ export default function Tour() {
   const tourSteps: TourStep[] = [
     {
       id: 1,
-      title: "Step 1: Digital IQ Assessment",
-      subtitle: "You've Already Completed This!",
-      description: "Your 27-question assessment analyzed your digital presence across multiple dimensions.",
-      icon: <CheckCircle2 className="w-12 h-12" />,
-      color: "#22C55E",
+      title: "Step 1: Scan Your Digital Presence",
+      subtitle: "You've already completed this",
+      description: "Your Digital IQ Assessment analyzed your online presence across multiple dimensions — your listings, reviews, website, social media, and local SEO.",
+      icon: <ScanLine className="w-12 h-12" />,
+      color: "#960D71",
       content: (
         <div className="space-y-6">
-          <div className="bg-green-50 border-2 border-green-500 rounded-xl p-6 text-center">
-            <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto mb-4" />
-            <h3 className="text-2xl font-bold text-green-700 mb-2">Assessment Complete!</h3>
-            <p className="text-green-600">You've already taken the first step toward digital transformation.</p>
+          <div className="border-2 rounded-xl p-6 text-center" style={{ borderColor: "#960D71", backgroundColor: "#E9ECF0" }}>
+            <CheckCircle2 className="w-16 h-16 mx-auto mb-4" style={{ color: "#4E7C63" }} />
+            <h3 className="text-2xl font-bold mb-2" style={{ color: "#09080E" }}>Assessment Complete</h3>
+            <p style={{ color: "#09080E" }}>You have taken the first step toward understanding where your business stands online.</p>
           </div>
-          
+
           <div className="grid md:grid-cols-2 gap-4">
-            <Card className="border-2 border-[#0000FF]">
+            <Card className="border-2" style={{ borderColor: "#E00420" }}>
               <CardContent className="p-5">
-                <h4 className="font-semibold text-[#0000FF] mb-2">Digital Presence Scan</h4>
-                <p className="text-sm text-gray-600">We analyzed your online visibility, website performance, and digital footprint (0-70 points).</p>
+                <div className="flex items-center gap-3 mb-3">
+                  <ScanLine className="w-8 h-8" style={{ color: "#E00420" }} />
+                  <h4 className="font-semibold"><SlashApp name="scan" /></h4>
+                </div>
+                <p className="text-sm" style={{ color: "#09080E" }}>Website and presence scanner — analyzes your digital footprint across directories, reviews, social media, and website performance.</p>
               </CardContent>
             </Card>
-            <Card className="border-2 border-[#F97316]">
+            <Card className="border-2" style={{ borderColor: "#960D71" }}>
               <CardContent className="p-5">
-                <h4 className="font-semibold text-[#F97316] mb-2">Operational Analysis</h4>
-                <p className="text-sm text-gray-600">We evaluated your business processes, communication, and growth readiness (0-70 points).</p>
+                <div className="flex items-center gap-3 mb-3">
+                  <BarChart3 className="w-8 h-8" style={{ color: "#960D71" }} />
+                  <h4 className="font-semibold"><SlashApp name="assess" /></h4>
+                </div>
+                <p className="text-sm" style={{ color: "#09080E" }}>Digital IQ Assessment — your Presence Scan (0-70) and Operational score (0-70) combined into a single Digital IQ Score on a 70-140 scale.</p>
               </CardContent>
             </Card>
           </div>
-          
-          <div className="bg-[#EEFBFF] rounded-xl p-6">
-            <h4 className="font-semibold text-[#09080E] mb-3">Your Digital IQ Score</h4>
-            <p className="text-gray-600 mb-4">Your score tells us exactly where you stand and what tools will help you grow.</p>
-            <div className="flex items-center gap-4">
-              <div className="text-4xl font-bold text-[#0000FF]">70-140</div>
-              <div className="text-sm text-gray-500">Digital IQ Score Range</div>
-            </div>
+
+          <div className="text-center">
+            <Button
+              onClick={() => setLocation("/portal/prescriptions")}
+              style={{ backgroundColor: "#E00420", color: "white" }}
+              data-testid="button-view-results"
+            >
+              View Your Results <ArrowRight className="ml-2 w-4 h-4" />
+            </Button>
           </div>
         </div>
       )
@@ -109,64 +137,43 @@ export default function Tour() {
     {
       id: 2,
       title: "Step 2: Your Prescribed Blueprint",
-      subtitle: "Understanding Your Personalized Recommendations",
-      description: "Learn how to read your prescription and prioritize the recommendations.",
+      subtitle: "Understanding our recommendations for your business",
+      description: "Your prescription is built from your Digital IQ scores — not a template. Every recommendation is prioritized by impact and speed, tailored to your business specifically.",
       icon: <FileText className="w-12 h-12" />,
-      color: "#0000FF",
+      color: "#F97316",
       content: (
         <div className="space-y-6">
-          <div className="bg-[#EEFBFF] border-2 border-[#0000FF] rounded-xl p-6">
-            <h3 className="text-xl font-bold text-[#0000FF] mb-4">How to Read Your Prescription</h3>
+          <div className="rounded-xl p-6" style={{ backgroundColor: "#EEFBFF", border: "2px solid #F97316" }}>
+            <h3 className="text-xl font-bold mb-4" style={{ color: "#09080E" }}>How to Read Your Prescription</h3>
             <div className="space-y-4">
               <div className="flex items-start gap-4">
-                <div className="w-8 h-8 rounded-full bg-[#0000FF] text-white flex items-center justify-center font-bold flex-shrink-0">1</div>
+                <div className="w-8 h-8 rounded-full text-white flex items-center justify-center font-bold flex-shrink-0" style={{ backgroundColor: "#F97316" }}>1</div>
                 <div>
-                  <h4 className="font-semibold">Score Breakdown</h4>
-                  <p className="text-sm text-gray-600">See your Presence Scan score (0-70) and Operational score (0-70) combined for your Digital IQ.</p>
+                  <h4 className="font-semibold" style={{ color: "#09080E" }}>Priority Order</h4>
+                  <p className="text-sm" style={{ color: "#09080E" }}>Top items make the biggest difference fastest. Start at the top and work down.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-8 h-8 rounded-full bg-[#0000FF] text-white flex items-center justify-center font-bold flex-shrink-0">2</div>
+                <div className="w-8 h-8 rounded-full text-white flex items-center justify-center font-bold flex-shrink-0" style={{ backgroundColor: "#F97316" }}>2</div>
                 <div>
-                  <h4 className="font-semibold">Priority Recommendations</h4>
-                  <p className="text-sm text-gray-600">High-priority items should be addressed first. Each recommendation includes impact and effort estimates.</p>
+                  <h4 className="font-semibold" style={{ color: "#09080E" }}>Effort and Impact</h4>
+                  <p className="text-sm" style={{ color: "#09080E" }}>Each recommendation includes how much time it takes and what you can reasonably expect to change.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-8 h-8 rounded-full bg-[#0000FF] text-white flex items-center justify-center font-bold flex-shrink-0">3</div>
+                <div className="w-8 h-8 rounded-full text-white flex items-center justify-center font-bold flex-shrink-0" style={{ backgroundColor: "#F97316" }}>3</div>
                 <div>
-                  <h4 className="font-semibold">Recommended Products</h4>
-                  <p className="text-sm text-gray-600">Based on your needs, we suggest specific tools from our catalog to address your gaps.</p>
+                  <h4 className="font-semibold" style={{ color: "#09080E" }}>Recommended Tools</h4>
+                  <p className="text-sm" style={{ color: "#09080E" }}>Based on your gaps, we prescribe specific apps in a specific order — each one matched to a category in your Digital IQ.</p>
                 </div>
               </div>
             </div>
           </div>
-          
-          <div className="grid md:grid-cols-3 gap-4">
-            <Card className="border-l-4 border-l-red-500">
-              <CardContent className="p-4">
-                <div className="text-red-500 font-semibold text-sm mb-1">HIGH PRIORITY</div>
-                <p className="text-xs text-gray-600">Critical issues that significantly impact your business growth.</p>
-              </CardContent>
-            </Card>
-            <Card className="border-l-4 border-l-yellow-500">
-              <CardContent className="p-4">
-                <div className="text-yellow-600 font-semibold text-sm mb-1">MEDIUM PRIORITY</div>
-                <p className="text-xs text-gray-600">Important improvements that will enhance your digital presence.</p>
-              </CardContent>
-            </Card>
-            <Card className="border-l-4 border-l-green-500">
-              <CardContent className="p-4">
-                <div className="text-green-600 font-semibold text-sm mb-1">LOW PRIORITY</div>
-                <p className="text-xs text-gray-600">Nice-to-have enhancements for optimization.</p>
-              </CardContent>
-            </Card>
-          </div>
-          
+
           <div className="text-center">
             <Button
               onClick={() => setLocation("/portal/prescriptions")}
-              className="bg-[#0000FF] hover:bg-[#0000CC] text-white"
+              style={{ backgroundColor: "#F97316", color: "white" }}
               data-testid="button-view-prescription"
             >
               View Your Prescription <ArrowRight className="ml-2 w-4 h-4" />
@@ -177,153 +184,142 @@ export default function Tour() {
     },
     {
       id: 3,
-      title: "Step 3: Anchor Suite",
-      subtitle: "Get Found Locally — Listings & Reputation",
-      description: "Control your local visibility with synchronized listings and reputation management.",
-      icon: <MapPin className="w-12 h-12" />,
-      color: "#0000FF",
+      title: "Step 3: Build Your Foundation",
+      subtitle: <><SlashApp name="connect" /> CRM and <SlashApp name="convert" /> forms</>,
+      description: "Every app on the platform works better when your customer data is organized. That starts with your CRM and your lead capture forms.",
+      icon: <Users className="w-12 h-12" />,
+      color: "#008060",
       content: (
         <div className="space-y-6">
-          <div className="bg-gradient-to-r from-[#09080E] to-[#1a1a2e] rounded-xl p-6 text-white">
-            <h3 className="text-2xl font-bold mb-2">Anchor Suite</h3>
-            <p className="opacity-80">Complete local presence management for businesses that need to be found.</p>
-          </div>
-          
           <div className="grid md:grid-cols-2 gap-6">
-            <Card className="border-2 border-[#FF0040] overflow-hidden">
-              <div className="bg-[#09080E] p-4">
+            <Card className="border-2 overflow-hidden" style={{ borderColor: "#008060" }}>
+              <div className="p-4" style={{ backgroundColor: "#E9ECF0", borderBottom: "2px solid #008060" }}>
                 <div className="flex items-center gap-3">
-                  <MapPin className="w-8 h-8 text-[#FF0040]" />
+                  <Users className="w-8 h-8" style={{ color: "#008060" }} />
                   <div>
-                    <h4 className="font-bold text-white">/ publish</h4>
-                    <p className="text-sm text-gray-400">Directory Sync</p>
+                    <h4 className="font-bold"><SlashApp name="connect" /></h4>
+                    <p className="text-sm" style={{ color: "#09080E" }}>CRM — Customer Relationship Management</p>
                   </div>
                 </div>
               </div>
               <CardContent className="p-5">
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#FF0040]" /> Sync across 60+ directories</li>
-                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#FF0040]" /> Consistent NAP (Name, Address, Phone)</li>
-                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#FF0040]" /> Duplicate suppression</li>
-                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#FF0040]" /> Local SEO boost</li>
+                <ul className="space-y-2 text-sm" style={{ color: "#09080E" }}>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4" style={{ color: "#008060" }} /> Manage every customer relationship in one place</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4" style={{ color: "#008060" }} /> Contact timeline with cross-app activity</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4" style={{ color: "#008060" }} /> Auto-sync with <SlashApp name="promote" /> campaigns</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4" style={{ color: "#008060" }} /> FREE Starter (100 contacts) or $29/mo Performance</li>
                 </ul>
               </CardContent>
             </Card>
-            
-            <Card className="border-2 border-[#D59600] overflow-hidden">
-              <div className="bg-[#09080E] p-4">
+
+            <Card className="border-2 overflow-hidden" style={{ borderColor: "#8000FF" }}>
+              <div className="p-4" style={{ backgroundColor: "#E9ECF0", borderBottom: "2px solid #8000FF" }}>
                 <div className="flex items-center gap-3">
-                  <Award className="w-8 h-8 text-[#D59600]" />
+                  <ArrowRightLeft className="w-8 h-8" style={{ color: "#8000FF" }} />
                   <div>
-                    <h4 className="font-bold text-white">/ elevate</h4>
-                    <p className="text-sm text-gray-400">Review Management</p>
+                    <h4 className="font-bold"><SlashApp name="convert" /></h4>
+                    <p className="text-sm" style={{ color: "#09080E" }}>Lead Capture and Conversion Tool</p>
                   </div>
                 </div>
               </div>
               <CardContent className="p-5">
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#D59600]" /> Monitor reviews across platforms</li>
-                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#D59600]" /> AI-powered response suggestions</li>
-                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#D59600]" /> Review request campaigns</li>
-                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#D59600]" /> Sentiment analysis</li>
+                <ul className="space-y-2 text-sm" style={{ color: "#09080E" }}>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4" style={{ color: "#8000FF" }} /> Forms, popups, and slide-ins for your website</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4" style={{ color: "#8000FF" }} /> Leads feed straight into <SlashApp name="connect" /> CRM</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4" style={{ color: "#8000FF" }} /> 16 templates, visual builder, A/B testing</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4" style={{ color: "#8000FF" }} /> FREE (with branding) or $59/year Premium</li>
                 </ul>
               </CardContent>
             </Card>
           </div>
-          
-          <div className="bg-[#EEFBFF] rounded-xl p-6">
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <div>
-                <h4 className="font-bold text-[#09080E]">Anchor Suite</h4>
-                <p className="text-sm text-gray-600">Listings + Reputation together</p>
-              </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold text-[#0000FF]">$59<span className="text-sm font-normal text-gray-500">/mo</span></div>
-                <div className="text-sm text-[#F97316]">Save $19 vs. individual</div>
-              </div>
-            </div>
+
+          <div className="text-center">
+            <Button
+              onClick={() => setLocation("/connect/dashboard")}
+              style={{ backgroundColor: "#008060", color: "white" }}
+              data-testid="button-setup-crm"
+            >
+              Set Up Your CRM <ArrowRight className="ml-2 w-4 h-4" />
+            </Button>
           </div>
         </div>
       )
     },
     {
       id: 4,
-      title: "Step 4: Coach Blue",
-      subtitle: "Your 24/7 AI Business Mentor",
-      description: "Get personalized guidance from an AI that understands your unique business challenges.",
-      icon: <Bot className="w-12 h-12" />,
-      color: "#8B5CF6",
+      title: "Step 4: Own Your Local Presence",
+      subtitle: "Anchor Suite — Get Found, Stay Credible",
+      description: "Four apps working together to make sure your business is visible, accurate, and trusted in every local search.",
+      icon: <Anchor className="w-12 h-12" />,
+      color: "#2073E3",
       content: (
         <div className="space-y-6">
-          <div className="bg-gradient-to-r from-[#0000FF] via-[#97ACCA] to-[#8B5CF6] rounded-xl p-6 text-white text-center">
-            <img 
-              src="/assets/approved%20icons%20and%20logos/Additional%20Apps/4-AI_Business_Coach_-_Coach_Blue.png" 
-              alt="Coach Blue"
-              className="w-24 h-24 mx-auto mb-4 rounded-2xl"
-            />
-            <h3 className="text-2xl font-bold mb-2">Meet Coach Blue</h3>
-            <p className="opacity-90">Your personal AI business mentor, available 24/7</p>
-          </div>
-          
-          <div className="bg-green-50 border-2 border-green-500 rounded-xl p-4 text-center">
-            <Sparkles className="w-8 h-8 text-green-500 mx-auto mb-2" />
-            <p className="font-semibold text-green-700">This tour is FREE! Take it as many times as you like.</p>
-          </div>
-          
           <div className="grid md:grid-cols-2 gap-4">
-            <Card>
+            <Card className="border-2" style={{ borderColor: "#064A6C" }}>
               <CardContent className="p-5">
-                <h4 className="font-semibold text-[#0000FF] mb-3">What Coach Blue Does:</h4>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-[#0000FF] mt-0.5" /> Explains your prescription in plain language</li>
-                  <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-[#0000FF] mt-0.5" /> Creates step-by-step action plans</li>
-                  <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-[#0000FF] mt-0.5" /> Answers questions about your business</li>
-                  <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-[#0000FF] mt-0.5" /> Provides ongoing strategic guidance</li>
-                </ul>
+                <div className="flex items-center gap-3 mb-3">
+                  <BookOpen className="w-8 h-8" style={{ color: "#064A6C" }} />
+                  <div>
+                    <h4 className="font-bold"><SlashApp name="publish" /></h4>
+                    <p className="text-xs" style={{ color: "#09080E" }}>Directory Listings Management Tool</p>
+                  </div>
+                </div>
+                <p className="text-sm" style={{ color: "#09080E" }}>Sync your business information across 60+ directories. Consistent name, address, and phone everywhere.</p>
               </CardContent>
             </Card>
-            <Card>
+
+            <Card className="border-2" style={{ borderColor: "#E9B307" }}>
               <CardContent className="p-5">
-                <h4 className="font-semibold text-[#F97316] mb-3">Why Subscribe?</h4>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-start gap-2"><Star className="w-4 h-4 text-[#F97316] mt-0.5" /> Unlimited conversations</li>
-                  <li className="flex items-start gap-2"><Star className="w-4 h-4 text-[#F97316] mt-0.5" /> Remembers your business context</li>
-                  <li className="flex items-start gap-2"><Star className="w-4 h-4 text-[#F97316] mt-0.5" /> Personalized recommendations</li>
-                  <li className="flex items-start gap-2"><Star className="w-4 h-4 text-[#F97316] mt-0.5" /> Available 24/7, no waiting</li>
-                </ul>
+                <div className="flex items-center gap-3 mb-3">
+                  <Star className="w-8 h-8" style={{ color: "#E9B307" }} />
+                  <div>
+                    <h4 className="font-bold"><SlashApp name="elevate" /></h4>
+                    <p className="text-xs" style={{ color: "#09080E" }}>Reviews and Ratings Management Tool</p>
+                  </div>
+                </div>
+                <p className="text-sm" style={{ color: "#09080E" }}>Monitor reviews across platforms, respond with AI-powered suggestions, and run review request campaigns.</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2" style={{ borderColor: "#374151" }}>
+              <CardContent className="p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <Target className="w-8 h-8" style={{ color: "#374151" }} />
+                  <div>
+                    <h4 className="font-bold"><SlashApp name="optimize" /></h4>
+                    <p className="text-xs" style={{ color: "#09080E" }}>SEO Management Tool</p>
+                  </div>
+                </div>
+                <p className="text-sm" style={{ color: "#09080E" }}>Track your search rankings, monitor keyword performance, and get actionable SEO recommendations.</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2" style={{ borderColor: "#97ACCA" }}>
+              <CardContent className="p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <Megaphone className="w-8 h-8" style={{ color: "#97ACCA" }} />
+                  <div>
+                    <h4 className="font-bold"><SlashApp name="amplify" /></h4>
+                    <p className="text-xs" style={{ color: "#09080E" }}>Digital Advertising Tool</p>
+                  </div>
+                </div>
+                <p className="text-sm" style={{ color: "#09080E" }}>Target local customers with digital ads across Google, Facebook, and more.</p>
               </CardContent>
             </Card>
           </div>
-          
-          <div className="bg-[#09080E] rounded-xl p-6 text-white">
+
+          <div className="rounded-xl p-6" style={{ backgroundColor: "#EEFBFF" }}>
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
-                <h4 className="font-bold text-xl">Coach Blue Subscription</h4>
-                <p className="text-gray-400 text-sm">Ongoing AI mentorship for your business</p>
+                <div className="flex items-center gap-2">
+                  <Anchor className="w-6 h-6" style={{ color: "#2073E3" }} />
+                  <h4 className="font-bold" style={{ color: "#09080E" }}>Anchor Suite</h4>
+                </div>
+                <p className="text-sm" style={{ color: "#09080E" }}><SlashApp name="publish" /> + <SlashApp name="elevate" /> + <SlashApp name="optimize" /> + <SlashApp name="amplify" /></p>
               </div>
               <div className="text-right">
-                <div className="text-3xl font-bold text-[#F97316]">$99<span className="text-lg font-normal text-gray-400">/mo</span></div>
-                <p className="text-xs text-gray-400">Cancel anytime</p>
-              </div>
-            </div>
-            <div className="mt-4 pt-4 border-t border-gray-700">
-              <p className="text-sm text-gray-300 mb-4">Ready to unlock unlimited AI business coaching?</p>
-              <div className="flex flex-wrap gap-3">
-                <Button
-                  onClick={() => setLocation("/subscription?product=coach-blue")}
-                  className="bg-[#F97316] hover:bg-[#EA580C] text-white"
-                  data-testid="button-subscribe-coach-blue"
-                >
-                  Subscribe Now — $99/mo
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setLocation("/coach-blue")}
-                  className="border-white text-white hover:bg-white hover:text-[#09080E]"
-                  data-testid="button-try-coach-blue"
-                >
-                  Try Coach Blue Free
-                </Button>
+                <div className="text-2xl font-bold" style={{ color: "#2073E3" }}>$99<span className="text-sm font-normal" style={{ color: "#09080E" }}>/mo</span></div>
+                <div className="text-sm" style={{ color: "#F97316" }}>Save $17 vs. $29/mo each</div>
               </div>
             </div>
           </div>
@@ -332,93 +328,136 @@ export default function Tour() {
     },
     {
       id: 5,
-      title: "Step 5: Compass Suite",
-      subtitle: "Complete Communication Suite",
-      description: "Master every channel with integrated tools for email, messaging, content, and live chat.",
-      icon: <MessageSquare className="w-12 h-12" />,
-      color: "#0000FF",
+      title: "Step 5: Activate Your Communications",
+      subtitle: "Compass Suite — Complete Communications Engine",
+      description: "Four apps that give you every channel you need to reach your customers — email, social, live chat, and unified messaging.",
+      icon: <Compass className="w-12 h-12" />,
+      color: "#F97316",
       content: (
         <div className="space-y-6">
-          <div className="bg-gradient-to-r from-[#0000FF] to-[#97ACCA] rounded-xl p-6 text-white">
-            <h3 className="text-2xl font-bold mb-2">Compass Suite</h3>
-            <p className="opacity-90">All four communication tools working together seamlessly.</p>
-          </div>
-          
           <div className="grid md:grid-cols-2 gap-4">
-            <Card className="border-2 border-[#0000FF]">
+            <Card className="border-2" style={{ borderColor: "#1844A6" }}>
               <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <Mail className="w-8 h-8 text-[#0000FF]" />
+                  <Mail className="w-8 h-8" style={{ color: "#1844A6" }} />
                   <div>
-                    <h4 className="font-bold">/ promote</h4>
-                    <p className="text-xs text-gray-500">Email Campaigns</p>
+                    <h4 className="font-bold"><SlashApp name="promote" /></h4>
+                    <p className="text-xs" style={{ color: "#09080E" }}>Email and SMS Campaigns Tool</p>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600">Design and send professional email campaigns with automation and analytics.</p>
+                <p className="text-sm" style={{ color: "#09080E" }}>Design and send email and SMS campaigns with automation, analytics, and <SlashApp name="convert" /> form integration.</p>
               </CardContent>
             </Card>
-            
-            <Card className="border-2 border-[#0000FF]">
+
+            <Card className="border-2" style={{ borderColor: "#001882" }}>
               <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <MessageSquare className="w-8 h-8 text-[#0000FF]" />
+                  <Inbox className="w-8 h-8" style={{ color: "#001882" }} />
                   <div>
-                    <h4 className="font-bold">/ respond</h4>
-                    <p className="text-xs text-gray-500">Unified Messaging</p>
+                    <h4 className="font-bold"><SlashApp name="respond" /></h4>
+                    <p className="text-xs" style={{ color: "#09080E" }}>Multi-Channel Unified Inbox</p>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600">Manage all customer conversations from one unified inbox across all channels.</p>
+                <p className="text-sm" style={{ color: "#09080E" }}>Manage all customer conversations from one inbox — email, SMS, Facebook, Instagram, and WhatsApp.</p>
               </CardContent>
             </Card>
-            
-            <Card className="border-2 border-[#0000FF]">
+
+            <Card className="border-2" style={{ borderColor: "#660099" }}>
               <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <FileText className="w-8 h-8 text-[#0000FF]" />
+                  <MessageCircle className="w-8 h-8" style={{ color: "#660099" }} />
                   <div>
-                    <h4 className="font-bold">/ post</h4>
-                    <p className="text-xs text-gray-500">Content Management</p>
+                    <h4 className="font-bold"><SlashApp name="engage" /></h4>
+                    <p className="text-xs" style={{ color: "#09080E" }}>Live Chat Widget Tool</p>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600">Create, schedule, and publish content across all your digital channels.</p>
+                <p className="text-sm" style={{ color: "#09080E" }}>Engage website visitors in real-time with a customizable chat widget and automated responses.</p>
               </CardContent>
             </Card>
-            
-            <Card className="border-2 border-[#0000FF]">
+
+            <Card className="border-2" style={{ borderColor: "#FF44CC" }}>
               <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <Users className="w-8 h-8 text-[#0000FF]" />
+                  <Share2 className="w-8 h-8" style={{ color: "#FF44CC" }} />
                   <div>
-                    <h4 className="font-bold">/ engage</h4>
-                    <p className="text-xs text-gray-500">Live Chat Widget</p>
+                    <h4 className="font-bold"><SlashApp name="post" /></h4>
+                    <p className="text-xs" style={{ color: "#09080E" }}>Create, Schedule and Post Social Media Tool</p>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600">Engage visitors in real-time with a customizable chat widget for your website.</p>
+                <p className="text-sm" style={{ color: "#09080E" }}>Create, schedule, and publish content across all your social media channels from one place.</p>
               </CardContent>
             </Card>
           </div>
-          
-          <div className="bg-[#EEFBFF] rounded-xl p-6">
+
+          <div className="rounded-xl p-6" style={{ backgroundColor: "#EEFBFF" }}>
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
-                <h4 className="font-bold text-[#09080E]">Compass Suite</h4>
-                <p className="text-sm text-gray-600">All 4 apps: / promote + / respond + / post + / engage</p>
+                <div className="flex items-center gap-2">
+                  <Compass className="w-6 h-6" style={{ color: "#F97316" }} />
+                  <h4 className="font-bold" style={{ color: "#09080E" }}>Compass Suite</h4>
+                </div>
+                <p className="text-sm" style={{ color: "#09080E" }}><SlashApp name="promote" /> + <SlashApp name="respond" /> + <SlashApp name="engage" /> + <SlashApp name="post" /></p>
               </div>
               <div className="text-right">
-                <div className="text-2xl font-bold text-[#0000FF]">$99<span className="text-sm font-normal text-gray-500">/mo</span></div>
-                <div className="text-sm text-[#F97316]">Save $37 vs. individual</div>
+                <div className="text-2xl font-bold" style={{ color: "#F97316" }}>$99<span className="text-sm font-normal" style={{ color: "#09080E" }}>/mo</span></div>
+                <div className="text-sm" style={{ color: "#F97316" }}>Save $17 vs. $29/mo each</div>
               </div>
             </div>
           </div>
-          
-          <div className="bg-green-50 border-2 border-green-500 rounded-xl p-6 text-center">
-            <CheckCircle2 className="w-12 h-12 text-green-500 mx-auto mb-3" />
-            <h3 className="text-xl font-bold text-green-700 mb-2">Tour Complete!</h3>
-            <p className="text-green-600 mb-4">You now understand the full businessblueprint.io platform.</p>
+        </div>
+      )
+    },
+    {
+      id: 6,
+      title: "Step 6: Never Grow Alone",
+      subtitle: "Coach Blue — your AI business coach",
+      description: "Ongoing, personalized guidance from an AI coach that understands your business, your scores, and your progress.",
+      icon: <Bot className="w-12 h-12" />,
+      color: "#001BB2",
+      content: (
+        <div className="space-y-6">
+          <div className="rounded-xl p-6 text-center" style={{ backgroundColor: "#001BB2" }}>
+            <img
+              src="https://cdn.triadblue.com/brands/businessblueprint/logo-image.png"
+              alt="Coach Blue"
+              className="w-48 h-48 mx-auto mb-4"
+            />
+            <h3 className="text-2xl font-bold text-white mb-2">Coach Blue</h3>
+            <p className="text-gray-300">AI Business Coach — available when you need direction</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            <Card>
+              <CardContent className="p-5">
+                <h4 className="font-semibold mb-3" style={{ color: "#09080E" }}>What Coach Blue does:</h4>
+                <ul className="space-y-2 text-sm" style={{ color: "#09080E" }}>
+                  <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 mt-0.5" style={{ color: "#F97316" }} /> Explains your prescription in plain language</li>
+                  <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 mt-0.5" style={{ color: "#F97316" }} /> Watches your data across every app</li>
+                  <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 mt-0.5" style={{ color: "#F97316" }} /> Tells you specifically what to act on today</li>
+                  <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 mt-0.5" style={{ color: "#F97316" }} /> Available 24/7, no waiting</li>
+                </ul>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-5">
+                <h4 className="font-semibold mb-3" style={{ color: "#09080E" }}>Pricing:</h4>
+                <ul className="space-y-3 text-sm" style={{ color: "#09080E" }}>
+                  <li className="flex justify-between"><span>Standalone</span><span className="font-bold">$99/mo</span></li>
+                  <li className="flex justify-between"><span>With one suite</span><span className="font-bold">$59/mo</span></li>
+                  <li className="flex justify-between items-center"><span>With both suites</span><span className="font-bold" style={{ color: "#F97316" }}>FREE</span></li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="border-2 rounded-xl p-6 text-center" style={{ borderColor: "#F97316", backgroundColor: "#EEFBFF" }}>
+            <CheckCircle2 className="w-12 h-12 mx-auto mb-3" style={{ color: "#4E7C63" }} />
+            <h3 className="text-xl font-bold mb-2" style={{ color: "#09080E" }}>Tour Complete</h3>
+            <p className="mb-4" style={{ color: "#09080E" }}>You now understand the full businessblueprint.io platform.</p>
             <div className="flex flex-wrap justify-center gap-3">
               <Button
                 onClick={() => setLocation("/portal/prescriptions")}
-                className="bg-[#0000FF] hover:bg-[#0000CC] text-white"
+                style={{ backgroundColor: "#F97316", color: "white" }}
                 data-testid="button-go-to-prescription"
               >
                 View My Prescription
@@ -426,7 +465,7 @@ export default function Tour() {
               <Button
                 variant="outline"
                 onClick={resetTour}
-                className="border-green-500 text-green-700 hover:bg-green-100"
+                style={{ borderColor: "#09080E", color: "#09080E" }}
                 data-testid="button-restart-tour"
               >
                 <RotateCcw className="w-4 h-4 mr-2" /> Replay Tour
@@ -464,70 +503,51 @@ export default function Tour() {
         <Header />
         <div className="max-w-4xl mx-auto px-4 py-16">
           <div className="text-center mb-12">
-            <div className="font-['Archivo_Semi_Expanded'] text-3xl font-bold mb-4">
-              Business<span className="text-[#F97316]">Blueprint</span>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-[#09080E] mb-4">
-              Your Free Platform Tour
+            <img src="https://cdn.triadblue.com/brands/businessblueprint/logo-lockup.png" alt="businessblueprint.io" className="h-12 mx-auto mb-6" />
+            <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "#09080E" }}>
+              Your Platform Tour
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              A 5-step interactive guide to understanding your prescription and the tools available to grow your business.
+            <p className="text-xl max-w-2xl mx-auto" style={{ color: "#09080E" }}>
+              A 6-step interactive guide to understanding our recommendations and the tools available to grow your business.
             </p>
           </div>
 
           <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
-            <div className="grid md:grid-cols-5 gap-4 mb-8">
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-4 mb-8">
               {tourSteps.map((step, idx) => (
                 <div key={step.id} className="text-center">
-                  <div 
-                    className="w-12 h-12 rounded-full mx-auto mb-2 flex items-center justify-center text-white font-bold"
+                  <div
+                    className="w-12 h-12 rounded-full mx-auto mb-2 flex items-center justify-center"
                     style={{ backgroundColor: step.color }}
                   >
-                    {idx + 1}
+                    {React.cloneElement(step.icon, { className: "w-6 h-6 text-white" })}
                   </div>
-                  <p className="text-xs font-medium text-gray-700">{step.title.split(":")[1]?.trim() || step.title}</p>
+                  <p className="text-xs font-medium" style={{ color: "#09080E" }}>{step.title.split(":")[1]?.trim() || step.title}</p>
                 </div>
               ))}
-            </div>
-
-            <div className="bg-[#EEFBFF] rounded-xl p-6 mb-8">
-              <div className="flex items-center justify-center gap-4 flex-wrap">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span className="text-sm">100% Free</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <RotateCcw className="w-5 h-5 text-[#0000FF]" />
-                  <span className="text-sm">Unlimited Replays</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Play className="w-5 h-5 text-[#F97316]" />
-                  <span className="text-sm">~5 minutes</span>
-                </div>
-              </div>
             </div>
 
             <div className="text-center">
               <Button
                 onClick={startTour}
                 size="lg"
-                className="bg-[#F97316] hover:bg-[#EA580C] text-white text-lg px-8 py-6"
+                className="text-white text-lg px-8 py-6"
+                style={{ backgroundColor: "#F97316" }}
                 data-testid="button-start-tour"
               >
-                <Play className="w-5 h-5 mr-2" /> Begin Your Free Tour
+                <Play className="w-5 h-5 mr-2" /> Begin Your Tour
               </Button>
-              <p className="text-sm text-gray-500 mt-4">No credit card required</p>
             </div>
           </div>
 
           <div className="text-center">
             <Button
               variant="link"
-              onClick={() => setLocation("/portal/prescriptions")}
-              className="text-[#0000FF]"
-              data-testid="link-skip-to-prescription"
+              onClick={() => setLocation("/portal")}
+              style={{ color: "#09080E" }}
+              data-testid="link-skip-to-dashboard"
             >
-              Skip tour and go directly to my prescription →
+              Go to your dashboard →
             </Button>
           </div>
         </div>
@@ -544,9 +564,7 @@ export default function Tour() {
       <div className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-2">
-            <div className="font-['Archivo_Semi_Expanded'] text-xl font-bold">
-              Business<span className="text-[#F97316]">Blueprint</span>
-            </div>
+            <img src="https://cdn.triadblue.com/brands/businessblueprint/logo-text.png" alt="businessblueprint.io" className="h-8" />
             <div className="flex items-center gap-4">
               <Button
                 variant="ghost"
@@ -556,7 +574,7 @@ export default function Tour() {
               >
                 <RotateCcw className="w-4 h-4 mr-1" /> Reset
               </Button>
-              <span className="text-sm text-gray-500">Step {currentStep + 1} of {tourSteps.length}</span>
+              <span className="text-sm" style={{ color: "#09080E" }}>Step {currentStep + 1} of {tourSteps.length}</span>
             </div>
           </div>
           <Progress value={progress} className="h-2" />
@@ -571,17 +589,18 @@ export default function Tour() {
               onClick={() => setCurrentStep(idx)}
               className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
                 currentStep === idx
-                  ? "bg-[#0000FF] text-white"
+                  ? "text-white"
                   : completedSteps.includes(step.id)
                   ? "bg-green-100 text-green-700"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
+              style={currentStep === idx ? { backgroundColor: step.color } : undefined}
               data-testid={`button-step-${idx + 1}`}
             >
               {completedSteps.includes(step.id) ? (
                 <CheckCircle2 className="w-4 h-4" />
               ) : (
-                <span className="w-5 h-5 rounded-full bg-current/20 flex items-center justify-center text-xs">
+                <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs">
                   {idx + 1}
                 </span>
               )}
@@ -598,21 +617,21 @@ export default function Tour() {
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
           >
-            <Card className="shadow-xl border-2 border-gray-100">
-              <div 
-                className="p-6 text-white"
-                style={{ backgroundColor: currentTourStep.color }}
+            <Card className="shadow-xl" style={{ border: `3px solid ${currentTourStep.color}` }}>
+              <div
+                className="p-6"
+                style={{ backgroundColor: "#E9ECF0", borderBottom: `3px solid ${currentTourStep.color}` }}
               >
                 <div className="flex items-center gap-4">
-                  {currentTourStep.icon}
+                  {React.cloneElement(currentTourStep.icon, { style: { color: currentTourStep.color } })}
                   <div>
-                    <h2 className="text-2xl font-bold">{currentTourStep.title}</h2>
-                    <p className="opacity-90">{currentTourStep.subtitle}</p>
+                    <h2 className="text-2xl font-bold" style={{ color: "#09080E" }}>{currentTourStep.title}</h2>
+                    <p style={{ color: "#09080E" }}>{currentTourStep.subtitle}</p>
                   </div>
                 </div>
               </div>
-              <CardContent className="p-6">
-                <p className="text-gray-600 mb-6">{currentTourStep.description}</p>
+              <CardContent className="p-6" style={{ backgroundColor: "#E9ECF0" }}>
+                <p className="mb-6" style={{ color: "#09080E" }}>{currentTourStep.description}</p>
                 {currentTourStep.content}
               </CardContent>
             </Card>
@@ -625,26 +644,30 @@ export default function Tour() {
             onClick={handlePrev}
             disabled={currentStep === 0}
             className="gap-2"
+            style={{ borderColor: "#09080E", color: "#09080E" }}
             data-testid="button-previous-step"
           >
             <ChevronLeft className="w-4 h-4" /> Previous
           </Button>
-          
+
           <div className="flex items-center gap-2">
-            {tourSteps.map((_, idx) => (
+            {tourSteps.map((step, idx) => (
               <div
                 key={idx}
-                className={`w-2 h-2 rounded-full transition-all ${
-                  currentStep === idx ? "bg-[#0000FF] w-4" : "bg-gray-300"
-                }`}
+                className="h-2 rounded-full transition-all"
+                style={{
+                  width: currentStep === idx ? "16px" : "8px",
+                  backgroundColor: currentStep === idx ? step.color : "#D1D5DB"
+                }}
               />
             ))}
           </div>
-          
+
           {currentStep < tourSteps.length - 1 ? (
             <Button
               onClick={handleNext}
-              className="bg-[#0000FF] hover:bg-[#0000CC] text-white gap-2"
+              className="text-white gap-2"
+              style={{ backgroundColor: "#F97316" }}
               data-testid="button-next-step"
             >
               Next <ChevronRight className="w-4 h-4" />
@@ -655,10 +678,11 @@ export default function Tour() {
                 markStepComplete(tourSteps[currentStep].id);
                 setLocation("/portal/prescriptions");
               }}
-              className="bg-[#F97316] hover:bg-[#EA580C] text-white gap-2"
+              className="text-white gap-2"
+              style={{ backgroundColor: "#F97316" }}
               data-testid="button-finish-tour"
             >
-              Finish & View Prescription <ChevronRight className="w-4 h-4" />
+              View My Prescription <ChevronRight className="w-4 h-4" />
             </Button>
           )}
         </div>

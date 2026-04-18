@@ -70,6 +70,7 @@ export function Footer() {
               {[
                 { href: "/assessment", slash: true, name: "assess", color: "#960D71", description: "Digital IQ Assessment" },
                 { href: "/connect", slash: true, name: "connect", color: "#008060", description: "CRM — Customer Relationship Management" },
+                { href: "/convert", slash: true, name: "convert", color: "#8000FF", description: "Lead Capture and Conversion Tool" },
                 { href: "/publish", slash: true, name: "publish", color: "#064A6C", description: "Directory Listings Management Tool" },
                 { href: "/elevate", slash: true, name: "elevate", color: "#E9B307", description: "Reviews and Ratings Management Tool" },
                 { href: "/optimize", slash: true, name: "optimize", color: "#374151", description: "SEO Management Tool" },

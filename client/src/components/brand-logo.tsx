@@ -1,11 +1,12 @@
 // Reusable brand logo components using OFFICIAL Business Blueprint brandmarks
 import { Mail, Inbox, MessageCircle } from "lucide-react";
-import bbHeaderLogo from "@assets/images_logos/bb-header-logo.png";
-import bbFaviconPng from "@assets/images_logos/bb-favicon.png";
-const bbAvatar = bbFaviconPng; // Lightbulb icon for Client Portal
-const bbFavicon = '/brand-assets/Blueprint_Favicon.png';
-const bbIcon = bbFaviconPng;
-import bbLockup from "@assets/images_logos/bb-header-logo.png";
+const bbLogoImage = 'https://cdn.triadblue.com/brands/businessblueprint/logo-image.png';
+const bbLogoLockup = 'https://cdn.triadblue.com/brands/businessblueprint/logo-lockup.png';
+const bbLogoText = 'https://cdn.triadblue.com/brands/businessblueprint/logo-text.png';
+const bbAvatar = bbLogoImage;
+const bbFavicon = bbLogoImage;
+const bbIcon = bbLogoImage;
+const bbLockup = bbLogoLockup;
 import webhostedLogo from "@assets/images_logos/hostsblue-url.png";
 import webhostedIcon from "@assets/images_logos/hostsblue-brandmark.png";
 import airswipedLogo from "@assets/images_logos/swipesblue-brandmark.png";
