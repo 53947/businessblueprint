@@ -392,7 +392,7 @@ export default function InboxPage() {
             data-testid="button-respond-settings"
             onClick={() => toast({
               title: "Channel Settings",
-              description: "Email, SMS, Facebook, and Instagram messaging are active. WhatsApp is available with Meta Business verification. X (Twitter) and TikTok DM integrations coming soon."
+              description: "Email, SMS, Facebook, and Instagram messaging are active. WhatsApp is available with Meta Business verification."
             })}
           >
             <Settings className="h-4 w-4" />
@@ -721,9 +721,6 @@ export default function InboxPage() {
                       ))}
                     </div>
                   )}
-                  <p className="text-xs text-gray-400 italic">
-                    Assignment, tags, and quick replies are coming soon
-                  </p>
                 </div>
               </div>
             ) : (

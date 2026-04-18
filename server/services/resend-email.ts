@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { getProductIconSvg } from './email-icons';
 
 async function getResendCredentials(): Promise<{ apiKey: string; fromEmail: string } | null> {
   // Check ONBOARDING_RESEND_API_KEY env var FIRST (works on Railway, Replit, and all deployments)
@@ -376,7 +377,7 @@ export class ResendEmailService {
 <body style="font-family: 'Archivo', Arial, sans-serif; line-height: 1.6; color: #09080E; background-color: #f5f5f5; margin: 0; padding: 0;">
   <div style="max-width: 600px; margin: 0 auto; background: #EEFBFF;">
     <!-- Header -->
-    <div style="background: linear-gradient(315deg, #EEFBFF 0%, #6EA6FF 50%, #0000FF 100%); padding: 30px 20px; text-align: center;">
+    <div style="background: linear-gradient(315deg, #EEFBFF 0%, #8085A1 50%, #09080E 100%); padding: 30px 20px; text-align: center;">
       <h1 style="margin: 0; color: white; font-size: 28px; font-weight: 700;">ScansBlue</h1>
       <p style="margin: 10px 0 0; color: rgba(255,255,255,0.9); font-size: 16px;">Full Website Analysis Report</p>
     </div>
@@ -389,11 +390,11 @@ export class ResendEmailService {
       
       <div style="text-align: center; padding: 20px; background: #f9fafb; border-radius: 12px; margin-bottom: 25px;">
         <p style="margin: 0 0 5px; color: #6B7280; font-size: 14px;">Website Analyzed</p>
-        <p style="margin: 0; font-size: 16px; font-weight: 600; color: #0000FF; word-break: break-all;">${data.websiteUrl}</p>
+        <p style="margin: 0; font-size: 16px; font-weight: 600; color: #09080E; word-break: break-all;">${data.websiteUrl}</p>
       </div>
       
       <!-- Overall Score -->
-      <div style="text-align: center; padding: 25px; background: linear-gradient(135deg, #0000FF08, #0000FF15); border-radius: 12px; margin-bottom: 25px; border: 2px solid #0000FF20;">
+      <div style="text-align: center; padding: 25px; background: linear-gradient(135deg, #09080E08, #09080E15); border-radius: 12px; margin-bottom: 25px; border: 2px solid #09080E20;">
         <p style="margin: 0 0 10px; color: #6B7280; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Overall Score</p>
         <div style="font-size: 64px; font-weight: 700; color: ${getScoreColor(overallScore)}; line-height: 1;">${overallScore}</div>
         <p style="margin: 5px 0 0; color: #6B7280; font-size: 14px;">out of 100</p>
@@ -448,7 +449,7 @@ export class ResendEmailService {
       
       <!-- CTA Button -->
       <div style="text-align: center; margin: 30px 0;">
-        <a href="${dashboardUrl}" style="display: inline-block; background: #0000FF; color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px;">
+        <a href="${dashboardUrl}" style="display: inline-block; background: #09080E; color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px;">
           View Full Dashboard
         </a>
       </div>
@@ -477,24 +478,7 @@ export class ResendEmailService {
     const highPriorityRecs = data.recommendations.filter(r => r.priority === 'high').slice(0, 3);
     const baseUrl = process.env.FRONTEND_URL || 'https://businessblueprint.io';
     
-    const getProductIcon = (productId: string | undefined): string => {
-      // Product icons use app accent colors as CSS-based icons in emails
-      // No broken image tags — return empty string if no match
-      const colorMap: Record<string, string> = {
-        'promote': '#1844A6',
-        'respond': '#001882',
-        'engage': '#660099',
-        'post': '#FF44CC',
-        'publish': '#064A6C',
-        'elevate': '#E9B307',
-        'optimize': '#374151',
-        'amplify': '#97ACCA',
-        'connect': '#008060',
-      };
-      const color = productId ? colorMap[productId] : null;
-      if (!color) return '';
-      return `<span style="display:inline-block;width:12px;height:12px;background:${color};border-radius:3px;margin-right:6px;vertical-align:middle;"></span>`;
-    };
+    const getProductIcon = (productId: string | undefined): string => getProductIconSvg(productId, 48);
     
     return `
 <!DOCTYPE html>
@@ -573,7 +557,7 @@ export class ResendEmailService {
       font-family: 'Archivo Semi Expanded', sans-serif;
       font-weight: 700;
       font-size: 24px;
-      color: #0000FF;
+      color: #09080E;
       margin: 30px 0 15px 0;
     }
     .content h3 {
@@ -592,7 +576,7 @@ export class ResendEmailService {
     }
     .recommendation {
       background: #ffffff;
-      border: 2px solid #0000FF;
+      border: 2px solid #09080E;
       border-radius: 8px;
       padding: 25px;
       margin: 25px 0;
@@ -600,7 +584,7 @@ export class ResendEmailService {
     .recommendation-header {
       margin-bottom: 15px;
     }
-    .recommendation-header img {
+    .recommendation-header svg {
       width: 48px;
       height: 48px;
       vertical-align: middle;
@@ -610,7 +594,7 @@ export class ResendEmailService {
       display: inline;
       vertical-align: middle;
       margin: 0;
-      color: #0000FF;
+      color: #09080E;
       font-size: 20px;
     }
     .product-name {
@@ -628,7 +612,7 @@ export class ResendEmailService {
     }
     .bundle-callout {
       background: #ffffff;
-      border: 2px solid #0000FF;
+      border: 2px solid #09080E;
       border-radius: 8px;
       padding: 20px;
       margin: 20px 0;
@@ -649,7 +633,7 @@ export class ResendEmailService {
       vertical-align: middle;
     }
     .bundle-callout strong {
-      color: #0000FF;
+      color: #09080E;
     }
     .cta-button {
       display: inline-block;
@@ -666,8 +650,8 @@ export class ResendEmailService {
     }
     .cta-button.secondary {
       background: transparent;
-      color: #0000FF;
-      border: 2px solid #0000FF;
+      color: #09080E;
+      border: 2px solid #09080E;
     }
     .footer {
       background: #f2f4f6;
@@ -706,7 +690,7 @@ export class ResendEmailService {
         
         <!-- EXECUTIVE SUMMARY -->
         <div class="summary-box">
-          <h3 style="margin-top: 0; color: #0000FF;">What This Score Means</h3>
+          <h3 style="margin-top: 0; color: #09080E;">What This Score Means</h3>
           <p>${data.summary}</p>
           <p><strong>The opportunity:</strong> Businesses that implement foundational digital tools typically see 20-40% revenue growth within the first year.</p>
         </div>
@@ -718,7 +702,7 @@ export class ResendEmailService {
         <!-- RECOMMENDATION: ${rec.title} -->
         <div class="recommendation">
           <div class="recommendation-header">
-            <img src="${getProductIcon(rec.productId)}" alt="${rec.productId || 'Product'}" />
+            ${getProductIcon(rec.productId)}
             <h3>${rec.title}</h3>
           </div>
           
@@ -740,7 +724,7 @@ export class ResendEmailService {
         <!-- BUNDLE ADVANTAGE -->
         <div class="bundle-callout">
           <div style="margin-bottom: 20px;">
-            <strong style="font-size: 18px; color: #0000FF;">💡 Smart Move: Save with Bundles</strong>
+            <strong style="font-size: 18px; color: #09080E;">💡 Smart Move: Save with Bundles</strong>
           </div>
           
           <div class="bundle-item">
@@ -770,10 +754,10 @@ export class ResendEmailService {
         <p><strong>Questions?</strong> Just reply to this email—we're here to help!</p>
         
         <!-- SCANSBLUE FULL REPORT UPSELL -->
-        <div style="background: #ffffff; border: 2px solid #0000FF; border-radius: 8px; padding: 25px; margin: 25px 0;">
+        <div style="background: #ffffff; border: 2px solid #09080E; border-radius: 8px; padding: 25px; margin: 25px 0;">
           <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-            <img src="${baseUrl}/scansblue assets/scansblue icon.png" alt="ScansBlue" style="width: 48px; height: 48px;" />
-            <h3 style="margin: 0; color: #0000FF; font-family: 'Archivo Semi Expanded', sans-serif;">Want a Complete Website Audit?</h3>
+            <img src="${baseUrl}/scansblue-icon.png" alt="ScansBlue" style="width: 48px; height: 48px;" />
+            <h3 style="margin: 0; color: #09080E; font-family: 'Archivo Semi Expanded', sans-serif;">Want a Complete Website Audit?</h3>
           </div>
           
           <p style="margin: 0 0 15px 0;">Your Digital IQ Assessment included a quick scan of your website. For a <strong>comprehensive technical analysis</strong> with actionable insights:</p>
@@ -792,7 +776,7 @@ export class ResendEmailService {
           </p>
           
           <div style="text-align: center; margin: 20px 0;">
-            <a href="${baseUrl}/scansblue/purchase?assessment=${data.assessmentId}" style="display: inline-block; background: #0000FF; color: #EEFBFF; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-family: 'Archivo Semi Expanded', sans-serif; font-size: 16px; border: 2px solid #0000FF;">
+            <a href="${baseUrl}/scansblue/purchase?assessment=${data.assessmentId}" style="display: inline-block; background: #09080E; color: #EEFBFF; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-family: 'Archivo Semi Expanded', sans-serif; font-size: 16px; border: 2px solid #09080E;">
               Get Full Website Audit - $10
             </a>
           </div>
@@ -1004,7 +988,7 @@ export class ResendEmailService {
         
         <p>I'm <strong>Coach Blue</strong>, your AI business mentor here at BusinessBlueprint. Think of me as your personal guide to digital growth—available 24/7 to help you navigate the world of digital marketing and implement your prescription recommendations.</p>
         
-        <h2 style="font-family: 'Archivo Semi Expanded', sans-serif; color: #0000FF; margin-top: 30px;">Your Free Platform Tour</h2>
+        <h2 style="font-family: 'Archivo Semi Expanded', sans-serif; color: #09080E; margin-top: 30px;">Your Free Platform Tour</h2>
         
         <p>Before we dive in, let me give you a <strong>FREE guided tour</strong> of BusinessBlueprint. I'll walk you through:</p>
         
@@ -1025,8 +1009,8 @@ export class ResendEmailService {
           <em>The tour is completely free and you can replay it as many times as you want!</em>
         </p>
         
-        <div style="border-top: 2px solid #0000FF; border-bottom: 2px solid #0000FF; padding: 20px; margin: 40px 0; background: #ffffff;">
-          <h3 style="font-family: 'Archivo Semi Expanded', sans-serif; color: #0000FF; margin-top: 0;">Want Me as Your Personal Mentor?</h3>
+        <div style="border-top: 2px solid #09080E; border-bottom: 2px solid #09080E; padding: 20px; margin: 40px 0; background: #ffffff;">
+          <h3 style="font-family: 'Archivo Semi Expanded', sans-serif; color: #09080E; margin-top: 0;">Want Me as Your Personal Mentor?</h3>
           
           <p>The platform tour is just the beginning. If you want <strong>ongoing, personalized guidance</strong> as you grow your business, I'm available as a premium subscription.</p>
           
@@ -1042,7 +1026,7 @@ export class ResendEmailService {
           <p style="margin-bottom: 0;">Think of it like having a business consultant available 24/7—but for a fraction of the cost.</p>
         </div>
         
-        <h2 style="font-family: 'Archivo Semi Expanded', sans-serif; color: #0000FF;">What's Next?</h2>
+        <h2 style="font-family: 'Archivo Semi Expanded', sans-serif; color: #09080E;">What's Next?</h2>
         
         <p>Here's what I recommend:</p>
         
@@ -1060,7 +1044,7 @@ export class ResendEmailService {
             Begin Free Tour
           </a>
           <br>
-          <a href="${prescriptionUrl}" class="cta-button" style="background: #0000FF; border: 2px solid #0000FF;">
+          <a href="${prescriptionUrl}" class="cta-button" style="background: #09080E; border: 2px solid #09080E;">
             View My Prescription
           </a>
         </div>

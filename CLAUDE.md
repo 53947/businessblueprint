@@ -162,7 +162,7 @@ Never reference `SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASS`/`EMAIL_USER`/`EM
 ALL email templates match the Coach Blue approved design:
 - Container: `#EEFBFF` background, `.email-outline` border: `2px solid #F97316` (orange)
 - Header/footer: `#f2f4f6` background with blue architect grid lines at 8% opacity, `border: 4px solid #F97316`
-- Buttons: `background: transparent; color: #F97316; border: 2px solid #F97316;` — NEVER solid fill. Secondary buttons use `#0000FF` border.
+- Buttons: `background: transparent; color: #F97316; border: 2px solid #F97316;` — NEVER solid fill. Secondary buttons use `#09080E` border.
 - Font: Archivo Semi Expanded. Text color: `#09080E`.
 - Anti-dark-mode meta tags in every email `<head>`: `<meta name="color-scheme" content="light only">`
 - Copyright: `© 2026 businessblueprint.io`
@@ -256,6 +256,7 @@ Every phone input across the platform uses: `+1 (555) 000-0000` — internationa
 | 2026-04-12 | **Assessment experience fixes** — Email templates redesigned to Coach Blue standard (orange borders, transparent buttons, anti-dark-mode, Archivo font, 2026 copyright). Chat detection expanded (40+ patterns + DOM-based + GTM logging). Industry dropdown replaced with 517-category Google Business Profile autocomplete. DeepSeek tone rules for personality-driven prescriptions. customerFlow + customerDiscovery assessment questions (PR #12) |
 | 2026-04-12 | CRM contact delete FK cleanup (7 related tables cleaned before contact deletion). CRM sidebar buttons renamed "Return to Dashboard" / "Return to Homepage" / "Logout" (PR #13) |
 | 2026-04-12 | Phone placeholders standardized to +1 (555) 000-0000 across 7 files. Email consent checkbox + schema + server on client signup (PR #14) |
+| 2026-04-17 | **Audit fixes** — Removed Coming Soon card from engage-dashboard + 2 coming-soon refs from respond. Added / convert to footer. Fixed assessment email: border #6EA6FF→#F97316, checkmark #00FF40→#4E7C63, 4× BusinessBlueprint→businessblueprint, 8× #0000FF→#09080E. Swept #0000FF from all email templates (45 instances across email.ts + resend-email.ts). Changed #6EA6FF→#8085A1 in resend-email.ts ScansBlue gradient. Replaced product PNG icon refs with inline Lucide SVGs via shared email-icons.ts. Added logo + scansblue-icon + Coach Blue PNG to client/public/. Build-time email asset check added to npm build. |
 
 **AGENTS: Update this section on every commit. Your work is not done until this changelog reflects it.**
 **AGENTS: All changes go to `staging` branch. NEVER push to `main` directly.**

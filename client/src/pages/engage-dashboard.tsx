@@ -568,39 +568,6 @@ export default function EngageDashboard() {
                 </CardContent>
               </Card>
             </div>
-
-            {/* Coming Soon Features */}
-            <Card className="border-dashed">
-              <CardContent className="p-6">
-                <h3 className="font-semibold text-gray-700 mb-3">Coming Soon</h3>
-                <div className="grid md:grid-cols-2 gap-3 text-sm text-gray-500">
-                  <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className="text-xs">Soon</Badge>
-                    Pre-chat form customization
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className="text-xs">Soon</Badge>
-                    File upload in chat
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className="text-xs">Soon</Badge>
-                    Post-chat rating & feedback
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className="text-xs">Soon</Badge>
-                    Business hours enforcement
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className="text-xs">Soon</Badge>
-                    Agent availability panel
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className="text-xs">Soon</Badge>
-                    Conversation routing & transfer
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         )}
 

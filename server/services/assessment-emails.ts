@@ -68,7 +68,7 @@ interface AssessmentData {
   industry?: string | null;
 }
 
-function generateAssessmentConfirmationHTML(assessment: AssessmentData): string {
+export function generateAssessmentConfirmationHTML(assessment: AssessmentData): string {
   const displayName = assessment.businessName || assessment.email.split('@')[0];
   
   return `<!DOCTYPE html>
@@ -149,9 +149,9 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
       text-align: center;
       padding: 30px 0;
     }
-    .checkmark { 
-      font-size: 72px; 
-      color: #00FF40; 
+    .checkmark {
+      font-size: 72px;
+      color: #4E7C63;
       line-height: 1;
       display: block;
       margin-bottom: 20px;
@@ -170,8 +170,8 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
     }
     .timeline-icon { 
       background: transparent;
-      color: #0000FF; 
-      border: 3px solid #0000FF;
+      color: #09080E; 
+      border: 3px solid #09080E;
       min-width: 40px; 
       height: 40px; 
       border-radius: 50%; 
@@ -186,13 +186,13 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
     }
     .email-notice {
       background: #EEFBFF;
-      border: 2px solid #6EA6FF;
+      border: 2px solid #F97316;
       border-radius: 12px;
       padding: 25px;
       margin: 30px 0;
     }
     .assessment-id {
-      color: #0000FF;
+      color: #09080E;
       font-weight: 700;
       font-size: 16px;
     }
@@ -201,24 +201,24 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
       font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;
       font-weight: 700;
       font-size: 36px;
-      color: #0000FF;
+      color: #09080E;
     }
     h2 {
       font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;
       font-weight: 700;
-      color: #0000FF;
+      color: #09080E;
       font-size: 24px;
       margin: 0 0 10px 0;
     }
     h3 {
-      color: #0000FF;
+      color: #09080E;
       margin: 0 0 8px 0;
       font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;
       font-weight: 700;
       font-size: 18px;
     }
     h4 {
-      color: #0000FF;
+      color: #09080E;
       margin: 0 0 12px 0;
       font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;
       font-weight: 600;
@@ -231,7 +231,7 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
       margin-top: 10px;
     }
     strong {
-      color: #0000FF;
+      color: #09080E;
       font-weight: 700;
     }
     p {
@@ -247,7 +247,7 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
   <div class="email-container">
     <div class="email-outline">
       <div class="header">
-        <img src="https://businessblueprint.io/1-Master_business_blueprint_icon_and_logo.png" alt="BusinessBlueprint.io" class="logo" />
+        <img src="https://businessblueprint.io/1-Master_business_blueprint_icon_and_logo.png" alt="businessblueprint.io" class="logo" />
       </div>
       
       <div class="content">
@@ -260,7 +260,7 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
 
       <p>Hi ${displayName},</p>
       
-      <p><strong>Thank you for completing your BusinessBlueprint.io assessment!</strong> We've received your information and our AI is already getting to work.</p>
+      <p><strong>Thank you for completing your businessblueprint.io assessment!</strong> We've received your information and our AI is already getting to work.</p>
       
       <div class="timeline">
         <h2>What Happens Next</h2>
@@ -319,9 +319,9 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
       </div>
       
       <div class="footer">
-        <p><strong>BusinessBlueprint.io</strong></p>
+        <p><strong>businessblueprint.io</strong></p>
         <p>Your Partner in Local Business Growth</p>
-        <p style="margin-top: 20px; font-size: 12px; opacity: 0.7;">© 2026 BusinessBlueprint.io</p>
+        <p style="margin-top: 20px; font-size: 12px; opacity: 0.7;">© 2026 businessblueprint.io</p>
       </div>
     </div>
   </div>
