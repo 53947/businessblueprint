@@ -47,6 +47,7 @@ jobs:
           BACKUP_DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
         run: |
           set -euo pipefail
+          export PATH="/usr/lib/postgresql/17/bin:$PATH"
           DATE=$(date -u +%Y-%m-%d)
           FILENAME="nightly-backup-${DATE}.sql.gz"
           echo "Dumping database to $FILENAME"
