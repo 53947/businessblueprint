@@ -52,6 +52,7 @@ jobs:
           FILENAME="nightly-backup-${DATE}.sql.gz"
           echo "Dumping database to $FILENAME"
           pg_dump "$BACKUP_DATABASE_URL" \
+            --schema=public \
             --no-owner \
             --no-privileges \
             --format=plain \
