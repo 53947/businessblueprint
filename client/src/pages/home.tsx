@@ -14,7 +14,7 @@ import webhostedIcon from "@assets/images_logos/hostsblue-brandmark.png";
 import webhostedLogo from "@assets/images_logos/hostsblue-url.png";
 import airswipedLogo from "@assets/images_logos/swipesblue-brandmark.png";
 import { AppName, AppIcon, BundleHeader } from "@/components/app-name";
-import coachBlueStepIcon from "@assets/images_logos/coachblue48.png";
+const coachBlueStepIcon = "https://cdn.triadblue.com/brands/businessblueprint/logo-image.png";
 import {
   APP_REGISTRY, BUNDLE_REGISTRY, CONNECT_CRM, COACH_BLUE, DIGITAL_IQ,
   HOW_IT_WORKS_STEPS, getAppsByBundle,
@@ -105,12 +105,12 @@ export default function Home() {
                 </p>
                 <div className="space-y-3">
                   {[
-                    { title: "Scan Your Digital Presence", titleJsx: null, desc: "Free. Five minutes. We score your website, your reviews, your social presence, and how consistently your business information appears across the web.", descJsx: null, color: "#A00028" },
-                    { title: "Get Your Custom Blueprint", titleJsx: null, desc: "Your scores tell the AI what's broken. It builds a prescription specific to your business — not a generic checklist, not a sales pitch.", descJsx: null, color: "#FFC107" },
-                    { title: "", titleJsx: <>Build Your Foundation — <Link href="/connect" className="hover:underline" style={{ color: "#064A6C" }}>/ connect</Link></>, desc: "", descJsx: <><Link href="/connect" className="hover:underline" style={{ color: "#064A6C" }}>/ connect</Link> is your CRM — the central record for every customer, conversation, and deal. Every app you activate feeds into it automatically.</>, color: "#008060" },
-                    { title: "", titleJsx: <>Own Your Local Presence — <Link href="/anchor" className="hover:underline" style={{ color: "#064A6C" }}>/ anchor suite</Link></>, desc: "Claim your Google Business listing. Register your D&B DUNS number. Get listed everywhere your customers are looking — all from one place.", descJsx: null, color: "#2073E3" },
-                    { title: "", titleJsx: <>Activate Your Communications — <Link href="/compass" className="hover:underline" style={{ color: "#064A6C" }}>/ compass suite</Link></>, desc: "Email campaigns, live chat on your website, one inbox for every message channel, and social media scheduling — all connected, all talking to each other.", descJsx: null, color: "#F97316" },
-                    { title: "", titleJsx: <>Never Grow Alone — <Link href="/coach-blue" className="hover:underline" style={{ color: "#064A6C" }}>Coach Blue</Link></>, desc: "", descJsx: <><Link href="/coach-blue" className="hover:underline" style={{ color: "#064A6C" }}>Coach Blue</Link> watches your data, guides your setup, and tells you exactly what needs attention before it becomes a problem.</>, color: "#0000FF", isPng: true },
+                    { title: "", titleJsx: <>Complete your Digital Assessment — <Link href="/assessment"><AppName appId="assess" size="sm" iconSize={0} /></Link></>, desc: "Free. Five minutes. We score your website, your reviews, your social presence, and how consistently your business information appears across the web.", descJsx: null, color: "#960D71" },
+                    { title: "", titleJsx: <>Get Your Custom Blueprint — <Link href="/prescriptions"><span style={{ fontFamily: "Archivo Semi Expanded, Archivo, sans-serif", fontWeight: 700 }}><span style={{ color: "#09080E" }}>/</span>{" "}<span style={{ color: "#FFA402" }}>prescribe</span></span></Link></>, desc: "Your scores tell the AI what's broken. It builds a prescription specific to your business — not a generic checklist, not a sales pitch.", descJsx: null, color: "#FFA402" },
+                    { title: "", titleJsx: <>Build Your Foundation — <Link href="/connect"><AppName appId="connect" size="sm" iconSize={0} /></Link></>, desc: "", descJsx: <><Link href="/connect"><AppName appId="connect" size="sm" iconSize={0} /></Link> is your CRM — the central record for every customer, conversation, and deal. Every app you activate feeds into it automatically.</>, color: "#008060" },
+                    { title: "", titleJsx: <>Own Your Local Presence — <Link href="/anchor"><span style={{ fontFamily: "Archivo Semi Expanded, Archivo, sans-serif", fontWeight: 700 }}><span style={{ color: "#09080E" }}>/</span>{" "}<span style={{ color: "#2073E3" }}>anchor suite</span></span></Link></>, desc: "Claim your Google Business listing. Register your D&B DUNS number. Get listed everywhere your customers are looking — all from one place.", descJsx: null, color: "#2073E3" },
+                    { title: "", titleJsx: <>Activate Your Communications — <Link href="/compass"><span style={{ fontFamily: "Archivo Semi Expanded, Archivo, sans-serif", fontWeight: 700 }}><span style={{ color: "#09080E" }}>/</span>{" "}<span style={{ color: "#F97316" }}>compass suite</span></span></Link></>, desc: "Email campaigns, live chat on your website, one inbox for every message channel, and social media scheduling — all connected, all talking to each other.", descJsx: null, color: "#F97316" },
+                    { title: "", titleJsx: <>Never Grow Alone — <Link href="/coach-blue"><span style={{ fontFamily: "Archivo Semi Expanded, Archivo, sans-serif", fontWeight: 700, color: "#001BB2" }}>Coach Blue</span></Link></>, desc: "", descJsx: <><Link href="/coach-blue"><span style={{ fontFamily: "Archivo Semi Expanded, Archivo, sans-serif", fontWeight: 700, color: "#001BB2" }}>Coach Blue</span></Link> watches your data, guides your setup, and tells you exactly what needs attention before it becomes a problem.</>, color: "#001BB2", isPng: true },
                   ].map((step, i) => (
                     <div key={i} className="flex items-start gap-2 p-2 rounded-lg border-l-4 backdrop-blur-sm" style={{ borderColor: step.color, backgroundColor: "rgba(255,255,255,0.5)" }}>
                       <div className="flex-shrink-0 -mt-2">
@@ -128,7 +128,7 @@ export default function Home() {
                   ))}
                 </div>
                 <div className="text-center mt-3">
-                  <a href="/journey" style={{ color: '#064A6C', fontSize: 13, fontWeight: 600 }}>
+                  <a href="/journey" style={{ color: '#09080E', fontSize: 13, fontWeight: 600 }}>
                     Read the full story →
                   </a>
                 </div>

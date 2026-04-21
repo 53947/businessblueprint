@@ -2,7 +2,7 @@ import {
   BookOpen, Star, Target, Mail, Inbox, MessageCircle, Share2, Megaphone,
   Anchor, Compass, Users, BarChart3, ScanLine, ClipboardCheck, FileText,
   GraduationCap, TrendingUp, Layers, ShoppingBasket, Lightbulb, LayoutGrid, Code,
-  HelpCircle, Video, MessageSquare, LogIn, Settings, ArrowRightLeft,
+  HelpCircle, Video, MessageSquare, LogIn, Settings, ArrowRightLeft, Pill,
   type LucideIcon,
 } from "lucide-react";
 import {
@@ -12,6 +12,8 @@ import {
   CONVERT_FORM,
   COACH_BLUE,
   DIGITAL_IQ,
+  ASSESS_APP,
+  PRESCRIBE_APP,
 } from "@/config/app-registry";
 
 // ─────────────────────────────────────────────
@@ -22,7 +24,7 @@ export const ICON_MAP: Record<string, LucideIcon> = {
   BookOpen, Star, Target, Mail, Inbox, MessageCircle, Share2, Megaphone,
   Anchor, Compass, Users, BarChart3, ScanLine, ClipboardCheck, FileText,
   GraduationCap, TrendingUp, Layers, ShoppingBasket, Lightbulb, LayoutGrid, Code,
-  HelpCircle, Video, MessageSquare, LogIn, Settings, ArrowRightLeft,
+  HelpCircle, Video, MessageSquare, LogIn, Settings, ArrowRightLeft, Pill,
 };
 
 // ─────────────────────────────────────────────
@@ -90,6 +92,12 @@ function lookupApp(id: string): {
 
   if (id === DIGITAL_IQ.id)
     return { ...DIGITAL_IQ, isSlashApp: DIGITAL_IQ.isSlashApp };
+
+  if (id === ASSESS_APP.id)
+    return { ...ASSESS_APP, isSlashApp: ASSESS_APP.isSlashApp };
+
+  if (id === PRESCRIBE_APP.id)
+    return { ...PRESCRIBE_APP, isSlashApp: PRESCRIBE_APP.isSlashApp };
 
   return null;
 }

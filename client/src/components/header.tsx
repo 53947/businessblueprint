@@ -36,8 +36,11 @@ import {
   APP_REGISTRY,
   BUNDLE_REGISTRY,
   CONNECT_CRM,
+  CONVERT_FORM,
   COACH_BLUE,
   DIGITAL_IQ,
+  ASSESS_APP,
+  PRESCRIBE_APP,
   getAppsByBundle,
   blueprintIcon,
   hostsBlueIcon,
@@ -316,6 +319,22 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </a>
                             </NavigationMenuLink>
 
+                            {/* / prescribe — standalone */}
+                            <NavigationMenuLink asChild>
+                              <a className="group flex items-start gap-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent" href="/prescriptions" data-testid="link-resources-prescribe">
+                                <div className="flex-shrink-0">
+                                  <AppIcon name="Pill" size={20} color="#FFA402" />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-semibold" style={{ fontFamily: "Archivo Semi Expanded, Archivo, sans-serif" }}>
+                                    <span style={{ color: "#09080E" }}>/</span>{" "}
+                                    <span style={{ color: "#FFA402" }}>prescribe</span>
+                                  </div>
+                                  <p className="text-xs text-gray-600">AI Custom Blueprint Generator</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+
                             {/* / connect — highlighted card */}
                             <NavigationMenuLink asChild>
                               <a className="group flex items-start gap-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent border border-gray-200" href="/connect" data-testid="link-resources-connect">
@@ -325,6 +344,19 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div>
                                   <AppName appId="connect" size="sm" iconSize={0} />
                                   <p className="text-xs text-gray-600">{CONNECT_CRM.description}</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+
+                            {/* / convert — highlighted card */}
+                            <NavigationMenuLink asChild>
+                              <a className="group flex items-start gap-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent border border-gray-200" href="/convert" data-testid="link-resources-convert">
+                                <div className="flex-shrink-0">
+                                  <AppIcon name={CONVERT_FORM.icon} size={20} color={CONVERT_FORM.color} />
+                                </div>
+                                <div>
+                                  <AppName appId="convert" size="sm" iconSize={0} />
+                                  <p className="text-xs text-gray-600">{CONVERT_FORM.description}</p>
                                 </div>
                               </a>
                             </NavigationMenuLink>
@@ -777,12 +809,33 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       </div>
                                     </a>
 
+                                    {/* / prescribe */}
+                                    <a href="/prescriptions" className="flex items-start gap-2 p-2 text-gray-900 hover:bg-gray-50 rounded text-sm" data-testid="mobile-link-resources-prescribe">
+                                      <div className="flex-shrink-0"><AppIcon name="Pill" size={20} color="#FFA402" /></div>
+                                      <div>
+                                        <div className="text-sm font-semibold" style={{ fontFamily: "Archivo Semi Expanded, Archivo, sans-serif" }}>
+                                          <span style={{ color: "#09080E" }}>/</span>{" "}
+                                          <span style={{ color: "#FFA402" }}>prescribe</span>
+                                        </div>
+                                        <p className="text-xs text-gray-600">AI Custom Blueprint Generator</p>
+                                      </div>
+                                    </a>
+
                                     {/* / connect — highlighted */}
                                     <a href="/connect" className="flex items-start gap-2 p-2 text-gray-900 hover:bg-gray-50 rounded text-sm border border-gray-200" data-testid="mobile-link-resources-connect">
                                       <div className="flex-shrink-0"><AppIcon name={CONNECT_CRM.icon} size={20} color={CONNECT_CRM.color} /></div>
                                       <div>
                                         <AppName appId="connect" size="sm" iconSize={0} />
                                         <p className="text-xs text-gray-600">{CONNECT_CRM.description}</p>
+                                      </div>
+                                    </a>
+
+                                    {/* / convert — highlighted */}
+                                    <a href="/convert" className="flex items-start gap-2 p-2 text-gray-900 hover:bg-gray-50 rounded text-sm border border-gray-200" data-testid="mobile-link-resources-convert">
+                                      <div className="flex-shrink-0"><AppIcon name={CONVERT_FORM.icon} size={20} color={CONVERT_FORM.color} /></div>
+                                      <div>
+                                        <AppName appId="convert" size="sm" iconSize={0} />
+                                        <p className="text-xs text-gray-600">{CONVERT_FORM.description}</p>
                                       </div>
                                     </a>
 

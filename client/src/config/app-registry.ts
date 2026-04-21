@@ -176,7 +176,7 @@ export const APP_REGISTRY: SlashApp[] = [
     id: "post",
     name: "post",
     color: "#FF44CC",
-    description: "Create, Schedule and Post Social Media Tool",
+    description: "Create, Schedule, Post Social Media Tool",
     icon: "Share2",
     landingRoute: "/post",
     dashboardRoute: "/post/dashboard",
@@ -299,9 +299,42 @@ export const DIGITAL_IQ: DigitalIQConfig = {
   description: "Digital IQ Assessment Tool",
 };
 
+export interface DiagnosticAppConfig {
+  id: string;
+  name: string;
+  color: string;
+  icon: string;
+  isSlashApp: true;
+  route: string;
+  price: number;
+  description: string;
+}
+
+export const ASSESS_APP: DiagnosticAppConfig = {
+  id: "assess",
+  name: "assess",
+  color: "#960D71",
+  icon: "Lightbulb",
+  isSlashApp: true,
+  route: "/assessment",
+  price: 0,
+  description: "Digital IQ Assessment Tool",
+};
+
+export const PRESCRIBE_APP: DiagnosticAppConfig = {
+  id: "prescribe",
+  name: "prescribe",
+  color: "#FFA402",
+  icon: "Pill",
+  isSlashApp: true,
+  route: "/prescriptions",
+  price: 0,
+  description: "AI Custom Blueprint Generator",
+};
+
 export const HOW_IT_WORKS_STEPS: HowItWorksStep[] = [
-  { step: 1, title: "Scan Your Digital Presence", icon: "ClipboardCheck" },
-  { step: 2, title: "Get Your Custom Blueprint", icon: "FileText" },
+  { step: 1, title: "Scan Your Digital Presence", icon: "Lightbulb" },
+  { step: 2, title: "Get Your Custom Blueprint", icon: "Pill" },
   { step: 3, title: "Build Your Foundation", icon: "Users" },
   { step: 4, title: "Own Your Local Presence", icon: "Anchor" },
   { step: 5, title: "Activate Your Communications", icon: "Compass" },

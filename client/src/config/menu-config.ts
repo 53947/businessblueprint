@@ -4,8 +4,8 @@
 // Product data comes from app-registry.ts. This file defines LAYOUT and SECTIONS.
 
 import {
-  APP_REGISTRY, BUNDLE_REGISTRY, CONNECT_CRM, COACH_BLUE, DIGITAL_IQ,
-  HOW_IT_WORKS_STEPS, SCANNING_TOOL, getAppsByBundle,
+  APP_REGISTRY, BUNDLE_REGISTRY, CONNECT_CRM, CONVERT_FORM, COACH_BLUE, DIGITAL_IQ,
+  ASSESS_APP, PRESCRIBE_APP, HOW_IT_WORKS_STEPS, SCANNING_TOOL, getAppsByBundle,
 } from "@/config/app-registry";
 
 // ── Platform icons (non-registry) ──
@@ -228,5 +228,5 @@ export const RESOURCES_MENU: {
 };
 
 // Re-export for convenience
-export { APP_REGISTRY, BUNDLE_REGISTRY, CONNECT_CRM, COACH_BLUE, DIGITAL_IQ, SCANNING_TOOL, getAppsByBundle };
+export { APP_REGISTRY, BUNDLE_REGISTRY, CONNECT_CRM, CONVERT_FORM, COACH_BLUE, DIGITAL_IQ, ASSESS_APP, PRESCRIBE_APP, SCANNING_TOOL, getAppsByBundle };
 export { blueprintIcon, hostsBlueIcon, swipesBlueIcon, scansBlueIcon, settingsIcon };
