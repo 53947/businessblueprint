@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { AppIcon } from "@/components/app-name";
-import coachBlueIcon from "@assets/images_logos/coachblue48.png";
+const coachBlueIcon = "https://cdn.triadblue.com/brands/coachblue/logo-image.png";
 
 interface HowItWorksProps {
   onStartAssessment: () => void;

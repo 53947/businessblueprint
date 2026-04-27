@@ -7,12 +7,7 @@ import { Footer } from "@/components/footer";
 import { BrandLogo } from "@/components/brand-logo";
 import { ClipboardCheck, FileText, Layers, Wrench, Rocket, Star, MessageCircle, Mail, Target, GraduationCap, ArrowRight, CheckCircle2 } from "lucide-react";
 import { DigitalAssessmentIcon, DigitalIQIcon, CoachBlueIcon, BasePlanIcon, ActionPlanIcon, BuildMethodIcon } from "@/components/brand-icons";
-import bbIcon from "@assets/images_logos/bb-favicon.png";
-import bbLogo from "@assets/images_logos/bb-favicon.png";
-import coachBlueLarge from "@assets/images_logos/coachblue.png";
-import webhostedIcon from "@assets/images_logos/hostsblue-brandmark.png";
-import webhostedLogo from "@assets/images_logos/hostsblue-url.png";
-import airswipedLogo from "@assets/images_logos/swipesblue-brandmark.png";
+const coachBlueLarge = "https://cdn.triadblue.com/brands/coachblue/logo-image.png";
 import { AppName, AppIcon, BundleHeader } from "@/components/app-name";
 const coachBlueStepIcon = "https://cdn.triadblue.com/brands/businessblueprint/logo-image.png";
 import {

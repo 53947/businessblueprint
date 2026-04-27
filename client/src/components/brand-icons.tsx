@@ -1,5 +1,5 @@
 // Brand Icons - Official brand assets
-import coachBlueIcon from "@assets/images_logos/coachblue48.png";
+const coachBlueIcon = "https://cdn.triadblue.com/brands/coachblue/logo-image.png";
 import commverseIcon from "@assets/images_logos/commverse-icon-old.png";
 import digitalIQIcon from "@assets/images_logos/digital-iq-icon-old.png";
 import digitalAssessmentIcon from "@assets/images_logos/digital-iq-assessment-icon.png";

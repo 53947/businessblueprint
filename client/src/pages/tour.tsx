@@ -503,7 +503,7 @@ export default function Tour() {
         <Header />
         <div className="max-w-4xl mx-auto px-4 py-16">
           <div className="text-center mb-12">
-            <img src="https://cdn.triadblue.com/brands/businessblueprint/logo-lockup.png" alt="businessblueprint.io" className="h-12 mx-auto mb-6" />
+            <img src="https://cdn.triadblue.com/brands/businessblueprint/logo-image-and-logo-text-as-url.png" alt="businessblueprint.io" className="h-12 mx-auto mb-6" />
             <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "#09080E" }}>
               Your Platform Tour
             </h1>
@@ -564,7 +564,7 @@ export default function Tour() {
       <div className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-2">
-            <img src="https://cdn.triadblue.com/brands/businessblueprint/logo-text.png" alt="businessblueprint.io" className="h-8" />
+            <img src="https://cdn.triadblue.com/brands/businessblueprint/logo-text-as-url.png" alt="businessblueprint.io" className="h-8" />
             <div className="flex items-center gap-4">
               <Button
                 variant="ghost"

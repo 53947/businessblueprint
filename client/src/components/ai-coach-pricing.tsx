@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { CheckCircle, Users, Target, TrendingUp, Zap } from "lucide-react";
-import aiCoachLogo from "@assets/images_logos/coachblue256.png";
-import aiCoachSmall from "@assets/images_logos/coachblue24.png";
+const aiCoachLogo = "https://cdn.triadblue.com/brands/coachblue/logo-image.png";
+const aiCoachSmall = "https://cdn.triadblue.com/brands/coachblue/logo-image.png";
 
 interface AICoachPricingProps {
   currentPlan?: "diy" | "msp";

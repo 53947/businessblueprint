@@ -88,7 +88,7 @@ import { cn } from "@/lib/utils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Footer } from "@/components/footer";
-import bbLogo from "@assets/images_logos/bb-logo-only.png";
+const bbLogo = "https://cdn.triadblue.com/brands/businessblueprint/logo-image-and-logo-text-as-url.png";
 
 interface CrmStats {
   contacts: number;

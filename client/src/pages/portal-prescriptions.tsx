@@ -529,7 +529,7 @@ function PrescriptionDetail({ prescriptionId, token }: { prescriptionId?: string
           {!token && (
             <div className="mt-8 p-6 bg-[#0000FF]/5 rounded-xl border border-[#0000FF]/15">
               <div className="flex items-start gap-4">
-                <img src="/assets/images_logos/coachblue48.png" alt="Coach Blue" className="w-10 h-10 rounded-lg flex-shrink-0" />
+                <img src="https://cdn.triadblue.com/brands/coachblue/logo-image.png" alt="Coach Blue" className="w-10 h-10 rounded-lg flex-shrink-0" />
                 <div>
                   <h3 className="font-bold text-[#09080E] text-lg mb-1">
                     Coach Blue is ready when you are

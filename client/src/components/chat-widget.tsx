@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { MessageCircle, X, Headphones } from "lucide-react";
 import { useLocation } from "wouter";
-import coachBlueIcon24 from "@assets/images_logos/coachblue24.png";
-import coachBlueIcon48 from "@assets/images_logos/coachblue48.png";
+const coachBlueIcon24 = "https://cdn.triadblue.com/brands/coachblue/logo-image.png";
+const coachBlueIcon48 = "https://cdn.triadblue.com/brands/coachblue/logo-image.png";
 import { EngageChatContent } from "@/components/engage-widget";
 import { CoachBlueChat } from "@/components/ai-coach";
 

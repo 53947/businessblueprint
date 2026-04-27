@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Search, ArrowRight, AlertTriangle, Loader2 } from "lucide-react";
 import { useLocation } from "wouter";
 import { getDisplayScore, getScoreLabel, getScoreColor } from "@shared/score-utils";
-import coachBlueIcon from "@assets/images_logos/coachblue48.png";
+const coachBlueIcon = "https://cdn.triadblue.com/brands/coachblue/logo-image.png";
 
 const APP_COLORS: Record<string, string> = {
   promote: '#1844A6',

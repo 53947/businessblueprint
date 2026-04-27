@@ -11,7 +11,6 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { ShoppingCart, Shield, Lock, CreditCard } from "lucide-react";
 import { BrandLogo, BrandIcon } from "@/components/brand-logo";
-import airswipedLogo from "@assets/images_logos/swipesblue-brandmark.png";
 
 interface CartItem {
   id: string;

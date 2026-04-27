@@ -1,19 +1,16 @@
 // Reusable brand logo components using OFFICIAL Business Blueprint brandmarks
 import { Mail, Inbox, MessageCircle } from "lucide-react";
 const bbLogoImage = 'https://cdn.triadblue.com/brands/businessblueprint/logo-image.png';
-const bbLogoLockup = 'https://cdn.triadblue.com/brands/businessblueprint/logo-lockup.png';
-const bbLogoText = 'https://cdn.triadblue.com/brands/businessblueprint/logo-text.png';
+const bbLogoLockup = 'https://cdn.triadblue.com/brands/businessblueprint/logo-image-and-logo-text-as-url.png';
+const bbLogoText = 'https://cdn.triadblue.com/brands/businessblueprint/logo-text-as-url.png';
 const bbAvatar = bbLogoImage;
 const bbFavicon = bbLogoImage;
 const bbIcon = bbLogoImage;
 const bbLockup = bbLogoLockup;
-import webhostedLogo from "@assets/images_logos/hostsblue-url.png";
-import webhostedIcon from "@assets/images_logos/hostsblue-brandmark.png";
-import airswipedLogo from "@assets/images_logos/swipesblue-brandmark.png";
-import hostsBlueIcon from "@assets/images_logos/hostsblue-brandmark.png";
-import hostsBlueWordmark from "@assets/images_logos/hostsblue-lockup.png";
-import swipesBlueIcon from "@assets/images_logos/swipesblue-brandmark.png";
-import swipesBlueWordmark from "@assets/images_logos/swipesblue-lockup.png";
+const hostsBlueIcon = "https://cdn.triadblue.com/brands/hostsblue/logo-image.png";
+const hostsBlueWordmark = "https://cdn.triadblue.com/brands/hostsblue/logo-image-and-logo-text-as-url.png";
+const swipesBlueIcon = "https://cdn.triadblue.com/brands/swipesblue/logo-image.png";
+const swipesBlueWordmark = "https://cdn.triadblue.com/brands/swipesblue/logo-image-and-logo-text-as-url.png";
 
 // App color constants
 const SEND_COLOR = "#1844A6";

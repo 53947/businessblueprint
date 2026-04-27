@@ -1,9 +1,9 @@
-import bbLogo from "@assets/images_logos/bb-header-logo.png";
-import triadblueEcosystem from "@assets/images_logos/triadblue-ecosystem-logo.png";
-import swipesLogo from "@assets/images_logos/swipesblue_logo_image_and_text_as_url.png";
-import hostsLogo from "@assets/images_logos/hostsblue_logo_image_and_text_as_url.png";
-import scansLogo from "@assets/images_logos/scansblue_logo_image_and_text_as_url.png";
-import builderLogo from "@assets/images_logos/builderblue2-logo-url.png";
+const bbLogo = "https://cdn.triadblue.com/brands/businessblueprint/logo-image-and-logo-text-as-url.png";
+const triadblueEcosystem = "https://cdn.triadblue.com/brands/triadblue/ecosystem-lockup.png";
+const swipesLogo = "https://cdn.triadblue.com/brands/swipesblue/logo-image-and-logo-text-as-url.png";
+const hostsLogo = "https://cdn.triadblue.com/brands/hostsblue/logo-image-and-logo-text-as-url.png";
+const scansLogo = "https://cdn.triadblue.com/brands/scansblue/logo-image-and-logo-text-as-url.png";
+const builderLogo = "https://cdn.triadblue.com/brands/builderblue2/logo-image-and-logo-text-as-url.png";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();

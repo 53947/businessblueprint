@@ -16,13 +16,13 @@ import {
 import { cn } from "@/lib/utils";
 import { APP_REGISTRY, BUNDLE_REGISTRY } from "@/config/app-registry";
 import { ICON_MAP } from "@/components/app-name";
-import bbIcon from "@assets/images_logos/bb-favicon.png";
-import bbLockup from "@assets/images_logos/bb-logo-only.png";
-import aiCoachIcon from "@assets/images_logos/coachblue48.png";
-import hostsBlueWordmark from "@assets/images_logos/hostsblue_logo_image_and_text_as_url.png";
-import swipesBlueWordmark from "@assets/images_logos/swipesblue_logo_image_and_text_as_url.png";
-import builderBlueWordmark from "@assets/images_logos/builderblue2-logo-image-and-text-as-url-for-header.png";
-import scansBlueWordmark from "@assets/images_logos/scansblue_logo_image_and_text_as_url.png";
+const bbIcon = "https://cdn.triadblue.com/brands/businessblueprint/logo-image.png";
+const bbLockup = "https://cdn.triadblue.com/brands/businessblueprint/logo-image-and-logo-text-as-url.png";
+const aiCoachIcon = "https://cdn.triadblue.com/brands/coachblue/logo-image.png";
+const hostsBlueWordmark = "https://cdn.triadblue.com/brands/hostsblue/logo-image-and-logo-text-as-url.png";
+const swipesBlueWordmark = "https://cdn.triadblue.com/brands/swipesblue/logo-image-and-logo-text-as-url.png";
+const builderBlueWordmark = "https://cdn.triadblue.com/brands/builderblue2/logo-image-and-logo-text-as-url.png";
+const scansBlueWordmark = "https://cdn.triadblue.com/brands/scansblue/logo-image-and-logo-text-as-url.png";
 import { CONNECT_CRM, CONVERT_FORM } from "@/config/app-registry";
 
 interface SideNavProps extends React.HTMLAttributes<HTMLDivElement> {
