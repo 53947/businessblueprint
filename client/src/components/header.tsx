@@ -52,7 +52,7 @@ import {
 // Shared pricing component
 import { PricingLayout } from "@/components/pricing-layout";
 import { AppName, AppIcon } from "@/components/app-name";
-const coachBlueIcon = 'https://cdn.triadblue.com/brands/businessblueprint/logo-image.png';
+const coachBlueIcon = 'https://cdn.triadblue.com/brands/coachblue/logo-image.png';
 
 interface HeaderProps {
   showNavigation?: boolean;

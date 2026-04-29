@@ -9,7 +9,7 @@ import { ClipboardCheck, FileText, Layers, Wrench, Rocket, Star, MessageCircle, 
 import { DigitalAssessmentIcon, DigitalIQIcon, CoachBlueIcon, BasePlanIcon, ActionPlanIcon, BuildMethodIcon } from "@/components/brand-icons";
 const coachBlueLarge = "https://cdn.triadblue.com/brands/coachblue/logo-image.png";
 import { AppName, AppIcon, BundleHeader } from "@/components/app-name";
-const coachBlueStepIcon = "https://cdn.triadblue.com/brands/businessblueprint/logo-image.png";
+const coachBlueStepIcon = "https://cdn.triadblue.com/brands/coachblue/logo-image.png";
 import {
   APP_REGISTRY, BUNDLE_REGISTRY, CONNECT_CRM, COACH_BLUE, DIGITAL_IQ,
   HOW_IT_WORKS_STEPS, getAppsByBundle,

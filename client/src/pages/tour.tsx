@@ -418,7 +418,7 @@ export default function Tour() {
         <div className="space-y-6">
           <div className="rounded-xl p-6 text-center" style={{ backgroundColor: "#001BB2" }}>
             <img
-              src="https://cdn.triadblue.com/brands/businessblueprint/logo-image.png"
+              src="https://cdn.triadblue.com/brands/coachblue/logo-image.png"
               alt="Coach Blue"
               className="w-48 h-48 mx-auto mb-4"
             />
