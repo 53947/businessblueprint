@@ -36,10 +36,10 @@ export function renderCoachBlueEmail(slots: CoachBlueEmailSlots): string {
 </head>
 <body style="font-family: Copperplate, 'Copperplate Gothic', serif; line-height: 1.6; color: #09080E; background-color: #f5f5f5; margin: 0; padding: 0; font-variant: normal; text-transform: none;">
   <div style="max-width: 600px; margin: 0 auto; background: #EEFBFF;">
-    <div style="border: 2px solid #F97316; border-radius: 8px; overflow: hidden;">
+    <div style="border: 2px solid #FF6B00; border-radius: 8px; overflow: hidden;">
 
       <!-- HEADER BANNER -->
-      <div style="background: #97ACCA; padding: 30px; border-bottom: 4px solid #F97316;">
+      <div style="background: #97ACCA; padding: 30px; border-bottom: 4px solid #FF6B00;">
         <table width="100%" cellpadding="0" cellspacing="0" border="0">
           <tr>
             <td style="vertical-align: top; padding-right: 20px;">
@@ -69,7 +69,7 @@ export function renderCoachBlueEmail(slots: CoachBlueEmailSlots): string {
         <p style="font-size: 15px; margin: 0 0 30px 0; font-family: Copperplate, 'Copperplate Gothic', serif;">${slots.coachVoice}</p>
 
         <!-- HIGHLIGHT CALLOUT — ORANGE -->
-        <div style="background: #F97316; border-radius: 8px; padding: 24px 28px; margin: 30px 0;">
+        <div style="background: #FF6B00; border-radius: 8px; padding: 24px 28px; margin: 30px 0;">
           <p style="font-weight: 700; color: #09080E; font-size: 20px; margin: 0 0 16px 0; font-family: 'Allerta Stencil', sans-serif; letter-spacing: 0.5px;">${slots.highlightHeader}</p>
           <ul style="margin: 0; padding-left: 20px; list-style-type: disc;">
             ${bullets}
@@ -85,7 +85,7 @@ export function renderCoachBlueEmail(slots: CoachBlueEmailSlots): string {
       </div>
 
       <!-- FOOTER -->
-      <div style="background: #f2f4f6; background-image: linear-gradient(0deg, transparent 24%, rgba(0, 0, 255, 0.08) 25%, rgba(0, 0, 255, 0.08) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.08) 75%, rgba(0, 0, 255, 0.08) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0, 0, 255, 0.08) 25%, rgba(0, 0, 255, 0.08) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.08) 75%, rgba(0, 0, 255, 0.08) 76%, transparent 77%, transparent); background-size: 50px 50px; background-color: #f2f4f6; color: #09080E; padding: 30px; text-align: center; border-top: 4px solid #F97316;">
+      <div style="background: #f2f4f6; background-image: linear-gradient(0deg, transparent 24%, rgba(0, 0, 255, 0.08) 25%, rgba(0, 0, 255, 0.08) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.08) 75%, rgba(0, 0, 255, 0.08) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0, 0, 255, 0.08) 25%, rgba(0, 0, 255, 0.08) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.08) 75%, rgba(0, 0, 255, 0.08) 76%, transparent 77%, transparent); background-size: 50px 50px; background-color: #f2f4f6; color: #09080E; padding: 30px; text-align: center; border-top: 4px solid #FF6B00;">
         <img src="https://cdn.triadblue.com/brands/businessblueprint/logo-text.png" alt="businessblueprint.io" style="height: 28px; margin-bottom: 8px;" />
         <p style="margin: 8px 0 0 0; font-size: 14px; font-family: Copperplate, 'Copperplate Gothic', serif;">Your Partner in Local Business Growth</p>
         <p style="margin-top: 16px; font-size: 11px; opacity: 0.6; font-family: Copperplate, 'Copperplate Gothic', serif;">a product of</p>

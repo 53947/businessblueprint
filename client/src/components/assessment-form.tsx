@@ -1429,7 +1429,7 @@ export function AssessmentForm() {
                     type="button"
                     disabled={submitMutation.isPending}
                     onClick={() => submitMutation.mutate()}
-                    className="bg-[#F97316] hover:bg-[#F97316]/90 text-white"
+                    className="bg-[#FF6B00] hover:bg-[#FF6B00]/90 text-white"
                   >
                     {submitMutation.isPending ? (
                       <>

@@ -140,7 +140,7 @@ export const HOW_IT_WORKS_MENU: {
       href: "/compass",
       testId: "link-step5",
       icon: HOW_IT_WORKS_STEPS[4].icon,
-      borderColor: "#F97316",
+      borderColor: "#FF6B00",
     },
     {
       number: 6,

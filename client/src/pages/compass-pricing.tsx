@@ -16,7 +16,7 @@ export default function CompassPricing() {
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
               <span style={{ color: '#09080E' }}>Compass Suite </span>
-              <span style={{ color: '#F97316' }}>Pricing</span>
+              <span style={{ color: '#FF6B00' }}>Pricing</span>
             </h1>
             <p className="text-xl text-gray-600 mb-4 max-w-3xl mx-auto">
               Choose individual apps at $39/month each, or get all four for $99/month
@@ -210,47 +210,47 @@ export default function CompassPricing() {
             </Card>
 
             {/* Bundle - Most Popular */}
-            <Card className="border-4 shadow-2xl hover:shadow-3xl transition-shadow bg-white relative" style={{ borderColor: '#F97316' }}>
+            <Card className="border-4 shadow-2xl hover:shadow-3xl transition-shadow bg-white relative" style={{ borderColor: '#FF6B00' }}>
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <span className="text-white text-sm font-bold px-4 py-1 rounded-full" style={{ backgroundColor: '#F97316' }}>
+                <span className="text-white text-sm font-bold px-4 py-1 rounded-full" style={{ backgroundColor: '#FF6B00' }}>
                   BEST VALUE
                 </span>
               </div>
               <CardHeader className="pt-8">
-                <CardTitle className="text-2xl" style={{ color: '#F97316' }}>Complete Bundle</CardTitle>
+                <CardTitle className="text-2xl" style={{ color: '#FF6B00' }}>Complete Bundle</CardTitle>
                 <CardDescription>All 4 Compass Suite Apps</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="mb-6">
                   <span className="text-4xl font-bold text-gray-900">$99</span>
                   <span className="text-gray-600">/month</span>
-                  <p className="text-sm mt-1" style={{ color: '#F97316' }}>Save $57/month</p>
+                  <p className="text-sm mt-1" style={{ color: '#FF6B00' }}>Save $57/month</p>
                 </div>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#F97316' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#FF6B00' }} />
                     <span className="text-sm text-gray-600">Everything in all 4 apps</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#F97316' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#FF6B00' }} />
                     <span className="text-sm text-gray-600">Cross-app analytics</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#F97316' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#FF6B00' }} />
                     <span className="text-sm text-gray-600">Unified customer profiles</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#F97316' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#FF6B00' }} />
                     <span className="text-sm text-gray-600">Conversation continuity</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#F97316' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#FF6B00' }} />
                     <span className="text-sm text-gray-600">Intelligent automation</span>
                   </li>
                 </ul>
                 <Button 
                   className="w-full text-white"
-                  style={{ backgroundColor: '#F97316' }}
+                  style={{ backgroundColor: '#FF6B00' }}
                   data-testid="button-bundle"
                   asChild
                 >
@@ -278,7 +278,7 @@ export default function CompassPricing() {
                   <th className="text-center py-4 px-4 font-bold" style={{ color: '#8000FF' }}>/ engage</th>
                   <th className="text-center py-4 px-4 font-bold" style={{ color: '#97ACCA' }}>/ respond</th>
                   <th className="text-center py-4 px-4 font-bold" style={{ color: '#FF44CC' }}>/ post</th>
-                  <th className="text-center py-4 px-4 font-bold" style={{ color: '#F97316' }}>Bundle</th>
+                  <th className="text-center py-4 px-4 font-bold" style={{ color: '#FF6B00' }}>Bundle</th>
                 </tr>
               </thead>
               <tbody>
@@ -288,7 +288,7 @@ export default function CompassPricing() {
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
-                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#F97316' }} /></td>
+                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#FF6B00' }} /></td>
                 </tr>
                 <tr className="border-b border-gray-200">
                   <td className="py-3 px-4 text-gray-600">SMS Campaigns</td>
@@ -296,7 +296,7 @@ export default function CompassPricing() {
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
-                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#F97316' }} /></td>
+                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#FF6B00' }} /></td>
                 </tr>
                 <tr className="border-b border-gray-200">
                   <td className="py-3 px-4 text-gray-600">Website Live Chat</td>
@@ -304,7 +304,7 @@ export default function CompassPricing() {
                   <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#8000FF' }} /></td>
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
-                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#F97316' }} /></td>
+                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#FF6B00' }} /></td>
                 </tr>
                 <tr className="border-b border-gray-200">
                   <td className="py-3 px-4 text-gray-600">Unified Inbox (8 channels)</td>
@@ -312,7 +312,7 @@ export default function CompassPricing() {
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#97ACCA' }} /></td>
                   <td className="text-center py-3 px-4">—</td>
-                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#F97316' }} /></td>
+                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#FF6B00' }} /></td>
                 </tr>
                 <tr className="border-b border-gray-200">
                   <td className="py-3 px-4 text-gray-600">Social Media Management</td>
@@ -320,7 +320,7 @@ export default function CompassPricing() {
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#FF44CC' }} /></td>
-                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#F97316' }} /></td>
+                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#FF6B00' }} /></td>
                 </tr>
                 <tr className="border-b border-gray-200">
                   <td className="py-3 px-4 text-gray-600">Cross-App Analytics</td>
@@ -328,7 +328,7 @@ export default function CompassPricing() {
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
-                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#F97316' }} /></td>
+                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#FF6B00' }} /></td>
                 </tr>
                 <tr className="border-b border-gray-200">
                   <td className="py-3 px-4 text-gray-600">Unified Customer Profiles</td>
@@ -336,7 +336,7 @@ export default function CompassPricing() {
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
-                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#F97316' }} /></td>
+                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#FF6B00' }} /></td>
                 </tr>
                 <tr className="border-b-2 border-gray-200">
                   <td className="py-3 px-4 font-bold text-gray-900">Monthly Price</td>
@@ -344,7 +344,7 @@ export default function CompassPricing() {
                   <td className="text-center py-3 px-4 font-bold" style={{ color: '#8000FF' }}>$39</td>
                   <td className="text-center py-3 px-4 font-bold" style={{ color: '#97ACCA' }}>$39</td>
                   <td className="text-center py-3 px-4 font-bold" style={{ color: '#FF44CC' }}>$39</td>
-                  <td className="text-center py-3 px-4 font-bold" style={{ color: '#F97316' }}>$99</td>
+                  <td className="text-center py-3 px-4 font-bold" style={{ color: '#FF6B00' }}>$99</td>
                 </tr>
               </tbody>
             </table>
@@ -411,7 +411,7 @@ export default function CompassPricing() {
             <Button 
               size="lg" 
               className="text-lg px-8 py-6 shadow-lg text-white"
-              style={{ backgroundColor: '#F97316' }}
+              style={{ backgroundColor: '#FF6B00' }}
               asChild
               data-testid="button-get-bundle"
             >

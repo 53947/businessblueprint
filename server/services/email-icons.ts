@@ -31,7 +31,7 @@ const APP_COLORS: Record<string, string> = {
   assess: '#960D71',
   scan: '#E00420',
   anchor: '#2073E3',
-  compass: '#F97316',
+  compass: '#FF6B00',
   website: '#374151',
   seo: '#374151',
 };

@@ -140,28 +140,28 @@ export default function Tour() {
       subtitle: "Understanding our recommendations for your business",
       description: "Your prescription is built from your Digital IQ scores — not a template. Every recommendation is prioritized by impact and speed, tailored to your business specifically.",
       icon: <FileText className="w-12 h-12" />,
-      color: "#F97316",
+      color: "#FF6B00",
       content: (
         <div className="space-y-6">
-          <div className="rounded-xl p-6" style={{ backgroundColor: "#EEFBFF", border: "2px solid #F97316" }}>
+          <div className="rounded-xl p-6" style={{ backgroundColor: "#EEFBFF", border: "2px solid #FF6B00" }}>
             <h3 className="text-xl font-bold mb-4" style={{ color: "#09080E" }}>How to Read Your Prescription</h3>
             <div className="space-y-4">
               <div className="flex items-start gap-4">
-                <div className="w-8 h-8 rounded-full text-white flex items-center justify-center font-bold flex-shrink-0" style={{ backgroundColor: "#F97316" }}>1</div>
+                <div className="w-8 h-8 rounded-full text-white flex items-center justify-center font-bold flex-shrink-0" style={{ backgroundColor: "#FF6B00" }}>1</div>
                 <div>
                   <h4 className="font-semibold" style={{ color: "#09080E" }}>Priority Order</h4>
                   <p className="text-sm" style={{ color: "#09080E" }}>Top items make the biggest difference fastest. Start at the top and work down.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-8 h-8 rounded-full text-white flex items-center justify-center font-bold flex-shrink-0" style={{ backgroundColor: "#F97316" }}>2</div>
+                <div className="w-8 h-8 rounded-full text-white flex items-center justify-center font-bold flex-shrink-0" style={{ backgroundColor: "#FF6B00" }}>2</div>
                 <div>
                   <h4 className="font-semibold" style={{ color: "#09080E" }}>Effort and Impact</h4>
                   <p className="text-sm" style={{ color: "#09080E" }}>Each recommendation includes how much time it takes and what you can reasonably expect to change.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-8 h-8 rounded-full text-white flex items-center justify-center font-bold flex-shrink-0" style={{ backgroundColor: "#F97316" }}>3</div>
+                <div className="w-8 h-8 rounded-full text-white flex items-center justify-center font-bold flex-shrink-0" style={{ backgroundColor: "#FF6B00" }}>3</div>
                 <div>
                   <h4 className="font-semibold" style={{ color: "#09080E" }}>Recommended Tools</h4>
                   <p className="text-sm" style={{ color: "#09080E" }}>Based on your gaps, we prescribe specific apps in a specific order — each one matched to a category in your Digital IQ.</p>
@@ -173,7 +173,7 @@ export default function Tour() {
           <div className="text-center">
             <Button
               onClick={() => setLocation("/portal/prescriptions")}
-              style={{ backgroundColor: "#F97316", color: "white" }}
+              style={{ backgroundColor: "#FF6B00", color: "white" }}
               data-testid="button-view-prescription"
             >
               View Your Prescription <ArrowRight className="ml-2 w-4 h-4" />
@@ -319,7 +319,7 @@ export default function Tour() {
               </div>
               <div className="text-right">
                 <div className="text-2xl font-bold" style={{ color: "#2073E3" }}>$99<span className="text-sm font-normal" style={{ color: "#09080E" }}>/mo</span></div>
-                <div className="text-sm" style={{ color: "#F97316" }}>Save $17 vs. $29/mo each</div>
+                <div className="text-sm" style={{ color: "#FF6B00" }}>Save $17 vs. $29/mo each</div>
               </div>
             </div>
           </div>
@@ -332,7 +332,7 @@ export default function Tour() {
       subtitle: "Compass Suite — Complete Communications Engine",
       description: "Four apps that give you every channel you need to reach your customers — email, social, live chat, and unified messaging.",
       icon: <Compass className="w-12 h-12" />,
-      color: "#F97316",
+      color: "#FF6B00",
       content: (
         <div className="space-y-6">
           <div className="grid md:grid-cols-2 gap-4">
@@ -393,14 +393,14 @@ export default function Tour() {
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
                 <div className="flex items-center gap-2">
-                  <Compass className="w-6 h-6" style={{ color: "#F97316" }} />
+                  <Compass className="w-6 h-6" style={{ color: "#FF6B00" }} />
                   <h4 className="font-bold" style={{ color: "#09080E" }}>Compass Suite</h4>
                 </div>
                 <p className="text-sm" style={{ color: "#09080E" }}><SlashApp name="promote" /> + <SlashApp name="respond" /> + <SlashApp name="engage" /> + <SlashApp name="post" /></p>
               </div>
               <div className="text-right">
-                <div className="text-2xl font-bold" style={{ color: "#F97316" }}>$99<span className="text-sm font-normal" style={{ color: "#09080E" }}>/mo</span></div>
-                <div className="text-sm" style={{ color: "#F97316" }}>Save $17 vs. $29/mo each</div>
+                <div className="text-2xl font-bold" style={{ color: "#FF6B00" }}>$99<span className="text-sm font-normal" style={{ color: "#09080E" }}>/mo</span></div>
+                <div className="text-sm" style={{ color: "#FF6B00" }}>Save $17 vs. $29/mo each</div>
               </div>
             </div>
           </div>
@@ -431,10 +431,10 @@ export default function Tour() {
               <CardContent className="p-5">
                 <h4 className="font-semibold mb-3" style={{ color: "#09080E" }}>What Coach Blue does:</h4>
                 <ul className="space-y-2 text-sm" style={{ color: "#09080E" }}>
-                  <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 mt-0.5" style={{ color: "#F97316" }} /> Explains your prescription in plain language</li>
-                  <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 mt-0.5" style={{ color: "#F97316" }} /> Watches your data across every app</li>
-                  <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 mt-0.5" style={{ color: "#F97316" }} /> Tells you specifically what to act on today</li>
-                  <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 mt-0.5" style={{ color: "#F97316" }} /> Available 24/7, no waiting</li>
+                  <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 mt-0.5" style={{ color: "#FF6B00" }} /> Explains your prescription in plain language</li>
+                  <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 mt-0.5" style={{ color: "#FF6B00" }} /> Watches your data across every app</li>
+                  <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 mt-0.5" style={{ color: "#FF6B00" }} /> Tells you specifically what to act on today</li>
+                  <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 mt-0.5" style={{ color: "#FF6B00" }} /> Available 24/7, no waiting</li>
                 </ul>
               </CardContent>
             </Card>
@@ -444,20 +444,20 @@ export default function Tour() {
                 <ul className="space-y-3 text-sm" style={{ color: "#09080E" }}>
                   <li className="flex justify-between"><span>Standalone</span><span className="font-bold">$99/mo</span></li>
                   <li className="flex justify-between"><span>With one suite</span><span className="font-bold">$59/mo</span></li>
-                  <li className="flex justify-between items-center"><span>With both suites</span><span className="font-bold" style={{ color: "#F97316" }}>FREE</span></li>
+                  <li className="flex justify-between items-center"><span>With both suites</span><span className="font-bold" style={{ color: "#FF6B00" }}>FREE</span></li>
                 </ul>
               </CardContent>
             </Card>
           </div>
 
-          <div className="border-2 rounded-xl p-6 text-center" style={{ borderColor: "#F97316", backgroundColor: "#EEFBFF" }}>
+          <div className="border-2 rounded-xl p-6 text-center" style={{ borderColor: "#FF6B00", backgroundColor: "#EEFBFF" }}>
             <CheckCircle2 className="w-12 h-12 mx-auto mb-3" style={{ color: "#4E7C63" }} />
             <h3 className="text-xl font-bold mb-2" style={{ color: "#09080E" }}>Tour Complete</h3>
             <p className="mb-4" style={{ color: "#09080E" }}>You now understand the full businessblueprint.io platform.</p>
             <div className="flex flex-wrap justify-center gap-3">
               <Button
                 onClick={() => setLocation("/portal/prescriptions")}
-                style={{ backgroundColor: "#F97316", color: "white" }}
+                style={{ backgroundColor: "#FF6B00", color: "white" }}
                 data-testid="button-go-to-prescription"
               >
                 View My Prescription
@@ -532,7 +532,7 @@ export default function Tour() {
                 onClick={startTour}
                 size="lg"
                 className="text-white text-lg px-8 py-6"
-                style={{ backgroundColor: "#F97316" }}
+                style={{ backgroundColor: "#FF6B00" }}
                 data-testid="button-start-tour"
               >
                 <Play className="w-5 h-5 mr-2" /> Begin Your Tour
@@ -667,7 +667,7 @@ export default function Tour() {
             <Button
               onClick={handleNext}
               className="text-white gap-2"
-              style={{ backgroundColor: "#F97316" }}
+              style={{ backgroundColor: "#FF6B00" }}
               data-testid="button-next-step"
             >
               Next <ChevronRight className="w-4 h-4" />
@@ -679,7 +679,7 @@ export default function Tour() {
                 setLocation("/portal/prescriptions");
               }}
               className="text-white gap-2"
-              style={{ backgroundColor: "#F97316" }}
+              style={{ backgroundColor: "#FF6B00" }}
               data-testid="button-finish-tour"
             >
               View My Prescription <ChevronRight className="w-4 h-4" />

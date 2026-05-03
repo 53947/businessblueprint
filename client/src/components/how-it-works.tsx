@@ -45,7 +45,7 @@ const STEPS = [
     description: "Email campaigns, live chat, a unified inbox for every message channel, and social media management — all connected through / connect.",
     shortDesc: "Email, chat, inbox, and social media.",
     icon: "Compass",
-    color: "#F97316",
+    color: "#FF6B00",
   },
   {
     number: 6,
