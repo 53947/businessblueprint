@@ -77,7 +77,7 @@ export function ScansBlueResults({ results, websiteUrl, assessmentId, onRequestF
       <CardHeader className="bg-[#09080E] text-white rounded-t-lg">
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Zap className="w-5 h-5 text-[#F97316]" />
+            <Zap className="w-5 h-5 text-[#FF6B00]" />
             <span style={{ fontFamily: 'Archivo, sans-serif' }}>Website Technical Analysis</span>
           </div>
           <Badge className={`${getScoreBg(results.overallScore || 0)} ${getScoreColor(results.overallScore || 0)}`}>
@@ -115,7 +115,7 @@ export function ScansBlueResults({ results, websiteUrl, assessmentId, onRequestF
 
           <div className="p-4 bg-[#EEFBFF] rounded-lg" data-testid="performance-score">
             <div className="flex items-center gap-2 mb-2">
-              <Zap className="w-5 h-5 text-[#F97316]" />
+              <Zap className="w-5 h-5 text-[#FF6B00]" />
               <span className="font-semibold text-[#09080E]">Performance</span>
             </div>
             <div className="flex items-center gap-2">
@@ -193,7 +193,7 @@ export function ScansBlueResults({ results, websiteUrl, assessmentId, onRequestF
             </Button>
           ) : (
             <Button
-              className="bg-gradient-to-r from-[#0000FF] to-[#F97316] hover:opacity-90 text-white shadow-lg"
+              className="bg-gradient-to-r from-[#0000FF] to-[#FF6B00] hover:opacity-90 text-white shadow-lg"
               onClick={handlePurchaseFullReport}
               data-testid="purchase-full-report"
             >
@@ -204,7 +204,7 @@ export function ScansBlueResults({ results, websiteUrl, assessmentId, onRequestF
           
           <Button
             variant="outline"
-            className="border-[#F97316] text-[#F97316] hover:bg-[#F97316] hover:text-white"
+            className="border-[#FF6B00] text-[#FF6B00] hover:bg-[#FF6B00] hover:text-white"
             onClick={() => window.open('https://hostsblue.com', '_blank')}
             data-testid="visit-hostsblue"
           >
@@ -213,7 +213,7 @@ export function ScansBlueResults({ results, websiteUrl, assessmentId, onRequestF
         </div>
         
         {!results.fullReportUrl && !results.fullReportPurchased && (
-          <div className="mt-4 p-4 bg-gradient-to-r from-[#0000FF]/5 to-[#F97316]/5 rounded-lg border border-[#0000FF]/20">
+          <div className="mt-4 p-4 bg-gradient-to-r from-[#0000FF]/5 to-[#FF6B00]/5 rounded-lg border border-[#0000FF]/20">
             <div className="flex items-start gap-3">
               <FileText className="w-5 h-5 text-[#0000FF] mt-0.5 flex-shrink-0" />
               <div>

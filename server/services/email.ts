@@ -568,9 +568,9 @@ export class EmailService {
                 linear-gradient(90deg, rgba(0,0,255,0.02) 1px, transparent 1px);
             background-size: 20px 20px;
         }
-        .cta-button { display: inline-block; background: #F97316; color: white; padding: 18px 40px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin: 20px 0; box-shadow: 0 4px 15px rgba(249,115,22,0.3); }
+        .cta-button { display: inline-block; background: #FF6B00; color: white; padding: 18px 40px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin: 20px 0; box-shadow: 0 4px 15px rgba(255,107,0,0.3); }
         .footer { background: #09080E; padding: 20px; text-align: center; color: #94a3b8; font-size: 14px; }
-        .footer a { color: #F97316; text-decoration: none; }
+        .footer a { color: #FF6B00; text-decoration: none; }
         .feature-list { list-style: none; padding: 0; margin: 25px 0; background: white; border-radius: 8px; }
         .feature-list li { padding: 12px 15px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; color: #09080E; }
         .feature-list li:last-child { border-bottom: none; }
@@ -667,7 +667,7 @@ export class EmailService {
       color: #09080E;
       padding: 40px 30px;
       text-align: center;
-      border-bottom: 4px solid #F97316;
+      border-bottom: 4px solid #FF6B00;
     }
     .header h1 {
       font-family: 'Archivo Semi Expanded', sans-serif;
@@ -679,7 +679,7 @@ export class EmailService {
     .header .score {
       font-size: 48px;
       font-weight: 700;
-      color: #F97316;
+      color: #FF6B00;
       margin: 20px 0 10px 0;
     }
     .header .score-label {
@@ -717,7 +717,7 @@ export class EmailService {
     }
     .summary-box {
       background: #ffffff;
-      border-left: 4px solid #F97316;
+      border-left: 4px solid #FF6B00;
       padding: 20px;
       margin: 25px 0;
       border-radius: 4px;
@@ -746,7 +746,7 @@ export class EmailService {
       font-size: 20px;
     }
     .product-name {
-      color: #F97316;
+      color: #FF6B00;
       font-weight: 700;
       font-size: 18px;
     }
@@ -785,7 +785,7 @@ export class EmailService {
     }
     .cta-button {
       display: inline-block;
-      background: #F97316;
+      background: #FF6B00;
       color: #EEFBFF;
       padding: 16px 32px;
       text-decoration: none;
@@ -794,7 +794,7 @@ export class EmailService {
       font-family: 'Archivo Semi Expanded', sans-serif;
       font-size: 16px;
       margin: 20px 10px 20px 0;
-      border: 2px solid #F97316;
+      border: 2px solid #FF6B00;
     }
     .cta-button.secondary {
       background: #09080E;
@@ -805,7 +805,7 @@ export class EmailService {
       color: #09080E;
       padding: 30px;
       text-align: center;
-      border-top: 4px solid #F97316;
+      border-top: 4px solid #FF6B00;
     }
     .footer p {
       font-size: 14px;
@@ -1435,7 +1435,7 @@ export class EmailService {
       color: #09080E;
       padding: 40px 30px;
       text-align: center;
-      border-bottom: 4px solid #F97316;
+      border-bottom: 4px solid #FF6B00;
     }
     .content {
       background: #EEFBFF;
@@ -1451,11 +1451,11 @@ export class EmailService {
       color: #09080E;
       padding: 30px;
       text-align: center;
-      border-top: 4px solid #F97316;
+      border-top: 4px solid #FF6B00;
     }
     .cta-button {
       display: inline-block;
-      background: #F97316;
+      background: #FF6B00;
       color: #EEFBFF;
       padding: 16px 32px;
       text-decoration: none;
@@ -1464,7 +1464,7 @@ export class EmailService {
       font-family: 'Archivo Semi Expanded', sans-serif;
       font-size: 16px;
       margin: 20px 10px 20px 0;
-      border: 2px solid #F97316;
+      border: 2px solid #FF6B00;
     }
   </style>
 </head>

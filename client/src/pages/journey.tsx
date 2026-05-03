@@ -191,9 +191,9 @@ export default function Journey() {
       <section className="bg-white py-16 border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-start gap-6 mb-6">
-            <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: "#F97316" }}>5</div>
+            <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: "#FF6B00" }}>5</div>
             <div className="flex items-center gap-3">
-              <AppIcon name="Compass" size={40} color="#F97316" />
+              <AppIcon name="Compass" size={40} color="#FF6B00" />
               <h2 className="text-3xl font-bold text-gray-900">Activate Your Communications — Compass Suite</h2>
             </div>
           </div>
@@ -241,8 +241,8 @@ export default function Journey() {
             </p>
           </div>
 
-          <div className="bg-white border-l-4 p-6 rounded-lg shadow-sm mb-6" style={{ borderColor: "#F97316" }}>
-            <p className="text-xs uppercase tracking-widest font-semibold mb-2" style={{ color: "#F97316" }}>WHAT THIS MEANS FOR YOUR BUSINESS</p>
+          <div className="bg-white border-l-4 p-6 rounded-lg shadow-sm mb-6" style={{ borderColor: "#FF6B00" }}>
+            <p className="text-xs uppercase tracking-widest font-semibold mb-2" style={{ color: "#FF6B00" }}>WHAT THIS MEANS FOR YOUR BUSINESS</p>
             <p className="text-gray-900 text-base leading-relaxed">Your customers don't all reach out the same way. Some text. Some use Facebook. Some fill out your website form. If those messages are scattered across different apps, some of them don't get answered. Unanswered messages become lost customers. The Compass Suite puts every message in one place.</p>
           </div>
           <div className="bg-gray-100 rounded-lg p-4 italic text-gray-600 text-sm">

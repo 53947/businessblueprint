@@ -14,7 +14,7 @@ const APPS = {
   compass: {
     label: "Compass Suite",
     price: "$99/mo",
-    color: "#F97316",
+    color: "#FF6B00",
     apps: [
       { name: "promote", color: "#1844A6", desc: "Email and SMS marketing" },
       { name: "respond", color: "#001882", desc: "Unified inbox for all channels" },

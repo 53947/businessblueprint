@@ -25,7 +25,7 @@ export function CoachBlueCTA({ variant = 'default', message }: CoachBlueCTAProps
             </div>
             <Link href="/coach-blue">
               <Button 
-                className="bg-[#F97316] hover:bg-[#F97316]/90 text-white"
+                className="bg-[#FF6B00] hover:bg-[#FF6B00]/90 text-white"
                 data-testid="chat-coach-blue-compact"
               >
                 Chat Now <ArrowRight className="w-4 h-4 ml-1" />
@@ -45,7 +45,7 @@ export function CoachBlueCTA({ variant = 'default', message }: CoachBlueCTAProps
       <div className="bg-gradient-to-r from-[#09080E] to-[#0000FF] p-6 text-center">
         <div className="flex justify-center mb-4">
           <div className="p-4 bg-white/10 rounded-full">
-            <Sparkles className="w-10 h-10 text-[#F97316]" />
+            <Sparkles className="w-10 h-10 text-[#FF6B00]" />
           </div>
         </div>
         <h3 
@@ -63,7 +63,7 @@ export function CoachBlueCTA({ variant = 'default', message }: CoachBlueCTAProps
           <Link href="/coach-blue">
             <Button 
               size="lg"
-              className="bg-[#F97316] hover:bg-[#F97316]/90 text-white w-full sm:w-auto"
+              className="bg-[#FF6B00] hover:bg-[#FF6B00]/90 text-white w-full sm:w-auto"
               data-testid="chat-coach-blue"
             >
               <MessageSquare className="w-5 h-5 mr-2" />

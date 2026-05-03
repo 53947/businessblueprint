@@ -343,7 +343,7 @@ export class ResendEmailService {
       background: #EEFBFF;
     }
     .email-outline {
-      border: 2px solid #F97316;
+      border: 2px solid #FF6B00;
       border-radius: 8px;
       overflow: hidden;
     }
@@ -357,7 +357,7 @@ export class ResendEmailService {
       color: #09080E;
       padding: 40px 30px;
       text-align: center;
-      border-bottom: 4px solid #F97316;
+      border-bottom: 4px solid #FF6B00;
     }
     .header h1 {
       font-family: 'Archivo Semi Expanded', sans-serif;
@@ -369,7 +369,7 @@ export class ResendEmailService {
     .header .score {
       font-size: 48px;
       font-weight: 700;
-      color: #F97316;
+      color: #FF6B00;
       margin: 20px 0 10px 0;
     }
     .header .score-label {
@@ -407,7 +407,7 @@ export class ResendEmailService {
     }
     .summary-box {
       background: #ffffff;
-      border-left: 4px solid #F97316;
+      border-left: 4px solid #FF6B00;
       padding: 20px;
       margin: 25px 0;
       border-radius: 4px;
@@ -436,7 +436,7 @@ export class ResendEmailService {
       font-size: 20px;
     }
     .product-name {
-      color: #F97316;
+      color: #FF6B00;
       font-weight: 700;
       font-size: 18px;
     }
@@ -476,7 +476,7 @@ export class ResendEmailService {
     .cta-button {
       display: inline-block;
       background: transparent;
-      color: #F97316;
+      color: #FF6B00;
       padding: 14px 32px;
       text-decoration: none;
       border-radius: 8px;
@@ -484,7 +484,7 @@ export class ResendEmailService {
       font-family: 'Archivo Semi Expanded', sans-serif;
       font-size: 16px;
       margin: 20px 10px 20px 0;
-      border: 2px solid #F97316;
+      border: 2px solid #FF6B00;
     }
     .cta-button.secondary {
       background: transparent;
@@ -501,7 +501,7 @@ export class ResendEmailService {
       color: #09080E;
       padding: 30px;
       text-align: center;
-      border-top: 4px solid #F97316;
+      border-top: 4px solid #FF6B00;
     }
     .footer p {
       font-size: 14px;
@@ -566,7 +566,7 @@ export class ResendEmailService {
           </div>
           
           <div class="bundle-item">
-            <p><strong style="color: #F97316;">/ compass suite ($99/mo):</strong> Includes / promote (email campaigns), / post (social media), / respond (unified inbox), and / engage (live chat widget) — all four communication tools in one integrated platform.</p>
+            <p><strong style="color: #FF6B00;">/ compass suite ($99/mo):</strong> Includes / promote (email campaigns), / post (social media), / respond (unified inbox), and / engage (live chat widget) — all four communication tools in one integrated platform.</p>
           </div>
 
           <div class="bundle-item" style="margin-top: 20px;">
@@ -652,28 +652,28 @@ export class ResendEmailService {
   :root { color-scheme: light only; }
   body { font-family: 'Archivo Semi Expanded', Archivo, sans-serif; line-height: 1.6; color: #09080E; max-width: 600px; margin: 0 auto; background: #EEFBFF; }
   .email-container { max-width: 600px; margin: 0 auto; background: #EEFBFF; }
-  .email-outline { border: 2px solid #F97316; border-radius: 8px; overflow: hidden; }
+  .email-outline { border: 2px solid #FF6B00; border-radius: 8px; overflow: hidden; }
   .header {
     background: #f2f4f6;
     background-image:
       linear-gradient(0deg, transparent 24%, rgba(0,0,255,0.08) 25%, rgba(0,0,255,0.08) 26%, transparent 27%, transparent 74%, rgba(0,0,255,0.08) 75%, rgba(0,0,255,0.08) 76%, transparent 77%, transparent),
       linear-gradient(90deg, transparent 24%, rgba(0,0,255,0.08) 25%, rgba(0,0,255,0.08) 26%, transparent 27%, transparent 74%, rgba(0,0,255,0.08) 75%, rgba(0,0,255,0.08) 76%, transparent 77%, transparent);
     background-size: 50px 50px;
-    color: #09080E; padding: 40px 30px; text-align: center; border-bottom: 4px solid #F97316;
+    color: #09080E; padding: 40px 30px; text-align: center; border-bottom: 4px solid #FF6B00;
   }
   .content { padding: 40px; background: #EEFBFF;
     background-image:
       linear-gradient(0deg, transparent 24%, rgba(0,0,255,0.04) 25%, rgba(0,0,255,0.04) 26%, transparent 27%, transparent 74%, rgba(0,0,255,0.04) 75%, rgba(0,0,255,0.04) 76%, transparent 77%, transparent),
       linear-gradient(90deg, transparent 24%, rgba(0,0,255,0.04) 25%, rgba(0,0,255,0.04) 26%, transparent 27%, transparent 74%, rgba(0,0,255,0.04) 75%, rgba(0,0,255,0.04) 76%, transparent 77%, transparent);
     background-size: 50px 50px; }
-  .code-box { background: #FFFFFF; border: 2px dashed #F97316; padding: 30px; text-align: center; border-radius: 8px; margin: 30px 0; }
-  .code { font-size: 36px; font-weight: bold; color: #F97316; letter-spacing: 8px; font-family: 'Archivo Semi Expanded', monospace; }
+  .code-box { background: #FFFFFF; border: 2px dashed #FF6B00; padding: 30px; text-align: center; border-radius: 8px; margin: 30px 0; }
+  .code { font-size: 36px; font-weight: bold; color: #FF6B00; letter-spacing: 8px; font-family: 'Archivo Semi Expanded', monospace; }
   .footer {
     background: #f2f4f6;
     background-image:
       linear-gradient(0deg, transparent 24%, rgba(0,0,255,0.08) 25%, rgba(0,0,255,0.08) 26%, transparent 27%, transparent 74%, rgba(0,0,255,0.08) 75%, rgba(0,0,255,0.08) 76%, transparent 77%, transparent),
       linear-gradient(90deg, transparent 24%, rgba(0,0,255,0.08) 25%, rgba(0,0,255,0.08) 26%, transparent 27%, transparent 74%, rgba(0,0,255,0.08) 75%, rgba(0,0,255,0.08) 76%, transparent 77%, transparent);
-    background-size: 50px 50px; padding: 20px; text-align: center; color: #09080E; font-size: 14px; border-top: 4px solid #F97316; }
+    background-size: 50px 50px; padding: 20px; text-align: center; color: #09080E; font-size: 14px; border-top: 4px solid #FF6B00; }
   .warning { background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 15px; margin: 20px 0; border-radius: 4px; }
 </style>
 </head>
@@ -754,7 +754,7 @@ export class ResendEmailService {
       background: #EEFBFF;
     }
     .email-outline {
-      border: 2px solid #F97316;
+      border: 2px solid #FF6B00;
       border-radius: 8px;
       overflow: hidden;
     }
@@ -768,7 +768,7 @@ export class ResendEmailService {
       color: #09080E;
       padding: 40px 30px;
       text-align: center;
-      border-bottom: 4px solid #F97316;
+      border-bottom: 4px solid #FF6B00;
     }
     .content {
       background: #EEFBFF;
@@ -789,11 +789,11 @@ export class ResendEmailService {
       color: #09080E;
       padding: 30px;
       text-align: center;
-      border-top: 4px solid #F97316;
+      border-top: 4px solid #FF6B00;
     }
     .cta-button {
       display: inline-block;
-      background: #F97316;
+      background: #FF6B00;
       color: #EEFBFF;
       padding: 16px 32px;
       text-decoration: none;
@@ -802,7 +802,7 @@ export class ResendEmailService {
       font-family: 'Archivo Semi Expanded', sans-serif;
       font-size: 16px;
       margin: 20px 10px 20px 0;
-      border: 2px solid #F97316;
+      border: 2px solid #FF6B00;
     }
   </style>
 </head>

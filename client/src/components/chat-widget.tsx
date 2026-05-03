@@ -15,7 +15,7 @@ interface ChatWidgetProps {
   enabledFeatures?: string;
 }
 
-export function ChatWidget({ clientId, companyName = "businessblueprint.io", primaryColor = "#F97316", enabledFeatures }: ChatWidgetProps) {
+export function ChatWidget({ clientId, companyName = "businessblueprint.io", primaryColor = "#FF6B00", enabledFeatures }: ChatWidgetProps) {
   const [isOpen, setIsOpen] = useState(() => {
     return sessionStorage.getItem("chatWidgetOpen") === "true";
   });
@@ -111,7 +111,7 @@ export function ChatWidget({ clientId, companyName = "businessblueprint.io", pri
                   activeTab === "support" ? "z-10" : "opacity-80 hover:opacity-100"
                 }`}
                 style={{
-                  backgroundColor: activeTab === "support" ? "#F97316" : "rgba(249,115,22,0.4)",
+                  backgroundColor: activeTab === "support" ? "#FF6B00" : "rgba(255,107,0,0.4)",
                   color: "#E9ECF0",
                   borderRadius: "10px 10px 0 0",
                   marginBottom: activeTab === "support" ? "-1px" : "2px",

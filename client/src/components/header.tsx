@@ -597,7 +597,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                 <a
                   href={isLoggedIn ? "/assessment" : "/portal/login?redirect=/assessment"}
-                  className="flex items-center px-2 py-1.5 border-2 border-[#960D71] text-[#960D71] bg-transparent hover:bg-[#960D71] hover:text-white rounded-md text-xs font-bold transition-all whitespace-nowrap"
+                  className="flex items-center px-2 py-1.5 bg-[#FFD700] border border-[#09080E] text-[#09080E] hover:bg-[#09080E] hover:text-[#FFD700] rounded-md text-xs font-bold transition-all whitespace-nowrap"
                   data-testid="button-digital-iq"
                 >
                   Digital IQ
@@ -653,7 +653,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   Login
                 </a>
               )}
-              <a href={isLoggedIn ? "/assessment" : "/portal/login?redirect=/assessment"} className="flex-1 px-2 py-2 border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white rounded-md text-xs font-bold text-center transition-all" data-testid="button-digital-iq-mobile">
+              <a href={isLoggedIn ? "/assessment" : "/portal/login?redirect=/assessment"} className="flex-1 px-2 py-2 bg-[#FFD700] border border-[#09080E] text-[#09080E] hover:bg-[#09080E] hover:text-[#FFD700] rounded-md text-xs font-bold text-center transition-all" data-testid="button-digital-iq-mobile">
                 Digital IQ
               </a>
             </>

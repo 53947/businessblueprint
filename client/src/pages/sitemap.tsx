@@ -61,7 +61,7 @@ const categoryConfig: Record<string, { icon: any; color: string; description: st
   Assessment: { icon: BarChart3, color: "text-blue-600", description: "Business assessment tools" },
   "Coach Blue": { icon: Brain, color: "text-purple-600", description: "AI-powered coaching" },
   Pricing: { icon: CreditCard, color: "text-emerald-600", description: "Plans and checkout" },
-  "Compass Suite": { icon: MessagesSquare, color: "text-orange-600", description: "Communication suite" },
+  "Compass Suite": { icon: MessagesSquare, color: "text-[#FF6B00]", description: "Communication suite" },
   "Anchor Suite": { icon: Building2, color: "text-pink-600", description: "Local business tools" },
   Relationships: { icon: Users, color: "text-blue-600", description: "CRM and customer management" },
   Portal: { icon: Layout, color: "text-indigo-600", description: "Client portal pages" },

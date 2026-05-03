@@ -213,7 +213,7 @@ export const BUNDLE_REGISTRY: BundleConfig[] = [
   {
     id: "compass",
     name: "Compass Suite",
-    color: "#F97316",
+    color: "#FF6B00",
     icon: "Compass",
     price: 99,
     appIds: ["promote", "respond", "engage", "post"],

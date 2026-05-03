@@ -95,7 +95,7 @@ export function generateAssessmentConfirmationHTML(assessment: AssessmentData): 
       background: #EEFBFF;
     }
     .email-outline {
-      border: 2px solid #F97316;
+      border: 2px solid #FF6B00;
       border-radius: 8px;
       overflow: hidden;
     }
@@ -104,7 +104,7 @@ export function generateAssessmentConfirmationHTML(assessment: AssessmentData): 
       color: #09080E;
       padding: 40px 30px;
       text-align: center;
-      border-bottom: 4px solid #F97316;
+      border-bottom: 4px solid #FF6B00;
     }
     .logo {
       max-width: 300px;
@@ -126,13 +126,13 @@ export function generateAssessmentConfirmationHTML(assessment: AssessmentData): 
       text-align: center; 
       padding: 30px 20px; 
       font-size: 14px; 
-      border-top: 4px solid #F97316;
+      border-top: 4px solid #FF6B00;
     }
     .button { 
       display: inline-block; 
       background: transparent;
-      color: #F97316; 
-      border: 2px solid #F97316;
+      color: #FF6B00; 
+      border: 2px solid #FF6B00;
       padding: 14px 32px; 
       text-decoration: none; 
       border-radius: 8px; 
@@ -142,7 +142,7 @@ export function generateAssessmentConfirmationHTML(assessment: AssessmentData): 
       transition: all 0.3s ease;
     }
     .button:hover {
-      background: #F97316;
+      background: #FF6B00;
       color: white;
     }
     .success-section {
@@ -161,7 +161,7 @@ export function generateAssessmentConfirmationHTML(assessment: AssessmentData): 
       padding: 30px; 
       border-radius: 12px; 
       margin: 30px 0; 
-      border-left: 4px solid #F97316;
+      border-left: 4px solid #FF6B00;
     }
     .timeline-item { 
       display: flex; 
@@ -186,7 +186,7 @@ export function generateAssessmentConfirmationHTML(assessment: AssessmentData): 
     }
     .email-notice {
       background: #EEFBFF;
-      border: 2px solid #F97316;
+      border: 2px solid #FF6B00;
       border-radius: 12px;
       padding: 25px;
       margin: 30px 0;
@@ -307,12 +307,12 @@ export function generateAssessmentConfirmationHTML(assessment: AssessmentData): 
 
       <div style="text-align: center; margin: 30px 0;">
         <a href="https://businessblueprint.io/auth/signup"
-           style="display: inline-block; background: transparent; color: #F97316; border: 2px solid #F97316; padding: 14px 32px; text-decoration: none; border-radius: 8px; margin: 10px 0; font-weight: 700; font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;">
+           style="display: inline-block; background: transparent; color: #FF6B00; border: 2px solid #FF6B00; padding: 14px 32px; text-decoration: none; border-radius: 8px; margin: 10px 0; font-weight: 700; font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;">
           Create Your Free Account →
         </a>
         <br/>
         <a href="https://businessblueprint.io/find-results"
-           style="display: inline-block; background: transparent; color: #F97316; border: 2px solid #F97316; padding: 14px 32px; text-decoration: none; border-radius: 8px; margin: 10px 0; font-weight: 700; font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;">
+           style="display: inline-block; background: transparent; color: #FF6B00; border: 2px solid #FF6B00; padding: 14px 32px; text-decoration: none; border-radius: 8px; margin: 10px 0; font-weight: 700; font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;">
           View Your Results
         </a>
       </div>

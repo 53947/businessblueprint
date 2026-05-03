@@ -44,7 +44,7 @@ export function ALCIcon({ className = "w-16 h-16" }: PathwayIconProps) {
 export function CaptainIcon({ className = "w-16 h-16" }: PathwayIconProps) {
   return (
     <div className={className} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <Ship style={{ width: '90%', height: '90%', color: '#F97316' }} />
+      <Ship style={{ width: '90%', height: '90%', color: '#FF6B00' }} />
     </div>
   );
 }

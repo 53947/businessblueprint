@@ -55,9 +55,9 @@ const PRODUCT_INFO: Record<string, { name: string; url: string; color: string }>
   'reputation': { name: '/ elevate', url: '/elevate', color: '#FFD700' },
   'anchor': { name: 'Anchor Suite', url: '/anchor', color: '#2073E3' },
   'relationships': { name: '/ connect', url: '/connect', color: '#008060' },
-  'hostsBlue': { name: 'HostsBlue', url: 'https://hostsblue.com', color: '#F97316' },
+  'hostsBlue': { name: 'HostsBlue', url: 'https://hostsblue.com', color: '#008060' },
   'scansBlue': { name: 'ScansBlue', url: 'https://scansblue.com', color: '#0000FF' },
-  'swipesBlue': { name: 'SwipesBlue', url: 'https://swipesblue.com', color: '#F97316' },
+  'swipesBlue': { name: 'SwipesBlue', url: 'https://swipesblue.com', color: '#374151' },
 };
 
 const BUNDLE_INFO: Record<string, { name: string; savings: string; products: string[] }> = {
@@ -131,7 +131,7 @@ export function ProductRecommendationCard({ recommendation, showBundleAdvantage 
           <ul className="mb-4 space-y-1">
             {recommendation.productBenefits.slice(0, 3).map((benefit, idx) => (
               <li key={idx} className="flex items-center gap-2 text-sm text-gray-700">
-                <span className="w-1.5 h-1.5 bg-[#F97316] rounded-full" />
+                <span className="w-1.5 h-1.5 bg-[#FF6B00] rounded-full" />
                 {benefit}
               </li>
             ))}
@@ -142,7 +142,7 @@ export function ProductRecommendationCard({ recommendation, showBundleAdvantage 
           {product && (
             <Button
               variant="outline"
-              className="border-[#F97316] text-[#F97316] hover:bg-[#F97316] hover:text-white"
+              className="border-[#FF6B00] text-[#FF6B00] hover:bg-[#FF6B00] hover:text-white"
               onClick={() => {
                 if (isExternalUrl(product.url)) {
                   window.open(product.url, '_blank');

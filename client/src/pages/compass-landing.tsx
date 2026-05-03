@@ -32,7 +32,7 @@ export default function CompassLanding() {
               <Button 
                 size="lg" 
                 className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity text-white"
-                style={{ backgroundColor: '#F97316' }}
+                style={{ backgroundColor: '#FF6B00' }}
                 asChild
                 data-testid="button-get-started"
               >
@@ -42,7 +42,7 @@ export default function CompassLanding() {
                 size="lg" 
                 variant="outline" 
                 className="text-lg px-8 py-6 shadow-md hover:bg-gray-50 transition-colors"
-                style={{ borderColor: '#F97316', color: '#F97316' }}
+                style={{ borderColor: '#FF6B00', color: '#FF6B00' }}
                 asChild
                 data-testid="button-learn-more"
               >
@@ -58,10 +58,10 @@ export default function CompassLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold" style={{ color: '#F97316' }}>${bundleApps[0]?.standalonePrice}/mo</div>
+              <div className="text-4xl font-bold" style={{ color: '#FF6B00' }}>${bundleApps[0]?.standalonePrice}/mo</div>
               <span className="text-white text-xl">each app</span>
               <span className="text-gray-400 text-2xl">|</span>
-              <div className="text-4xl font-bold" style={{ color: '#F97316' }}>${bundlePrice}/mo</div>
+              <div className="text-4xl font-bold" style={{ color: '#FF6B00' }}>${bundlePrice}/mo</div>
               <span className="text-white text-xl">for all {bundleApps.length}</span>
             </div>
             <p className="text-gray-300 text-sm">
@@ -126,7 +126,7 @@ export default function CompassLanding() {
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <div className="flex gap-4">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#F97316' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#FF6B00' }}>
                   <Zap className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -186,7 +186,7 @@ export default function CompassLanding() {
       {/* Value Proposition */}
       <section className="py-16 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-2xl p-8 md:p-12 text-white" style={{ background: 'linear-gradient(to bottom right, #F97316, #8000FF, #FC6ACD)' }}>
+          <div className="rounded-2xl p-8 md:p-12 text-white" style={{ background: 'linear-gradient(to bottom right, #FF6B00, #8000FF, #FC6ACD)' }}>
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
               Why Compass Suite is Different
             </h2>
@@ -244,7 +244,7 @@ export default function CompassLanding() {
             <Button 
               size="lg" 
               className="text-lg px-8 py-6 shadow-lg text-white"
-              style={{ backgroundColor: '#F97316' }}
+              style={{ backgroundColor: '#FF6B00' }}
               asChild
               data-testid="button-view-pricing"
             >
@@ -254,7 +254,7 @@ export default function CompassLanding() {
               size="lg" 
               variant="outline" 
               className="text-lg px-8 py-6 shadow-md"
-              style={{ borderColor: '#F97316', color: '#F97316' }}
+              style={{ borderColor: '#FF6B00', color: '#FF6B00' }}
               asChild
               data-testid="button-get-started"
             >

@@ -634,7 +634,7 @@ export default function MarketplacePage() {
             <Card className="bg-gradient-to-br from-[#8000FF] to-[#B566FF] border-4 border-white rounded-3xl p-10 max-w-3xl mx-auto shadow-2xl">
               <div className="text-center">
                 <div className="flex justify-center mb-6">
-                  <AppIcon name="Compass" size={96} color="#F97316" />
+                  <AppIcon name="Compass" size={96} color="#FF6B00" />
                 </div>
                 <div className="inline-flex items-center gap-3 text-2xl font-black px-6 py-3 rounded-full bg-white/20 backdrop-blur-sm mb-6">
                   <span className="text-white">Compass Suite</span>
