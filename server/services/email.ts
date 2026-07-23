@@ -2,6 +2,8 @@
 import { Resend } from 'resend';
 import { db } from '../db';
 import { emailLogs } from '@shared/schema';
+import { getDisplayScore } from '@shared/score-utils';
+import { getProductIconSvg } from './email-icons';
 
 interface EmailReportData {
   businessName: string;
@@ -530,9 +532,10 @@ export class EmailService {
     digitalScore?: number;
   }): string {
     const portalUrl = `${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/portal/prescriptions`;
-    const scoreSection = data.digitalScore ? `
+    const displayScore = data.digitalScore ? getDisplayScore(data.digitalScore) : null;
+    const scoreSection = displayScore ? `
             <div style="background: rgba(255,255,255,0.2); display: inline-block; padding: 15px 30px; border-radius: 25px; margin: 15px 0; border: 2px solid rgba(255,255,255,0.3);">
-                <div style="font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; font-size: 36px; font-weight: bold;">${data.digitalScore}</div>
+                <div style="font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; font-size: 36px; font-weight: bold;">${displayScore}</div>
                 <div style="font-size: 14px;">Your Digital IQ Score</div>
             </div>` : '';
     
@@ -548,7 +551,7 @@ export class EmailService {
         body { font-family: 'Archivo', Arial, sans-serif; line-height: 1.6; color: #09080E; max-width: 600px; margin: 0 auto; background: #EEFBFF; }
         .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 2px solid #09080E; }
         .header { 
-            background: #0000FF; 
+            background: #09080E; 
             background-image: 
                 linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
@@ -565,14 +568,14 @@ export class EmailService {
                 linear-gradient(90deg, rgba(0,0,255,0.02) 1px, transparent 1px);
             background-size: 20px 20px;
         }
-        .cta-button { display: inline-block; background: #F97316; color: white; padding: 18px 40px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin: 20px 0; box-shadow: 0 4px 15px rgba(249,115,22,0.3); }
+        .cta-button { display: inline-block; background: #FF6B00; color: white; padding: 18px 40px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin: 20px 0; box-shadow: 0 4px 15px rgba(255,107,0,0.3); }
         .footer { background: #09080E; padding: 20px; text-align: center; color: #94a3b8; font-size: 14px; }
-        .footer a { color: #F97316; text-decoration: none; }
+        .footer a { color: #FF6B00; text-decoration: none; }
         .feature-list { list-style: none; padding: 0; margin: 25px 0; background: white; border-radius: 8px; }
         .feature-list li { padding: 12px 15px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; color: #09080E; }
         .feature-list li:last-child { border-bottom: none; }
         .feature-icon { margin-right: 15px; font-size: 20px; }
-        .next-steps { background: white; border-left: 4px solid #0000FF; padding: 20px; margin: 25px 0; border-radius: 0 8px 8px 0; }
+        .next-steps { background: white; border-left: 4px solid #09080E; padding: 20px; margin: 25px 0; border-radius: 0 8px 8px 0; }
     </style>
 </head>
 <body>
@@ -596,7 +599,7 @@ export class EmailService {
             </ul>
             
             <div class="next-steps">
-                <h3 style="font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; color: #0000FF; margin-top: 0;">Your Next Steps:</h3>
+                <h3 style="font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; color: #09080E; margin-top: 0;">Your Next Steps:</h3>
                 <ol style="margin: 10px 0; padding-left: 20px; color: #09080E;">
                     <li>Access your personalized prescription</li>
                     <li>Review your Digital IQ breakdown</li>
@@ -630,24 +633,7 @@ export class EmailService {
     const highPriorityRecs = data.recommendations.filter(r => r.priority === 'high').slice(0, 3);
     const baseUrl = process.env.FRONTEND_URL || 'https://businessblueprint.io';
     
-    const getProductIcon = (productId: string | undefined): string => {
-      const iconMap: Record<string, string> = {
-        'send': 'send.png',
-        'inbox': 'inbox.png', 
-        'content': 'content.png',
-        'livechat': 'livechat.png',
-        'reputation': 'reputation.png',
-        'listings': 'listings.png',
-        'localblue': 'localblue.png',
-        'commverse': 'commverse.png',
-        'relationships': 'relationships.png',
-        'website': 'Website-SEO.png',
-        'seo': 'Website-SEO.png',
-        'hostsblue': 'hostsblue.png',
-        'swipesblue': 'swipesblue.png',
-      };
-      return productId ? `${baseUrl}/${iconMap[productId] || 'send.png'}` : `${baseUrl}/send.png`;
-    };
+    const getProductIcon = (productId: string | undefined): string => getProductIconSvg(productId, 48);
     
     return `
 <!DOCTYPE html>
@@ -681,7 +667,7 @@ export class EmailService {
       color: #09080E;
       padding: 40px 30px;
       text-align: center;
-      border-bottom: 4px solid #F97316;
+      border-bottom: 4px solid #FF6B00;
     }
     .header h1 {
       font-family: 'Archivo Semi Expanded', sans-serif;
@@ -693,7 +679,7 @@ export class EmailService {
     .header .score {
       font-size: 48px;
       font-weight: 700;
-      color: #F97316;
+      color: #FF6B00;
       margin: 20px 0 10px 0;
     }
     .header .score-label {
@@ -719,7 +705,7 @@ export class EmailService {
       font-family: 'Archivo Semi Expanded', sans-serif;
       font-weight: 700;
       font-size: 24px;
-      color: #0000FF;
+      color: #09080E;
       margin: 30px 0 15px 0;
     }
     .content h3 {
@@ -731,14 +717,14 @@ export class EmailService {
     }
     .summary-box {
       background: #ffffff;
-      border-left: 4px solid #F97316;
+      border-left: 4px solid #FF6B00;
       padding: 20px;
       margin: 25px 0;
       border-radius: 4px;
     }
     .recommendation {
       background: #ffffff;
-      border: 2px solid #0000FF;
+      border: 2px solid #09080E;
       border-radius: 8px;
       padding: 25px;
       margin: 25px 0;
@@ -746,7 +732,7 @@ export class EmailService {
     .recommendation-header {
       margin-bottom: 15px;
     }
-    .recommendation-header img {
+    .recommendation-header svg {
       width: 48px;
       height: 48px;
       vertical-align: middle;
@@ -756,11 +742,11 @@ export class EmailService {
       display: inline;
       vertical-align: middle;
       margin: 0;
-      color: #0000FF;
+      color: #09080E;
       font-size: 20px;
     }
     .product-name {
-      color: #F97316;
+      color: #FF6B00;
       font-weight: 700;
       font-size: 18px;
     }
@@ -774,7 +760,7 @@ export class EmailService {
     }
     .bundle-callout {
       background: #ffffff;
-      border: 2px solid #0000FF;
+      border: 2px solid #09080E;
       border-radius: 8px;
       padding: 20px;
       margin: 20px 0;
@@ -795,11 +781,11 @@ export class EmailService {
       vertical-align: middle;
     }
     .bundle-callout strong {
-      color: #0000FF;
+      color: #09080E;
     }
     .cta-button {
       display: inline-block;
-      background: #F97316;
+      background: #FF6B00;
       color: #EEFBFF;
       padding: 16px 32px;
       text-decoration: none;
@@ -808,18 +794,18 @@ export class EmailService {
       font-family: 'Archivo Semi Expanded', sans-serif;
       font-size: 16px;
       margin: 20px 10px 20px 0;
-      border: 2px solid #F97316;
+      border: 2px solid #FF6B00;
     }
     .cta-button.secondary {
-      background: #0000FF;
-      border: 2px solid #0000FF;
+      background: #09080E;
+      border: 2px solid #09080E;
     }
     .footer {
       background: #f2f4f6;
       color: #09080E;
       padding: 30px;
       text-align: center;
-      border-top: 4px solid #F97316;
+      border-top: 4px solid #FF6B00;
     }
     .footer p {
       font-size: 14px;
@@ -834,7 +820,7 @@ export class EmailService {
       <!-- HEADER -->
       <div class="header">
         <h1>Your Digital IQ Assessment Results</h1>
-        <div class="score">${data.digitalScore}<span style="font-size: 24px; opacity: 0.8;">/140</span></div>
+        <div class="score">${getDisplayScore(data.digitalScore || 0)}<span style="font-size: 24px; opacity: 0.8;">/140</span></div>
         <div class="score-label">Digital IQ Score</div>
       </div>
       
@@ -846,7 +832,7 @@ export class EmailService {
         
         <!-- EXECUTIVE SUMMARY -->
         <div class="summary-box">
-          <h3 style="margin-top: 0; color: #0000FF;">What This Score Means</h3>
+          <h3 style="margin-top: 0; color: #09080E;">What This Score Means</h3>
           <p>${data.summary}</p>
           <p><strong>The opportunity:</strong> Businesses that implement foundational digital tools typically see 20-40% revenue growth within the first year.</p>
         </div>
@@ -858,7 +844,7 @@ export class EmailService {
         <!-- RECOMMENDATION: ${rec.title} -->
         <div class="recommendation">
           <div class="recommendation-header">
-            <img src="${getProductIcon(rec.productId)}" alt="${rec.productId || 'Product'}" />
+            ${getProductIcon(rec.productId)}
             <h3>${rec.title}</h3>
           </div>
           
@@ -880,26 +866,26 @@ export class EmailService {
         <!-- BUNDLE ADVANTAGE -->
         <div class="bundle-callout">
           <div style="margin-bottom: 20px;">
-            <strong style="font-size: 18px; color: #0000FF;">💡 Smart Move: Save with Bundles</strong>
+            <strong style="font-size: 18px; color: #09080E;">💡 Smart Move: Save with Bundles</strong>
           </div>
           
           <div class="bundle-item">
-            <img src="${baseUrl}/commverse.png" alt="CommVerse Bundle" />
-            <p><strong>CommVerse Bundle ($99/mo):</strong> Includes Send, Content, Inbox (unified communications), and LiveChat (website chat widget)—all four tools in one integrated platform. Save money and manage everything from one dashboard.</p>
+            ${getProductIconSvg('compass', 48)}
+            <p><strong>Compass Suite ($99/mo):</strong> Includes / promote (email campaigns), / respond (unified inbox), / engage (live chat widget), and / post (social media) — all four communication tools in one integrated platform.</p>
           </div>
-          
+
           <div class="bundle-item" style="margin-top: 20px;">
-            <img src="${baseUrl}/localblue.png" alt="LocalBlue Bundle" />
-            <p><strong>LocalBlue Bundle ($59/mo):</strong> Includes Reputation, business Listings management, and Google Business Profile optimization for complete local SEO dominance.</p>
+            ${getProductIconSvg('anchor', 48)}
+            <p><strong>Anchor Suite ($99/mo):</strong> Includes / publish (business listings), / elevate (reputation & reviews), / optimize (SEO health), and / amplify (advertising) — complete local SEO and visibility.</p>
           </div>
         </div>
         
         <!-- SCANSBLUE FAST CHECK RESULTS (if available) -->
         ${data.fastCheck ? `
-        <div style="background: #ffffff; border: 2px solid #0000FF; border-radius: 8px; padding: 25px; margin: 25px 0;">
+        <div style="background: #ffffff; border: 2px solid #09080E; border-radius: 8px; padding: 25px; margin: 25px 0;">
           <div style="margin-bottom: 15px;">
-            <img src="${baseUrl}/scansblue-icon.png" alt="ScansBlue" style="width: 48px; height: 48px; vertical-align: middle; margin-right: 15px;" />
-            <h3 style="display: inline; vertical-align: middle; margin: 0; color: #0000FF; font-family: 'Archivo Semi Expanded', sans-serif;">Website Technical Analysis</h3>
+            <img src="https://cdn.triadblue.com/brands/scansblue/logo-image.png" alt="ScansBlue" style="width: 48px; height: 48px; vertical-align: middle; margin-right: 15px;" />
+            <h3 style="display: inline; vertical-align: middle; margin: 0; color: #09080E; font-family: 'Archivo Semi Expanded', sans-serif;">Website Technical Analysis</h3>
           </div>
           
           <p style="color: #09080E;">We ran a quick technical analysis of your website. Here's what we found:</p>
@@ -948,7 +934,7 @@ export class EmailService {
           `}
           
           <!-- UPSELL to Full Report -->
-          <div style="background: #DBEAFE; border-left: 4px solid #0000FF; padding: 15px; margin: 20px 0; border-radius: 4px;">
+          <div style="background: #DBEAFE; border-left: 4px solid #09080E; padding: 15px; margin: 20px 0; border-radius: 4px;">
             <p style="font-weight: 600; color: #09080E; margin: 0 0 10px 0;">Want the Complete Picture?</p>
             <p style="color: #09080E; margin: 0 0 10px 0; font-size: 14px;">
               This quick scan revealed your scores. Get a <strong>comprehensive technical analysis</strong> with detailed recommendations, prioritized task list, and actionable fixes.
@@ -956,7 +942,7 @@ export class EmailService {
           </div>
           
           <div style="text-align: center; margin: 20px 0;">
-            <a href="${baseUrl}/scansblue/purchase?assessment=${data.assessmentId}" style="display: inline-block; background: #0000FF; color: #EEFBFF; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-family: 'Archivo Semi Expanded', sans-serif; font-size: 16px; border: 2px solid #0000FF;">
+            <a href="https://scansblue.com/purchase?source=bbp&assessment=${data.assessmentId}" style="display: inline-block; background: #09080E; color: #EEFBFF; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-family: 'Archivo Semi Expanded', sans-serif; font-size: 16px; border: 2px solid #09080E;">
               Get Full Website Audit - $10
             </a>
           </div>
@@ -967,10 +953,10 @@ export class EmailService {
         </div>
         ` : `
         <!-- SCANSBLUE FULL REPORT UPSELL (no Fast Check data available) -->
-        <div style="background: #ffffff; border: 2px solid #0000FF; border-radius: 8px; padding: 25px; margin: 25px 0;">
+        <div style="background: #ffffff; border: 2px solid #09080E; border-radius: 8px; padding: 25px; margin: 25px 0;">
           <div style="margin-bottom: 15px;">
-            <img src="${baseUrl}/scansblue-icon.png" alt="ScansBlue" style="width: 48px; height: 48px; vertical-align: middle; margin-right: 15px;" />
-            <h3 style="display: inline; vertical-align: middle; margin: 0; color: #0000FF; font-family: 'Archivo Semi Expanded', sans-serif;">Want a Complete Website Audit?</h3>
+            <img src="https://cdn.triadblue.com/brands/scansblue/logo-image.png" alt="ScansBlue" style="width: 48px; height: 48px; vertical-align: middle; margin-right: 15px;" />
+            <h3 style="display: inline; vertical-align: middle; margin: 0; color: #09080E; font-family: 'Archivo Semi Expanded', sans-serif;">Want a Complete Website Audit?</h3>
           </div>
           
           <p style="color: #09080E;">Get a <strong>comprehensive technical analysis</strong> of your website with actionable insights:</p>
@@ -988,7 +974,7 @@ export class EmailService {
           </p>
           
           <div style="text-align: center; margin: 20px 0;">
-            <a href="${baseUrl}/scansblue/purchase?assessment=${data.assessmentId}" style="display: inline-block; background: #0000FF; color: #EEFBFF; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-family: 'Archivo Semi Expanded', sans-serif; font-size: 16px; border: 2px solid #0000FF;">
+            <a href="https://scansblue.com/purchase?source=bbp&assessment=${data.assessmentId}" style="display: inline-block; background: #09080E; color: #EEFBFF; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-family: 'Archivo Semi Expanded', sans-serif; font-size: 16px; border: 2px solid #09080E;">
               Get Full Website Audit - $10
             </a>
           </div>
@@ -1259,7 +1245,7 @@ export class EmailService {
         <div class="header">
             <h1>📊 Your Digital Growth Plan is Ready!</h1>
             <p style="font-size: 18px; margin-top: 10px;">${data.businessName}</p>
-            <div class="score-badge">Digital IQ Score: ${data.digitalScore}</div>
+            <div class="score-badge">Digital IQ Score: ${getDisplayScore(data.digitalScore || 0)}</div>
         </div>
         
         <div class="content">
@@ -1413,7 +1399,7 @@ export class EmailService {
     assessmentId: number;
   }): string {
     const baseUrl = process.env.FRONTEND_URL || 'https://businessblueprint.io';
-    const coachBlueIcon = `${baseUrl}/4-AI_Business_Coach_-_Coach_Blue.png`;
+    const coachBlueIcon = `https://cdn.triadblue.com/brands/businessblueprint/logo-image.png`;
     const tourUrl = `${baseUrl}/tour?assessmentId=${data.assessmentId}`;
     const prescriptionUrl = `${baseUrl}/portal/prescriptions`;
     
@@ -1449,7 +1435,7 @@ export class EmailService {
       color: #09080E;
       padding: 40px 30px;
       text-align: center;
-      border-bottom: 4px solid #F97316;
+      border-bottom: 4px solid #FF6B00;
     }
     .content {
       background: #EEFBFF;
@@ -1465,11 +1451,11 @@ export class EmailService {
       color: #09080E;
       padding: 30px;
       text-align: center;
-      border-top: 4px solid #F97316;
+      border-top: 4px solid #FF6B00;
     }
     .cta-button {
       display: inline-block;
-      background: #F97316;
+      background: #FF6B00;
       color: #EEFBFF;
       padding: 16px 32px;
       text-decoration: none;
@@ -1478,7 +1464,7 @@ export class EmailService {
       font-family: 'Archivo Semi Expanded', sans-serif;
       font-size: 16px;
       margin: 20px 10px 20px 0;
-      border: 2px solid #F97316;
+      border: 2px solid #FF6B00;
     }
   </style>
 </head>
@@ -1502,13 +1488,13 @@ export class EmailService {
         
         <p>I'm <strong>Coach Blue</strong>, your AI business mentor here at BusinessBlueprint. Think of me as your personal guide to digital growth—available 24/7 to help you navigate the world of digital marketing and implement your prescription recommendations.</p>
         
-        <h2 style="font-family: 'Archivo Semi Expanded', sans-serif; color: #0000FF; margin-top: 30px;">Your Free Platform Tour</h2>
+        <h2 style="font-family: 'Archivo Semi Expanded', sans-serif; color: #09080E; margin-top: 30px;">Your Free Platform Tour</h2>
         
         <p>Before we dive in, let me give you a <strong>FREE guided tour</strong> of BusinessBlueprint. I'll walk you through:</p>
         
         <ul style="margin: 20px 0; padding-left: 20px;">
           <li><strong>Your Prescription:</strong> How to read and prioritize your recommendations</li>
-          <li><strong>The 5-Step Journey:</strong> Assessment → Prescription → LocalBlue → Coach Blue → CommVerse</li>
+          <li><strong>The 6-Step Journey:</strong> Scan → Prescription → / connect → Anchor Suite → Compass Suite → Coach Blue</li>
           <li><strong>Our Tools:</strong> A complete overview of all 9 apps and what they do</li>
           <li><strong>Getting Started:</strong> Which tools to implement first for maximum impact</li>
         </ul>
@@ -1522,12 +1508,12 @@ export class EmailService {
         <p style="font-size: 14px; color: #09080E; opacity: 0.8; text-align: center;">
           <em>The tour is completely free and you can replay it as many times as you want!</em>
         </p>
-        
-        <div style="border-top: 2px solid #0000FF; border-bottom: 2px solid #0000FF; padding: 20px; margin: 40px 0; background: #ffffff;">
-          <h3 style="font-family: 'Archivo Semi Expanded', sans-serif; color: #0000FF; margin-top: 0;">Want Me as Your Personal Mentor?</h3>
-          
+
+        <div style="border-top: 2px solid #09080E; border-bottom: 2px solid #09080E; padding: 20px; margin: 40px 0; background: #ffffff;">
+          <h3 style="font-family: 'Archivo Semi Expanded', sans-serif; color: #09080E; margin-top: 0;">Want Me as Your Personal Mentor?</h3>
+
           <p>The platform tour is just the beginning. If you want <strong>ongoing, personalized guidance</strong> as you grow your business, I'm available as a premium subscription.</p>
-          
+
           <p><strong>With Coach Blue Premium ($99/mo), I'll help you:</strong></p>
           <ul>
             <li>Implement your prescription step-by-step</li>
@@ -1536,11 +1522,11 @@ export class EmailService {
             <li>Provide strategic advice tailored to your business</li>
             <li>Keep you motivated and on track</li>
           </ul>
-          
-          <p style="margin-bottom: 0;">Think of it like having a business consultant available 24/7—but for a fraction of the cost.</p>
+
+          <p style="margin-bottom: 0;">Think of it like having a business consultant available 24/7--but for a fraction of the cost.</p>
         </div>
         
-        <h2 style="font-family: 'Archivo Semi Expanded', sans-serif; color: #0000FF;">What's Next?</h2>
+        <h2 style="font-family: 'Archivo Semi Expanded', sans-serif; color: #09080E;">What's Next?</h2>
         
         <p>Here's what I recommend:</p>
         
@@ -1558,7 +1544,7 @@ export class EmailService {
             Begin Free Tour
           </a>
           <br>
-          <a href="${prescriptionUrl}" class="cta-button" style="background: #0000FF; border: 2px solid #0000FF;">
+          <a href="${prescriptionUrl}" class="cta-button" style="background: #09080E; border: 2px solid #09080E;">
             View My Prescription
           </a>
         </div>

@@ -263,9 +263,7 @@ export class ScansBlueService {
   
   async getResults(assessmentId: number): Promise<any> {
     try {
-      const results = await db.query.scansBlueResults?.findFirst({
-        where: eq(scansBlueResults.assessmentId, assessmentId)
-      });
+      const [results] = await db.select().from(scansBlueResults).where(eq(scansBlueResults.assessmentId, assessmentId)).limit(1);
       
       if (results && results.criticalIssues) {
         return {

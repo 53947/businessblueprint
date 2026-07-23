@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {} from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -45,58 +45,16 @@ interface ScansBlueResultsProps {
 }
 
 export function ScansBlueResults({ results, websiteUrl, assessmentId, onRequestFullReport }: ScansBlueResultsProps) {
-  const [isPurchasing, setIsPurchasing] = useState(false);
   const { toast } = useToast();
 
   if (!results) return null;
 
-  const handlePurchaseFullReport = async () => {
-    if (!assessmentId) {
-      toast({
-        title: "Error",
-        description: "Assessment ID is required to purchase the full report.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsPurchasing(true);
-    try {
-      const response = await fetch('/api/scansblue/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ assessmentId })
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        let errorMessage = 'Failed to create checkout session';
-        try {
-          const errorData = JSON.parse(errorText);
-          errorMessage = errorData.error || errorMessage;
-        } catch {
-          errorMessage = errorText || errorMessage;
-        }
-        throw new Error(errorMessage);
-      }
-
-      const data = await response.json();
-
-      if (data.success && data.url) {
-        window.location.href = data.url;
-      } else {
-        throw new Error(data.error || 'Failed to create checkout session');
-      }
-    } catch (error: any) {
-      console.error('Purchase error:', error);
-      toast({
-        title: "Purchase Error",
-        description: error.message || "Failed to initiate checkout. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsPurchasing(false);
-    }
+  const handlePurchaseFullReport = () => {
+    // Full report purchases are handled on scansblue.com
+    const url = assessmentId
+      ? `https://scansblue.com/purchase?assessment=${assessmentId}`
+      : "https://scansblue.com/purchase";
+    window.open(url, "_blank", "noopener,noreferrer");
   };
 
   const getScoreColor = (score: number) => {
@@ -119,7 +77,7 @@ export function ScansBlueResults({ results, websiteUrl, assessmentId, onRequestF
       <CardHeader className="bg-[#09080E] text-white rounded-t-lg">
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Zap className="w-5 h-5 text-[#F97316]" />
+            <Zap className="w-5 h-5 text-[#FF6B00]" />
             <span style={{ fontFamily: 'Archivo, sans-serif' }}>Website Technical Analysis</span>
           </div>
           <Badge className={`${getScoreBg(results.overallScore || 0)} ${getScoreColor(results.overallScore || 0)}`}>
@@ -157,7 +115,7 @@ export function ScansBlueResults({ results, websiteUrl, assessmentId, onRequestF
 
           <div className="p-4 bg-[#EEFBFF] rounded-lg" data-testid="performance-score">
             <div className="flex items-center gap-2 mb-2">
-              <Zap className="w-5 h-5 text-[#F97316]" />
+              <Zap className="w-5 h-5 text-[#FF6B00]" />
               <span className="font-semibold text-[#09080E]">Performance</span>
             </div>
             <div className="flex items-center gap-2">
@@ -235,23 +193,18 @@ export function ScansBlueResults({ results, websiteUrl, assessmentId, onRequestF
             </Button>
           ) : (
             <Button
-              className="bg-gradient-to-r from-[#0000FF] to-[#F97316] hover:opacity-90 text-white shadow-lg"
+              className="bg-gradient-to-r from-[#0000FF] to-[#FF6B00] hover:opacity-90 text-white shadow-lg"
               onClick={handlePurchaseFullReport}
-              disabled={isPurchasing}
               data-testid="purchase-full-report"
             >
-              {isPurchasing ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
-                <CreditCard className="w-4 h-4 mr-2" />
-              )}
+              <CreditCard className="w-4 h-4 mr-2" />
               Get Full Report - $10
             </Button>
           )}
           
           <Button
             variant="outline"
-            className="border-[#F97316] text-[#F97316] hover:bg-[#F97316] hover:text-white"
+            className="border-[#FF6B00] text-[#FF6B00] hover:bg-[#FF6B00] hover:text-white"
             onClick={() => window.open('https://hostsblue.com', '_blank')}
             data-testid="visit-hostsblue"
           >
@@ -260,7 +213,7 @@ export function ScansBlueResults({ results, websiteUrl, assessmentId, onRequestF
         </div>
         
         {!results.fullReportUrl && !results.fullReportPurchased && (
-          <div className="mt-4 p-4 bg-gradient-to-r from-[#0000FF]/5 to-[#F97316]/5 rounded-lg border border-[#0000FF]/20">
+          <div className="mt-4 p-4 bg-gradient-to-r from-[#0000FF]/5 to-[#FF6B00]/5 rounded-lg border border-[#0000FF]/20">
             <div className="flex items-start gap-3">
               <FileText className="w-5 h-5 text-[#0000FF] mt-0.5 flex-shrink-0" />
               <div>

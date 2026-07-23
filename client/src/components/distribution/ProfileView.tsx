@@ -87,7 +87,7 @@ export function ProfileView({ profile, isUnlocked, onEditClick }: ProfileViewPro
               <Globe className="w-4 h-4 mt-0.5 text-gray-500 flex-shrink-0" />
               <div>
                 <p className="text-xs text-gray-500">Website</p>
-                <a href={profile.website} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-blue-600 hover:underline">
+                <a href={profile.website} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-blue-600 underline">
                   {profile.website}
                 </a>
               </div>

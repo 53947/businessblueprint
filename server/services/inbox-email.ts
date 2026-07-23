@@ -7,19 +7,15 @@ export class InboxEmailService {
   private transporter: nodemailer.Transporter;
 
   constructor() {
-    const smtpPort = parseInt(process.env.SMTP_PORT || '587');
-    // Allow explicit override, otherwise auto-detect based on port
-    const isSecure = process.env.SMTP_SECURE 
-      ? process.env.SMTP_SECURE === 'true' 
-      : smtpPort === 465;
-      
+    const smtpPort = parseInt(process.env.RESEND_BUSINESSBLUEPRINT_SMTP_PORT || '465');
+
     this.transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtp.gmail.com',
+      host: process.env.RESEND_BUSINESSBLUEPRINT_SMTP_HOSTNAME || 'smtp.resend.com',
       port: smtpPort,
-      secure: isSecure,
+      secure: smtpPort === 465,
       auth: {
-        user: process.env.SMTP_USER || process.env.EMAIL_USER,
-        pass: process.env.SMTP_PASS || process.env.EMAIL_PASS,
+        user: process.env.RESEND_BUSINESSBLUEPRINT_SMTP_USER || 'resend',
+        pass: process.env.RESEND_BUSINESSBLUEPRINT_SMTP_API_KEY || '',
       },
     });
   }
@@ -117,7 +113,7 @@ export class InboxEmailService {
         <div class="message">${content}</div>
     </div>
     <div class="footer">
-        <p>This message was sent from Business Blueprint Inbox</p>
+        <p>This message was sent from Business Blueprint Respond</p>
     </div>
 </body>
 </html>

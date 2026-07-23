@@ -3,3 +3,10 @@ node_modules
 server/public
 vite.config.ts.*
 *.tar.gz
+
+# Screenshots — Replit dumps these, never track them
+**/Screenshot*
+**/screenshot*
+**/dashboard_screenshots/dist/
+.wrangler/
+.env

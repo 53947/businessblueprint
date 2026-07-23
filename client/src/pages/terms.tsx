@@ -1,9 +1,12 @@
 import { Link } from "wouter";
 import { ArrowLeft } from "lucide-react";
+import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
 
 export default function Terms() {
   return (
     <div className="min-h-screen bg-white">
+      <Header />
       <div className="max-w-4xl mx-auto px-6 py-12">
         <Link href="/" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-8">
           <ArrowLeft className="w-4 h-4" />
@@ -26,11 +29,11 @@ export default function Terms() {
           <ul className="list-disc pl-6 mb-4">
             <li>AI-powered Digital Blueprint assessments</li>
             <li>Social media content management and scheduling</li>
-            <li>Unified communication inbox (Commverse)</li>
+            <li>Unified communication inbox (Compass Suite)</li>
             <li>Business listings and reputation management</li>
             <li>Email and SMS marketing automation</li>
             <li>Live chat functionality</li>
-            <li>AI Business Coach</li>
+            <li>Coach Blue</li>
             <li>Marketplace for à la carte services</li>
           </ul>
 
@@ -49,7 +52,7 @@ export default function Terms() {
           <h3 className="text-xl font-semibold mt-6 mb-3">4.1 Pricing Tiers</h3>
           <p className="mb-4">We offer multiple subscription tiers:</p>
           <ul className="list-disc pl-6 mb-4">
-            <li><strong>DIY Pathway:</strong> Self-service tools with AI Coach support</li>
+            <li><strong>DIY Pathway:</strong> Self-service tools with Coach Blue support</li>
             <li><strong>À La Carte:</strong> Individual services purchased separately</li>
           </ul>
 
@@ -99,7 +102,7 @@ export default function Terms() {
 
           <h2 className="text-2xl font-bold mt-8 mb-4">8. AI-Powered Services</h2>
           <p className="mb-4">
-            Our AI services (Digital Blueprint, AI Business Coach, automated review responses) use artificial intelligence. While we strive for accuracy, AI-generated content may not always be perfect. You are responsible for reviewing and approving AI-generated content before publication.
+            Our AI services (Digital Blueprint, Coach Blue, automated review responses) use artificial intelligence. While we strive for accuracy, AI-generated content may not always be perfect. You are responsible for reviewing and approving AI-generated content before publication.
           </p>
 
           <h2 className="text-2xl font-bold mt-8 mb-4">9. Third-Party Services</h2>
@@ -139,10 +142,11 @@ export default function Terms() {
           <p className="mb-4">
             <strong>Business Blueprint</strong><br />
             Email: legal@businessblueprint.io<br />
-            Website: <a href="https://businessblueprint.io" className="text-blue-600 hover:underline">businessblueprint.io</a>
+            Website: <a href="https://businessblueprint.io" className="text-blue-600 underline">businessblueprint.io</a>
           </p>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

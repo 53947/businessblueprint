@@ -3,7 +3,7 @@ import { db } from '../db';
 import { emailLogs, emailTemplates } from '@shared/schema';
 import { insertEmailTemplateSchema, updateEmailTemplateSchema } from '@shared/schema';
 import { eq, desc, and, sql, ilike, gte, lte, or } from 'drizzle-orm';
-import { isAuthenticated } from '../replitAuth';
+import { isAuthenticated } from '../auth';
 import { Resend } from 'resend';
 
 let connectionSettings: any;
@@ -139,14 +139,12 @@ export function registerEmailAdminRoutes(app: Express) {
     try {
       const logId = parseInt(req.params.id);
       
-      const log = await db.query.emailLogs.findFirst({
-        where: eq(emailLogs.id, logId)
-      });
-      
+      const [log] = await db.select().from(emailLogs).where(eq(emailLogs.id, logId)).limit(1);
+
       if (!log) {
         return res.status(404).json({ error: 'Email log not found' });
       }
-      
+
       res.json(log);
     } catch (error) {
       console.error('Error fetching email log:', error);
@@ -176,17 +174,15 @@ export function registerEmailAdminRoutes(app: Express) {
       const logId = parseInt(req.params.logId);
       const { subject, htmlBody, recipientEmail } = req.body; // Optional overrides
       
-      const originalLog = await db.query.emailLogs.findFirst({
-        where: eq(emailLogs.id, logId)
-      });
-      
+      const [originalLog] = await db.select().from(emailLogs).where(eq(emailLogs.id, logId)).limit(1);
+
       if (!originalLog) {
         return res.status(404).json({ error: 'Email log not found' });
       }
-      
+
       const { apiKey, fromEmail } = await getResendCredentials();
       const client = new Resend(apiKey);
-      
+
       const emailSubject = subject || originalLog.subject;
       const emailHtml = htmlBody || originalLog.htmlBody;
       const emailTo = recipientEmail || originalLog.recipientEmail;
@@ -280,14 +276,12 @@ export function registerEmailAdminRoutes(app: Express) {
     try {
       const logId = parseInt(req.params.logId);
       
-      const originalLog = await db.query.emailLogs.findFirst({
-        where: eq(emailLogs.id, logId)
-      });
-      
+      const [originalLog] = await db.select().from(emailLogs).where(eq(emailLogs.id, logId)).limit(1);
+
       if (!originalLog) {
         return res.status(404).json({ error: 'Email log not found' });
       }
-      
+
       if (originalLog.status !== 'failed') {
         return res.status(400).json({ error: 'Can only retry failed emails' });
       }
@@ -358,14 +352,12 @@ export function registerEmailAdminRoutes(app: Express) {
     try {
       const templateId = parseInt(req.params.id);
       
-      const template = await db.query.emailTemplates.findFirst({
-        where: eq(emailTemplates.id, templateId)
-      });
-      
+      const [template] = await db.select().from(emailTemplates).where(eq(emailTemplates.id, templateId)).limit(1);
+
       if (!template) {
         return res.status(404).json({ error: 'Template not found' });
       }
-      
+
       res.json(template);
     } catch (error) {
       console.error('Error fetching email template:', error);
@@ -442,14 +434,12 @@ export function registerEmailAdminRoutes(app: Express) {
       const templateId = parseInt(req.params.id);
       
       // Check if it's a system template
-      const template = await db.query.emailTemplates.findFirst({
-        where: eq(emailTemplates.id, templateId)
-      });
-      
+      const [template] = await db.select().from(emailTemplates).where(eq(emailTemplates.id, templateId)).limit(1);
+
       if (!template) {
         return res.status(404).json({ error: 'Template not found' });
       }
-      
+
       if (template.isSystem) {
         return res.status(400).json({ error: 'Cannot delete system templates' });
       }
@@ -474,14 +464,12 @@ export function registerEmailAdminRoutes(app: Express) {
         return res.status(400).json({ error: 'Missing required field: recipientEmail' });
       }
       
-      const template = await db.query.emailTemplates.findFirst({
-        where: eq(emailTemplates.id, templateId)
-      });
-      
+      const [template] = await db.select().from(emailTemplates).where(eq(emailTemplates.id, templateId)).limit(1);
+
       if (!template) {
         return res.status(404).json({ error: 'Template not found' });
       }
-      
+
       if (!template.isActive) {
         return res.status(400).json({ error: 'Template is not active' });
       }

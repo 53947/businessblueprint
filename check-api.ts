@@ -6,5 +6,4 @@ const client = new AgentMailClient({
 });
 
 console.log('Client properties:', Object.keys(client));
-console.log('Client type:', typeof client);
 console.log('\nClient prototype:', Object.getOwnPropertyNames(Object.getPrototypeOf(client)));

@@ -20,8 +20,18 @@ import { eq } from 'drizzle-orm';
  */
 export async function requireClientPortalAccess(req: any, res: Response, next: NextFunction) {
   try {
-    // Extract clientId from session
-    const sessionClientId = parseInt((req.session as any).clientId || '0');
+    // DEV MODE BYPASS: allow free access to client portal
+    if (process.env.NODE_ENV !== 'production') {
+      req.clientId = parseInt((req.session as any).clientId || '1');
+      req.client = { id: req.clientId, accountStatus: 'active', companyName: 'Dev Client', email: 'dev@localhost' };
+      return next();
+    }
+
+    // Internal server-to-server calls use x-client-id header
+    const internalClientId = req.headers['x-client-id'] ? parseInt(req.headers['x-client-id'] as string) : 0;
+
+    // Extract clientId from session or internal header
+    const sessionClientId = parseInt((req.session as any).clientId || '0') || internalClientId;
     
     // Also check URL param if present (for endpoints like /api/clients/:id/dashboard)
     const urlClientId = req.params.id ? parseInt(req.params.id) : null;
@@ -42,15 +52,12 @@ export async function requireClientPortalAccess(req: any, res: Response, next: N
     }
     
     // Get client from database to check account status
-    const client = await db.query.clients.findFirst({
-      where: eq(clients.id, sessionClientId),
-      columns: {
-        id: true,
-        accountStatus: true,
-        companyName: true,
-        email: true
-      }
-    });
+    const [client] = await db.select({
+      id: clients.id,
+      accountStatus: clients.accountStatus,
+      companyName: clients.companyName,
+      email: clients.email
+    }).from(clients).where(eq(clients.id, sessionClientId)).limit(1);
     
     if (!client) {
       return res.status(404).json({ 

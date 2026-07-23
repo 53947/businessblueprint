@@ -3,64 +3,49 @@ import { db } from '../db';
 import { emailLogs } from '@shared/schema';
 
 async function getResendCredentials(): Promise<{ apiKey: string; fromEmail: string } | null> {
+  // Check ONBOARDING_RESEND_API_KEY env var FIRST (works on Railway, Replit, and all deployments)
+  const envApiKey = process.env.ONBOARDING_RESEND_API_KEY;
+  if (envApiKey) {
+    console.log('[Email] Using ONBOARDING_RESEND_API_KEY from environment');
+    return { apiKey: envApiKey, fromEmail: process.env.FROM_EMAIL || 'noreply@businessblueprint.io' };
+  }
+
+  // Secondary fallback: Replit connector (only works on Replit deployments)
   try {
     const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
-    
     if (!hostname) {
-      const apiKey = process.env.RESEND_API_KEY;
-      if (apiKey) {
-        return { apiKey, fromEmail: process.env.FROM_EMAIL || 'noreply@businessblueprint.io' };
-      }
-      console.warn('[Assessment Email] No Resend connector or RESEND_API_KEY configured');
+      console.error('[Email] FAILED — no ONBOARDING_RESEND_API_KEY env var and no Replit connector configured');
       return null;
     }
-    
-    const xReplitToken = process.env.REPL_IDENTITY 
-      ? 'repl ' + process.env.REPL_IDENTITY 
-      : process.env.WEB_REPL_RENEWAL 
-      ? 'depl ' + process.env.WEB_REPL_RENEWAL 
+
+    const xReplitToken = process.env.REPL_IDENTITY
+      ? 'repl ' + process.env.REPL_IDENTITY
+      : process.env.WEB_REPL_RENEWAL
+      ? 'depl ' + process.env.WEB_REPL_RENEWAL
       : null;
 
     if (!xReplitToken) {
-      const apiKey = process.env.RESEND_API_KEY;
-      if (apiKey) {
-        return { apiKey, fromEmail: process.env.FROM_EMAIL || 'noreply@businessblueprint.io' };
-      }
-      console.warn('[Assessment Email] No Replit token found for connector');
+      console.error('[Email] FAILED — no ONBOARDING_RESEND_API_KEY env var and no Replit connector configured');
       return null;
     }
 
     const connectionSettings = await fetch(
       'https://' + hostname + '/api/v2/connection?include_secrets=true&connector_names=resend',
-      {
-        headers: {
-          'Accept': 'application/json',
-          'X_REPLIT_TOKEN': xReplitToken
-        }
-      }
+      { headers: { 'Accept': 'application/json', 'X_REPLIT_TOKEN': xReplitToken } }
     ).then(res => res.json()).then(data => data.items?.[0]);
 
-    if (!connectionSettings || !connectionSettings.settings?.api_key) {
-      const apiKey = process.env.RESEND_API_KEY;
-      if (apiKey) {
-        console.log('[Assessment Email] Using RESEND_API_KEY from environment');
-        return { apiKey, fromEmail: process.env.FROM_EMAIL || 'noreply@businessblueprint.io' };
-      }
-      console.warn('[Assessment Email] Resend connector not configured');
-      return null;
+    if (connectionSettings?.settings?.api_key) {
+      console.log('[Email] Using Replit connector');
+      return {
+        apiKey: connectionSettings.settings.api_key,
+        fromEmail: connectionSettings.settings.from_email || 'noreply@businessblueprint.io'
+      };
     }
-    
-    console.log('[Assessment Email] Using Resend connector credentials');
-    return {
-      apiKey: connectionSettings.settings.api_key,
-      fromEmail: connectionSettings.settings.from_email || 'noreply@businessblueprint.io'
-    };
+
+    console.error('[Email] FAILED — no ONBOARDING_RESEND_API_KEY env var and no Replit connector configured');
+    return null;
   } catch (error) {
-    console.error('[Assessment Email] Error fetching Resend credentials:', error);
-    const apiKey = process.env.RESEND_API_KEY;
-    if (apiKey) {
-      return { apiKey, fromEmail: process.env.FROM_EMAIL || 'noreply@businessblueprint.io' };
-    }
+    console.error('[Email] FAILED — no ONBOARDING_RESEND_API_KEY env var and no Replit connector configured');
     return null;
   }
 }
@@ -83,7 +68,7 @@ interface AssessmentData {
   industry?: string | null;
 }
 
-function generateAssessmentConfirmationHTML(assessment: AssessmentData): string {
+export function generateAssessmentConfirmationHTML(assessment: AssessmentData): string {
   const displayName = assessment.businessName || assessment.email.split('@')[0];
   
   return `<!DOCTYPE html>
@@ -91,6 +76,8 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light only">
+  <meta name="supported-color-schemes" content="light only">
   <title>Assessment Received</title>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Archivo+Semi+Expanded:wght@600;700&display=swap" rel="stylesheet">
   <style>
@@ -108,7 +95,7 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
       background: #EEFBFF;
     }
     .email-outline {
-      border: 2px solid #09080E;
+      border: 2px solid #FF6B00;
       border-radius: 8px;
       overflow: hidden;
     }
@@ -117,7 +104,7 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
       color: #09080E;
       padding: 40px 30px;
       text-align: center;
-      border-bottom: 4px solid #F97316;
+      border-bottom: 4px solid #FF6B00;
     }
     .logo {
       max-width: 300px;
@@ -139,13 +126,13 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
       text-align: center; 
       padding: 30px 20px; 
       font-size: 14px; 
-      border-top: 4px solid #F97316;
+      border-top: 4px solid #FF6B00;
     }
     .button { 
       display: inline-block; 
       background: transparent;
-      color: #F97316; 
-      border: 2px solid #F97316;
+      color: #FF6B00; 
+      border: 2px solid #FF6B00;
       padding: 14px 32px; 
       text-decoration: none; 
       border-radius: 8px; 
@@ -155,16 +142,16 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
       transition: all 0.3s ease;
     }
     .button:hover {
-      background: #F97316;
+      background: #FF6B00;
       color: white;
     }
     .success-section {
       text-align: center;
       padding: 30px 0;
     }
-    .checkmark { 
-      font-size: 72px; 
-      color: #00FF40; 
+    .checkmark {
+      font-size: 72px;
+      color: #4E7C63;
       line-height: 1;
       display: block;
       margin-bottom: 20px;
@@ -174,7 +161,7 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
       padding: 30px; 
       border-radius: 12px; 
       margin: 30px 0; 
-      border-left: 4px solid #F97316;
+      border-left: 4px solid #FF6B00;
     }
     .timeline-item { 
       display: flex; 
@@ -183,8 +170,8 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
     }
     .timeline-icon { 
       background: transparent;
-      color: #0000FF; 
-      border: 3px solid #0000FF;
+      color: #09080E; 
+      border: 3px solid #09080E;
       min-width: 40px; 
       height: 40px; 
       border-radius: 50%; 
@@ -199,13 +186,13 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
     }
     .email-notice {
       background: #EEFBFF;
-      border: 2px solid #6EA6FF;
+      border: 2px solid #FF6B00;
       border-radius: 12px;
       padding: 25px;
       margin: 30px 0;
     }
     .assessment-id {
-      color: #0000FF;
+      color: #09080E;
       font-weight: 700;
       font-size: 16px;
     }
@@ -214,24 +201,24 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
       font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;
       font-weight: 700;
       font-size: 36px;
-      color: #0000FF;
+      color: #09080E;
     }
     h2 {
       font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;
       font-weight: 700;
-      color: #0000FF;
+      color: #09080E;
       font-size: 24px;
       margin: 0 0 10px 0;
     }
     h3 {
-      color: #0000FF;
+      color: #09080E;
       margin: 0 0 8px 0;
       font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;
       font-weight: 700;
       font-size: 18px;
     }
     h4 {
-      color: #0000FF;
+      color: #09080E;
       margin: 0 0 12px 0;
       font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;
       font-weight: 600;
@@ -244,7 +231,7 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
       margin-top: 10px;
     }
     strong {
-      color: #0000FF;
+      color: #09080E;
       font-weight: 700;
     }
     p {
@@ -260,7 +247,7 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
   <div class="email-container">
     <div class="email-outline">
       <div class="header">
-        <img src="https://businessblueprint.io/1-Master_business_blueprint_icon_and_logo.png" alt="BusinessBlueprint.io" class="logo" />
+        <img src="https://cdn.triadblue.com/brands/businessblueprint/logo-lockup.png" alt="businessblueprint.io" class="logo" />
       </div>
       
       <div class="content">
@@ -273,7 +260,7 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
 
       <p>Hi ${displayName},</p>
       
-      <p><strong>Thank you for completing your BusinessBlueprint.io assessment!</strong> We've received your information and our AI is already getting to work.</p>
+      <p><strong>Thank you for completing your businessblueprint.io assessment!</strong> We've received your information and our AI is already getting to work.</p>
       
       <div class="timeline">
         <h2>What Happens Next</h2>
@@ -283,7 +270,7 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
           <div class="timeline-icon">1</div>
           <div>
             <h3>AI Analysis (2-3 minutes)</h3>
-            <p>Our AI is analyzing your business using Google Business Intelligence and industry best practices to identify growth opportunities.</p>
+            <p>Our AI is scanning your online presence across directories, reviews, social media, and your website to identify growth opportunities.</p>
           </div>
         </div>
         
@@ -298,8 +285,8 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
         <div class="timeline-item">
           <div class="timeline-icon">3</div>
           <div>
-            <h3>Expert Review & Delivery (within 24 hours)</h3>
-            <p>Our team reviews the AI prescription to ensure quality and relevance, then delivers it to your client portal.</p>
+            <h3>Your Prescription is Ready</h3>
+            <p>Your personalized Digital IQ prescription with specific, prioritized recommendations is delivered to your portal and email.</p>
           </div>
         </div>
       </div>
@@ -315,20 +302,26 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
       
       <div class="email-notice">
         <h4>📧 Check Your Email</h4>
-        <p style="margin: 0;">You'll receive another notification when your prescription is ready. In the meantime, you can check the status anytime in your client portal.</p>
+        <p style="margin: 0;">Your prescription is being prepared now. Create your free account to access your personalized Directions for Use — step-by-step setup tasks with suggested timelines built from your prescription.</p>
       </div>
-      
+
       <div style="text-align: center; margin: 30px 0;">
-        <a href="https://businessblueprint.io/portal/assessments" class="button">
-          Check Status in Portal
+        <a href="https://businessblueprint.io/auth/signup"
+           style="display: inline-block; background: transparent; color: #FF6B00; border: 2px solid #FF6B00; padding: 14px 32px; text-decoration: none; border-radius: 8px; margin: 10px 0; font-weight: 700; font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;">
+          Create Your Free Account →
+        </a>
+        <br/>
+        <a href="https://businessblueprint.io/find-results"
+           style="display: inline-block; background: transparent; color: #FF6B00; border: 2px solid #FF6B00; padding: 14px 32px; text-decoration: none; border-radius: 8px; margin: 10px 0; font-weight: 700; font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;">
+          View Your Results
         </a>
       </div>
       </div>
       
       <div class="footer">
-        <p><strong>BusinessBlueprint.io</strong></p>
+        <p><strong>businessblueprint.io</strong></p>
         <p>Your Partner in Local Business Growth</p>
-        <p style="margin-top: 20px; font-size: 12px; opacity: 0.7;">© 2026 BusinessBlueprint.io</p>
+        <p style="margin-top: 20px; font-size: 12px; opacity: 0.7;">© 2026 businessblueprint.io</p>
       </div>
     </div>
   </div>
@@ -359,13 +352,19 @@ export async function sendAssessmentConfirmationEmail(assessment: AssessmentData
       return { success: false, error: 'Email service not configured' };
     }
     
+    console.log('[Assessment Email] Sending from:', resendClient.fromEmail, 'to:', assessment.email);
     const result = await resendClient.client.emails.send({
       from: resendClient.fromEmail,
       to: assessment.email,
       subject: subject,
       html: htmlBody,
     });
-    
+
+    if (result.error) {
+      console.error('[Assessment Email] Resend API ERROR:', JSON.stringify(result.error));
+      return { success: false, error: JSON.stringify(result.error) };
+    }
+
     await db.insert(emailLogs).values({
       recipientEmail: assessment.email,
       recipientName: assessment.businessName || null,
@@ -377,7 +376,7 @@ export async function sendAssessmentConfirmationEmail(assessment: AssessmentData
       resendApiId: result.data?.id || null,
       sentAt: new Date(),
     });
-    
+
     console.log(`[Assessment Email] Confirmation sent to ${assessment.email}, Resend ID: ${result.data?.id}`);
     return { success: true };
     

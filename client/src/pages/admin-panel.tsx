@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Header } from "@/components/header";
+import { getDisplayScore } from "@shared/score-utils";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -62,10 +64,14 @@ import {
   BarChart3,
   PieChart,
   Target,
-  Zap
+  Zap,
+  KeyRound,
+  Trash2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
+import { Label } from "@/components/ui/label";
+import { useAuth } from "@/hooks/useAuth";
 import { format, formatDistanceToNow } from "date-fns";
 import { EmailManagement } from "@/components/admin/email-management";
 import { AISettingsPanel } from "@/components/admin/ai-settings-panel";
@@ -159,6 +165,99 @@ interface SubscriptionWithDetails {
 
 type AdminTab = 'dashboard' | 'clients' | 'assessments' | 'billing' | 'tickets' | 'prescriptions' | 'emails' | 'settings';
 
+function AdminPasswordCard() {
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [pwError, setPwError] = useState("");
+  const [pwSuccess, setPwSuccess] = useState("");
+  const [pwLoading, setPwLoading] = useState(false);
+
+  const handleSetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPwError("");
+    setPwSuccess("");
+
+    if (newPassword.length < 8) {
+      setPwError("Password must be at least 8 characters.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPwError("Passwords do not match.");
+      return;
+    }
+
+    setPwLoading(true);
+    try {
+      const response = await fetch("/api/auth/set-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: newPassword }),
+      });
+      const data = await response.json();
+      if (response.ok && data.success) {
+        setPwSuccess("Password updated successfully.");
+        setNewPassword("");
+        setConfirmPassword("");
+      } else {
+        setPwError(data.message || "Failed to update password.");
+      }
+    } catch {
+      setPwError("Connection error. Please try again.");
+    } finally {
+      setPwLoading(false);
+    }
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <KeyRound className="h-5 w-5" />
+          Admin Password
+        </CardTitle>
+        <CardDescription>
+          Set or change your login password for credential-based sign in.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSetPassword} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="new-password">New Password</Label>
+            <Input
+              id="new-password"
+              type="password"
+              placeholder="Minimum 8 characters"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              disabled={pwLoading}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="confirm-password">Confirm Password</Label>
+            <Input
+              id="confirm-password"
+              type="password"
+              placeholder="Re-enter password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              disabled={pwLoading}
+            />
+          </div>
+          {pwError && (
+            <p className="text-sm text-red-600">{pwError}</p>
+          )}
+          {pwSuccess && (
+            <p className="text-sm text-green-600">{pwSuccess}</p>
+          )}
+          <Button type="submit" disabled={pwLoading} className="w-full">
+            {pwLoading ? "Saving..." : "Set Password"}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
   const [searchQuery, setSearchQuery] = useState("");
@@ -168,8 +267,16 @@ export default function AdminPanel() {
   const [expandedSubscription, setExpandedSubscription] = useState<number | null>(null);
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [clientToDelete, setClientToDelete] = useState<any>(null);
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+
+  // Redirect to login if not authenticated (production)
+  if (!authLoading && !isAuthenticated) {
+    window.location.href = "/login";
+    return null;
+  }
 
   // Fetch all clients
   const { data: clients, isLoading } = useQuery<Client[]>({
@@ -381,7 +488,7 @@ export default function AdminPanel() {
             </div>
             <div>
               <h2 className="font-bold text-lg">Admin Panel</h2>
-              <p className="text-xs text-gray-500">BusinessBlueprint.io</p>
+              <p className="text-xs text-gray-500">businessblueprint.io</p>
             </div>
           </div>
           
@@ -582,7 +689,7 @@ export default function AdminPanel() {
                               </p>
                             </div>
                             {assessment.digitalScore && (
-                              <Badge variant="secondary">{assessment.digitalScore}/100</Badge>
+                              <Badge variant="secondary">{getDisplayScore(assessment.digitalScore || 0)}/140</Badge>
                             )}
                           </div>
                         ))}
@@ -786,6 +893,16 @@ export default function AdminPanel() {
                                     <ExternalLink className="h-4 w-4 mr-2" />
                                     Portal
                                   </Button>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="text-red-600 hover:bg-red-50 hover:text-red-700"
+                                    onClick={() => setClientToDelete(client)}
+                                    data-testid={`button-delete-${client.id}`}
+                                    disabled={(client as any).isProtected}
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
                                 </div>
                               </TableCell>
                             </TableRow>
@@ -855,6 +972,37 @@ export default function AdminPanel() {
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
+
+              {/* Delete Client Confirmation */}
+              <AlertDialog open={!!clientToDelete} onOpenChange={(open) => { if (!open) setClientToDelete(null); }}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete Client</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will permanently delete <strong>{clientToDelete?.companyName}</strong> ({clientToDelete?.email}) and ALL related data including contacts, deals, tasks, notes, and timeline history. This cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      className="bg-red-600 hover:bg-red-700 text-white"
+                      onClick={async () => {
+                        try {
+                          await apiRequest("DELETE", `/api/admin/clients/${clientToDelete.id}`);
+                          toast({ title: "Client deleted", description: `${clientToDelete.companyName} has been removed.` });
+                          queryClient.invalidateQueries({ queryKey: ["/api/admin/clients"] });
+                          setClientToDelete(null);
+                        } catch (error: any) {
+                          toast({ title: "Delete failed", description: error?.message || "Could not delete client", variant: "destructive" });
+                        }
+                      }}
+                      data-testid="button-confirm-delete-client"
+                    >
+                      Delete Permanently
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           )}
 
@@ -960,7 +1108,7 @@ export default function AdminPanel() {
                                 {assessment.digitalScore ? (
                                   <div className="flex items-center gap-2">
                                     <TrendingUp className="h-4 w-4 text-blue-500" />
-                                    <span className="font-bold text-blue-600">{assessment.digitalScore}/100</span>
+                                    <span className="font-bold text-blue-600">{getDisplayScore(assessment.digitalScore || 0)}/140</span>
                                   </div>
                                 ) : (
                                   <span className="text-gray-400 text-sm">N/A</span>
@@ -1425,6 +1573,8 @@ export default function AdminPanel() {
                     </div>
                   </CardContent>
                 </Card>
+
+                <AdminPasswordCard />
 
                 <Card>
                   <CardHeader>

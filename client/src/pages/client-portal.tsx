@@ -1,45 +1,50 @@
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 import { format } from "date-fns";
 import { useLocation } from "wouter";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
+import { Footer } from "@/components/footer";
 import { SideNav } from "@/components/side-nav";
+import { SetupNotifications } from "@/components/setup-notifications";
+import { getDisplayScore } from "@shared/score-utils";
 import { BrandLogo } from "@/components/brand-logo";
+import { AppIcon } from "@/components/app-name";
 import { Header } from "@/components/header";
-import ContentManagement from "@/pages/content-management";
-import { 
-  BarChart3, 
-  Star, 
-  Globe, 
-  MessageSquare, 
-  TrendingUp, 
+import { BundleSection } from "@/components/bundle-section";
+import { BUNDLE_REGISTRY, getAppsByBundle } from "@/config/app-registry";
+import {
+  Globe,
+  MessageSquare,
   Calendar,
   MapPin,
   Phone,
   Mail,
-  ExternalLink,
   CheckCircle,
   AlertCircle,
   Clock,
-  LogOut,
   Brain,
   Home,
-  Share2,
   CheckSquare,
-  MessageCircle,
-  Bell,
   Lock,
   CreditCard,
   DollarSign,
   Package,
   Users,
-  Sparkles
+  Sparkles,
+  Pencil,
+  Save,
+  X
 } from "lucide-react";
 
 export default function ClientPortal() {
@@ -49,6 +54,12 @@ export default function ClientPortal() {
   const [activeTab, setActiveTab] = useState("overview");
   const [showTaskDialog, setShowTaskDialog] = useState(false);
   const [taskFilter, setTaskFilter] = useState("all");
+  // Profile editing state
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [profileForm, setProfileForm] = useState({ companyName: "", phone: "", address: "", website: "" });
+  const [smsConsentEdit, setSmsConsentEdit] = useState(false);
+  const [showProfileConfirm, setShowProfileConfirm] = useState(false);
+  const [profileConfirmText, setProfileConfirmText] = useState("");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -84,6 +95,84 @@ export default function ClientPortal() {
     enabled: !!clientId,
   });
 
+  // Fetch CRM tasks
+  const queryClient = useQueryClient();
+  const tasksQueryKey = `/api/crm/tasks?clientId=${clientId}`;
+  const { data: tasksData } = useQuery<any>({
+    queryKey: [tasksQueryKey],
+    enabled: !!clientId,
+  });
+
+  const createTaskMutation = useMutation({
+    mutationFn: (data: any) => apiRequest("POST", "/api/crm/tasks", data).then(r => r.json()),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: [tasksQueryKey] }); toast({ title: "Task created" }); setShowTaskDialog(false); },
+  });
+
+  const deleteTaskMutation = useMutation({
+    mutationFn: (id: number) => apiRequest("DELETE", `/api/crm/tasks/${id}`),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: [tasksQueryKey] }); toast({ title: "Task deleted" }); },
+  });
+
+  const toggleTaskMutation = useMutation({
+    mutationFn: ({ id, status }: { id: number; status: string }) =>
+      apiRequest("PATCH", `/api/crm/tasks/${id}`, { status }).then(r => r.json()),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: [tasksQueryKey] }),
+  });
+
+  const updateProfileMutation = useMutation({
+    mutationFn: (payload: { companyName: string; phone: string; address: string; website: string; confirmationText: string; smsConsent: boolean }) =>
+      apiRequest("PATCH", "/api/portal/profile", payload).then(r => r.json()),
+    onSuccess: (result: any) => {
+      if (result?.success === false) {
+        toast({ title: "Update failed", description: result.message, variant: "destructive" });
+        return;
+      }
+      toast({ title: "Profile updated", description: "Your business information has been saved." });
+      queryClient.invalidateQueries({ queryKey: [`/api/clients/${clientId}/dashboard`] });
+      setIsEditingProfile(false);
+      setShowProfileConfirm(false);
+      setProfileConfirmText("");
+      setSmsConsentEdit(false);
+    },
+    onError: (error: any) => {
+      toast({ title: "Update failed", description: error?.message || "Could not update profile", variant: "destructive" });
+    },
+  });
+
+  const startEditingProfile = () => {
+    const c = dashboardData?.data?.client;
+    if (!c) return;
+    setProfileForm({
+      companyName: c.companyName || "",
+      phone: c.phone || "",
+      address: c.address || "",
+      website: c.website || "",
+    });
+    setSmsConsentEdit(false);
+    setIsEditingProfile(true);
+  };
+
+  const cancelEditingProfile = () => {
+    setIsEditingProfile(false);
+    setShowProfileConfirm(false);
+    setProfileConfirmText("");
+    setSmsConsentEdit(false);
+  };
+
+  const handleConfirmProfileSave = () => {
+    const currentPhone = clientData?.client?.phone || "";
+    const phoneChanged = profileForm.phone.trim() && profileForm.phone.trim() !== currentPhone.trim();
+    if (phoneChanged && !smsConsentEdit) {
+      toast({
+        title: "Consent required",
+        description: "You must agree to receive SMS notifications to update your phone number.",
+        variant: "destructive",
+      });
+      return;
+    }
+    updateProfileMutation.mutate({ ...profileForm, confirmationText: profileConfirmText, smsConsent: smsConsentEdit });
+  };
+
   const handleSignOut = () => {
     // Clear all session data including JWT token
     sessionStorage.removeItem("clientId");
@@ -93,41 +182,8 @@ export default function ClientPortal() {
     setLocation("/portal/login");
   };
 
-  const handleManageListing = (platform: string) => {
-    const platformUrls = {
-      'Google Business': 'https://business.google.com',
-      'Yelp': 'https://biz.yelp.com',
-      'Facebook': 'https://business.facebook.com',
-      'Apple Maps': 'https://mapsconnect.apple.com'
-    };
-    
-    const url = platformUrls[platform as keyof typeof platformUrls];
-    if (url) {
-      window.open(url, '_blank');
-      toast({
-        title: "Redirecting to " + platform,
-        description: "Opening your " + platform + " business management page..."
-      });
-    } else {
-      toast({
-        title: "Coming Soon",
-        description: platform + " management integration is being developed."
-      });
-    }
-  };
-
-  const handleCompleteTask = (taskTitle: string) => {
-    toast({
-      title: "Task Completed!",
-      description: `"${taskTitle}" has been marked as complete.`
-    });
-  };
-
   const handleViewMessages = () => {
-    toast({
-      title: "Messages",
-      description: "Message management interface is being developed. Check back soon!"
-    });
+    setLocation("/respond");
   };
 
   const navigateToTab = (tab: string) => {
@@ -141,13 +197,13 @@ export default function ClientPortal() {
   const handleActivityClick = (activity: string) => {
     switch (activity) {
       case 'New review response needed':
-        navigateToTab('reviews');
+        setLocation('/elevate/dashboard');
         break;
       case 'Listing verification pending':
-        navigateToTab('listings');
+        setLocation('/publish/dashboard');
         break;
       case 'Campaign performance update':
-        navigateToTab('campaigns');
+        setLocation('/promote/dashboard');
         break;
       case 'Task deadline approaching':
         navigateToTab('tasks');
@@ -155,14 +211,14 @@ export default function ClientPortal() {
       default:
         toast({
           title: activity,
-          description: "More details available in the relevant tab"
+          description: "More details available in the relevant app"
         });
     }
   };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-[#E9ECF0]">
         <header className="bg-white shadow-sm border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
@@ -192,7 +248,7 @@ export default function ClientPortal() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#E9ECF0] flex items-center justify-center">
         <Alert className="max-w-md">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
@@ -207,16 +263,17 @@ export default function ClientPortal() {
   if (!clientData) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-[#E9ECF0] flex flex-col">
       {/* Main Navigation Header */}
       <Header showNavigation={true} />
       
       <div className="flex flex-1">
       {/* Side Navigation */}
-      <SideNav 
-        activeTab={activeTab} 
-        onTabChange={setActiveTab} 
+      <SideNav
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
         onSignOut={handleSignOut}
+        enabledFeatures={dashboardData?.client?.enabledFeatures}
         data-testid="portal-side-nav"
       />
 
@@ -252,17 +309,44 @@ export default function ClientPortal() {
       <div className="px-4 sm:px-6 lg:px-8 py-8">
         {/* Digital IQ + Business Info Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Digital IQ - Half Size */}
-          <Card className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+          {/* Digital IQ */}
+          <Card className="bg-[#09080E] text-white">
             <CardContent className="p-4">
-              <div className="text-center">
+              <div className="text-center mb-3">
                 <h2 className="text-lg font-bold mb-1">Digital IQ</h2>
-                <div className="text-4xl font-bold mb-1">{clientData.digitalScore}</div>
+                <div className="text-4xl font-bold mb-1">{getDisplayScore(clientData.digitalScore || 0)}</div>
                 <p className="text-xs text-blue-100">Updated {new Date(clientData.lastUpdated).toLocaleDateString()}</p>
-                <div className="flex items-center justify-center gap-2 mt-2">
-                  <Brain className="h-4 w-4" />
-                  <span className="text-xs">Powered by businessblueprint AI</span>
-                </div>
+              </div>
+              {/* Score improvement insights */}
+              <div className="space-y-2 mt-3 pt-3 border-t border-white/20">
+                {!clientData.listings?.verified && (
+                  <div className="flex items-center gap-2 text-xs text-blue-100">
+                    <Sparkles className="h-3 w-3 flex-shrink-0" />
+                    <span>Set up <strong>/ publish</strong> to add +15 pts (directory listings)</span>
+                  </div>
+                )}
+                {!clientData.reviews?.average && (
+                  <div className="flex items-center gap-2 text-xs text-blue-100">
+                    <Sparkles className="h-3 w-3 flex-shrink-0" />
+                    <span>Activate <strong>/ elevate</strong> to add +10 pts (reputation mgmt)</span>
+                  </div>
+                )}
+                {!clientData.socialMedia?.isSetup && (
+                  <div className="flex items-center gap-2 text-xs text-blue-100">
+                    <Sparkles className="h-3 w-3 flex-shrink-0" />
+                    <span>Connect <strong>/ post</strong> to add +10 pts (social presence)</span>
+                  </div>
+                )}
+                {!clientData.campaigns?.active && (
+                  <div className="flex items-center gap-2 text-xs text-blue-100">
+                    <Sparkles className="h-3 w-3 flex-shrink-0" />
+                    <span>Launch a <strong>/ promote</strong> campaign to add +10 pts</span>
+                  </div>
+                )}
+              </div>
+              <div className="flex items-center justify-center gap-2 mt-3">
+                <Brain className="h-4 w-4" />
+                <span className="text-xs">Powered by businessblueprint.io AI</span>
               </div>
             </CardContent>
           </Card>
@@ -270,96 +354,272 @@ export default function ClientPortal() {
           {/* Business Information - Upper Right */}
           <Card className="border-2 border-blue-200">
             <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-base">
-                <MapPin className="h-4 w-4" />
-                Business Information
-              </CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <MapPin className="h-4 w-4" />
+                  Business Information
+                </CardTitle>
+                {!isEditingProfile ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={startEditingProfile}
+                    data-testid="button-edit-profile"
+                  >
+                    <Pencil className="h-3.5 w-3.5 mr-1" />
+                    Edit
+                  </Button>
+                ) : (
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={cancelEditingProfile}
+                      data-testid="button-cancel-profile"
+                    >
+                      <X className="h-3.5 w-3.5 mr-1" />
+                      Cancel
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="text-white"
+                      style={{ backgroundColor: "#008060" }}
+                      onClick={() => setShowProfileConfirm(true)}
+                      data-testid="button-save-profile"
+                    >
+                      <Save className="h-3.5 w-3.5 mr-1" />
+                      Save Changes
+                    </Button>
+                  </div>
+                )}
+              </div>
             </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Mail className="h-3.5 w-3.5 text-gray-500" />
-                <span className="text-sm">{clientData.client.email}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Phone className="h-3.5 w-3.5 text-gray-500" />
-                <span className="text-sm">{clientData.client.phone}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="h-3.5 w-3.5 text-gray-500" />
-                <span className="text-sm">{clientData.client.address}</span>
-              </div>
-              {clientData.client.website && (
-                <div className="flex items-center gap-2">
-                  <Globe className="h-3.5 w-3.5 text-gray-500" />
-                  <a href={clientData.client.website} target="_blank" rel="noopener noreferrer" 
-                     className="text-sm text-blue-600 hover:text-blue-800 break-all">
-                    {clientData.client.website}
-                  </a>
+            <CardContent className="space-y-3">
+              {!isEditingProfile ? (
+                <>
+                  <div className="flex items-center gap-2">
+                    <Users className="h-3.5 w-3.5 text-gray-500" />
+                    <span className="text-sm font-semibold">{clientData.client.companyName}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-3.5 w-3.5 text-gray-500" />
+                    <span className="text-sm">{clientData.client.email}</span>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Lock className="h-3 w-3 text-gray-400" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-xs">Contact support to change your email address</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Phone className="h-3.5 w-3.5 text-gray-500" />
+                    <span className="text-sm">{clientData.client.phone || "Not set"}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-3.5 w-3.5 text-gray-500" />
+                    <span className="text-sm">{clientData.client.address || "Not set"}</span>
+                  </div>
+                  {clientData.client.website && (
+                    <div className="flex items-center gap-2">
+                      <Globe className="h-3.5 w-3.5 text-gray-500" />
+                      <a href={clientData.client.website} target="_blank" rel="noopener noreferrer"
+                         className="text-sm text-blue-600 hover:text-blue-800 break-all underline">
+                        {clientData.client.website}
+                      </a>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="space-y-3">
+                  <div>
+                    <Label htmlFor="edit-company" className="text-xs text-gray-600">Business Name</Label>
+                    <Input
+                      id="edit-company"
+                      value={profileForm.companyName}
+                      onChange={(e) => setProfileForm({ ...profileForm, companyName: e.target.value })}
+                      className="mt-1"
+                      data-testid="input-profile-company"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-xs text-gray-600 flex items-center gap-1">
+                      Email <Lock className="h-3 w-3 text-gray-400" />
+                    </Label>
+                    <Input
+                      value={clientData.client.email}
+                      disabled
+                      className="mt-1 bg-gray-100 text-gray-500"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Contact support to change your email address</p>
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-phone" className="text-xs text-gray-600">Phone</Label>
+                    <Input
+                      id="edit-phone"
+                      value={profileForm.phone}
+                      onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })}
+                      className="mt-1"
+                      data-testid="input-profile-phone"
+                    />
+                    {profileForm.phone.trim() && profileForm.phone.trim() !== (clientData.client.phone || "").trim() && (
+                      <div className="flex items-start gap-2 mt-2">
+                        <input
+                          type="checkbox"
+                          id="smsConsentEdit"
+                          checked={smsConsentEdit}
+                          onChange={(e) => setSmsConsentEdit(e.target.checked)}
+                          className="mt-1 h-4 w-4 rounded border-gray-300 text-[#008060] focus:ring-[#008060]"
+                          data-testid="checkbox-sms-consent-edit"
+                        />
+                        <label htmlFor="smsConsentEdit" className="text-xs text-gray-600 leading-tight">
+                          I agree to receive SMS notifications from businessblueprint.io about my account and platform updates. Message and data rates may apply. Reply STOP to unsubscribe.
+                        </label>
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-address" className="text-xs text-gray-600">Address</Label>
+                    <Input
+                      id="edit-address"
+                      value={profileForm.address}
+                      onChange={(e) => setProfileForm({ ...profileForm, address: e.target.value })}
+                      className="mt-1"
+                      data-testid="input-profile-address"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-website" className="text-xs text-gray-600">Website</Label>
+                    <Input
+                      id="edit-website"
+                      value={profileForm.website}
+                      onChange={(e) => setProfileForm({ ...profileForm, website: e.target.value })}
+                      className="mt-1"
+                      data-testid="input-profile-website"
+                    />
+                  </div>
                 </div>
               )}
               <div className="mt-3 pt-3 border-t border-gray-200">
                 <Alert className="bg-amber-50 border-amber-200">
                   <Lock className="h-4 w-4 text-amber-600" />
                   <AlertDescription className="text-xs text-amber-800">
-                    <strong>Protected:</strong> This information is used for Local SEO listings and citations. Changes require verification.
+                    Your business information is used across directory listings and citations. Changes are tracked and logged.
                   </AlertDescription>
                 </Alert>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full mt-3"
+                  onClick={() => setLocation("/publish/dashboard")}
+                  data-testid="button-use-profile-publish"
+                >
+                  Use this profile for&nbsp;<span style={{ color: "#09080E" }}>/</span>&nbsp;<span style={{ color: "#064A6C" }}>publish</span>
+                </Button>
               </div>
             </CardContent>
           </Card>
+
+          {/* Profile Change Confirmation Dialog */}
+          <Dialog open={showProfileConfirm} onOpenChange={(open) => { if (!open) { setShowProfileConfirm(false); setProfileConfirmText(""); } }}>
+            <DialogContent data-testid="dialog-profile-confirm">
+              <DialogHeader>
+                <DialogTitle>Confirm Profile Changes</DialogTitle>
+                <DialogDescription>
+                  Changing your business information affects your directory listings and local SEO. To confirm, type your current business name:
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-2 py-2">
+                <Label htmlFor="profile-confirm-input" className="text-sm text-gray-600">
+                  Current business name: <strong>{clientData.client.companyName}</strong>
+                </Label>
+                <Input
+                  id="profile-confirm-input"
+                  value={profileConfirmText}
+                  onChange={(e) => setProfileConfirmText(e.target.value)}
+                  placeholder="Type your current business name"
+                  data-testid="input-profile-confirm"
+                />
+              </div>
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => { setShowProfileConfirm(false); setProfileConfirmText(""); }}
+                  data-testid="button-profile-confirm-cancel"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="text-white"
+                  style={{ backgroundColor: "#008060" }}
+                  disabled={
+                    profileConfirmText.trim().toLowerCase() !== (clientData.client.companyName || "").trim().toLowerCase() ||
+                    updateProfileMutation.isPending
+                  }
+                  onClick={handleConfirmProfileSave}
+                  data-testid="button-profile-confirm-save"
+                >
+                  {updateProfileMutation.isPending ? "Saving..." : "Confirm & Save"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* CRM Hub - Prominent Entry Point */}
-        <Card className="mb-8 border-2 border-green-500 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950" data-testid="card-relationships-crm">
+        <Card className="mb-8 border-2 border-green-500 bg-gradient-to-r from-green-50 to-emerald-50" data-testid="card-relationships-crm">
           <CardContent className="p-6">
             <div className="flex flex-col md:flex-row items-center gap-6">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-xl flex items-center justify-center">
-                  <Users className="w-8 h-8 text-green-600 dark:text-green-400" />
+                <div className="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center">
+                  <Users className="w-8 h-8 text-green-600" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">/relationships</h3>
+                    <h3 className="text-xl font-bold" style={{ fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif' }}><span style={{ color: '#09080E' }}>/ </span><span style={{ color: '#008060' }}>connect</span></h3>
                     <Badge className="bg-green-500 text-white">CRM</Badge>
                   </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-sm text-gray-600">
                     Your customer command center — manage contacts, deals, and tasks
                   </p>
                 </div>
               </div>
-              <div className="flex-1 grid grid-cols-3 gap-4 text-center">
+              <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
                 <div>
-                  <div className="text-2xl font-bold text-gray-900 dark:text-white" data-testid="text-crm-contacts-count">
+                  <div className="text-2xl font-bold text-gray-900" data-testid="text-crm-contacts-count">
                     {clientData?.crm?.contactsCount || 0}
                   </div>
                   <p className="text-xs text-gray-500">Contacts</p>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-gray-900 dark:text-white" data-testid="text-crm-deals-count">
+                  <div className="text-2xl font-bold text-gray-900" data-testid="text-crm-deals-count">
                     {clientData?.crm?.activeDeals || 0}
                   </div>
                   <p className="text-xs text-gray-500">Active Deals</p>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-gray-900 dark:text-white" data-testid="text-crm-tasks-count">
+                  <div className="text-2xl font-bold text-gray-900" data-testid="text-crm-tasks-count">
                     {clientData?.crm?.tasksDue || 0}
                   </div>
                   <p className="text-xs text-gray-500">Tasks Due</p>
                 </div>
               </div>
               <div className="flex gap-3">
-                <Button 
-                  variant="outline" 
-                  className="border-green-500 text-green-700 hover:bg-green-100 dark:text-green-400 dark:hover:bg-green-900"
-                  onClick={() => setLocation("/relationships")}
+                <Button
+                  variant="outline"
+                  className="border-green-500 text-green-700 hover:bg-green-100"
+                  onClick={() => setLocation("/connect/dashboard")}
                   data-testid="button-open-crm"
                 >
                   <Users className="w-4 h-4 mr-2" />
                   Open CRM
                 </Button>
-                <Button 
+                <Button
                   className="bg-green-600 hover:bg-green-700 text-white"
-                  onClick={() => setLocation("/relationships")}
+                  onClick={() => setLocation("/connect/dashboard?action=add-contact")}
                   data-testid="button-add-contact"
                 >
                   <Sparkles className="w-4 h-4 mr-2" />
@@ -367,14 +627,14 @@ export default function ClientPortal() {
                 </Button>
               </div>
             </div>
-            
+
             {/* First-run prompt for new users - only show when no contacts */}
             {(!clientData?.crm?.contactsCount || clientData.crm.contactsCount === 0) && (
-              <div className="mt-4 pt-4 border-t border-green-200 dark:border-green-800">
-                <Alert className="bg-green-100 dark:bg-green-900/50 border-green-200 dark:border-green-800">
-                  <Sparkles className="h-4 w-4 text-green-600 dark:text-green-400" />
-                  <AlertDescription className="text-sm text-green-800 dark:text-green-200">
-                    <strong>Get Started:</strong> Your CRM is the single source of truth for all customer data. 
+              <div className="mt-4 pt-4 border-t border-green-200">
+                <Alert className="bg-green-100 border-green-200">
+                  <Sparkles className="h-4 w-4 text-green-600" />
+                  <AlertDescription className="text-sm text-green-800">
+                    <strong>Get Started:</strong> Your CRM is the single source of truth for all customer data.
                     Add your first contact to unlock unified timelines, deal tracking, and automation across all your apps.
                   </AlertDescription>
                 </Alert>
@@ -383,236 +643,16 @@ export default function ClientPortal() {
           </CardContent>
         </Card>
 
-        {/* 5 Service Boxes - Official Order */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-          {/* 1. Local SEO Management - /listings */}
-          <Card className="hover:shadow-lg transition-shadow" data-testid="card-local-seo">
-            <CardContent className="p-6">
-              {/* Results Section (TOP) */}
-              <div className="flex items-center justify-center gap-3 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/listings app_1762804610311.png" alt="/listings" className="w-8 h-8" />
-                <div className="text-center">
-                  <div className="flex gap-3">
-                    <div>
-                      <div className="text-2xl font-bold text-gray-900">{clientData.listings.verified || 5}</div>
-                      <p className="text-[10px] text-gray-600">Listings</p>
-                    </div>
-                    <div className="border-l border-gray-300"></div>
-                    <div>
-                      <div className="text-2xl font-bold text-gray-900">{clientData.listings.citations || 12}</div>
-                      <p className="text-[10px] text-gray-600">Citations</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Icon & Content (MIDDLE) */}
-              <div className="text-center mb-4">
-                <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/listings app_1762804610311.png" alt="/listings" className="w-16 h-16" />
-                </div>
-                <div className="flex justify-center mb-2">
-                  <img src="/attached_assets/: listings color triad black and FF0040_1762806224294.png" alt="/listings" className="h-5" />
-                </div>
-                <p className="text-xs text-gray-600">Directory sync & consistency</p>
-              </div>
-              
-              {/* Action Button (BOTTOM) */}
-              <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("listings")} data-testid="button-manage-local-seo">
-                <img src="/attached_assets/listings app_1762804610311.png" alt="" className="w-4 h-4" />
-                <span>Manage</span>
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* 2. /send */}
-          <Card className="hover:shadow-lg transition-shadow" data-testid="card-send">
-            <CardContent className="p-6">
-              {/* Results Section (TOP) */}
-              <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/native icons and favicons/: send app icon.png" alt="/send" className="w-8 h-8" />
-                <div className="text-center w-full">
-                  {clientData.campaigns.latest ? (
-                    <>
-                      <div className="text-sm font-bold text-gray-900 mb-1">{clientData.campaigns.latest.name}</div>
-                      <div className="grid grid-cols-3 gap-1 text-xs">
-                        <div>
-                          <div className="text-base font-bold text-gray-900">{clientData.campaigns.latest.clickThroughs}</div>
-                          <p className="text-[9px] text-gray-600">Clicks</p>
-                        </div>
-                        <div>
-                          <div className="text-base font-bold text-gray-900">{clientData.campaigns.latest.purchases}</div>
-                          <p className="text-[9px] text-gray-600">Sales</p>
-                        </div>
-                        <div>
-                          <div className="text-base font-bold text-gray-900">{clientData.campaigns.latest.unsubscribes}</div>
-                          <p className="text-[9px] text-gray-600">Unsubs</p>
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="text-sm text-gray-500">No campaigns yet</div>
-                  )}
-                </div>
-              </div>
-              
-              {/* Icon & Content (MIDDLE) */}
-              <div className="text-center mb-4">
-                <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/native icons and favicons/: send app icon.png" alt="/send" className="w-16 h-16" />
-                </div>
-                <div className="flex justify-center">
-                  <img src="/attached_assets/logos and wordmarks/: send app logo.png" alt="/send" className="h-6" />
-                </div>
-                <p className="text-xs text-gray-600">Email & SMS campaigns</p>
-              </div>
-              
-              {/* Action Button (BOTTOM) */}
-              <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("campaigns")} data-testid="button-schedule-campaign">
-                <img src="/attached_assets/native icons and favicons/: send app icon.png" alt="" className="w-4 h-4" />
-                <span>Schedule</span>
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* 3. Social Media Management */}
-          <Card className="hover:shadow-lg transition-shadow" data-testid="card-social-media">
-            <CardContent className="p-6">
-              {/* Results Section (TOP) */}
-              <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/native icons and favicons/: content app icon.png" alt="Social Media" className="w-8 h-8" />
-                <div className="text-center">
-                  <div className="grid grid-cols-3 gap-2 text-xs">
-                    <div>
-                      <div className="text-lg font-bold text-gray-900">{clientData.socialMedia?.newLikes || 0}</div>
-                      <p className="text-[9px] text-gray-600">Likes</p>
-                    </div>
-                    <div>
-                      <div className="text-lg font-bold text-gray-900">{clientData.socialMedia?.newComments || 0}</div>
-                      <p className="text-[9px] text-gray-600">Comments</p>
-                    </div>
-                    <div>
-                      <div className="text-lg font-bold text-gray-900">{clientData.socialMedia?.newMessages || 0}</div>
-                      <p className="text-[9px] text-gray-600">Messages</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Icon & Content (MIDDLE) */}
-              <div className="text-center mb-4">
-                <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/native icons and favicons/: content app icon.png" alt="Social Media" className="w-16 h-16" />
-                </div>
-                <div className="flex justify-center">
-                  <img src="/attached_assets/logos and wordmarks/: content app logo.png" alt="/content" className="h-6" />
-                </div>
-                <p className="text-xs text-gray-600">Social Media Management</p>
-              </div>
-              
-              {/* Action Button (BOTTOM) - Conditional */}
-              {clientData.socialMedia?.isSetup ? (
-                <div className="grid grid-cols-2 gap-2">
-                  <Button size="sm" variant="outline" className="flex items-center justify-center gap-1" onClick={() => setActiveTab("social")} data-testid="button-schedule-social">
-                    <img src="/attached_assets/native icons and favicons/: content app icon.png" alt="" className="w-4 h-4" />
-                    <span className="text-xs">Schedule</span>
-                  </Button>
-                  <Button size="sm" variant="outline" className="flex items-center justify-center gap-1" onClick={() => setActiveTab("social")} data-testid="button-respond-social">
-                    <img src="/attached_assets/native icons and favicons/: content app icon.png" alt="" className="w-4 h-4" />
-                    <span className="text-xs">Respond</span>
-                  </Button>
-                </div>
-              ) : (
-                <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("social")} data-testid="button-setup-social">
-                  <img src="/attached_assets/native icons and favicons/: content app icon.png" alt="" className="w-4 h-4" />
-                  <span>Setup</span>
-                </Button>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* 4. Reputation Management - /reputation */}
-          <Card className="hover:shadow-lg transition-shadow" data-testid="card-reputation">
-            <CardContent className="p-6">
-              {/* Results Section (TOP) */}
-              <div className="flex items-center justify-center gap-3 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/reputation app triad blue and repoutation gold_1762804622669.png" alt="/reputation" className="w-8 h-8" />
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">{clientData.reviews.average}</div>
-                  <p className="text-[10px] text-gray-600">Review Ratings</p>
-                </div>
-              </div>
-              
-              {/* Icon & Content (MIDDLE) */}
-              <div className="text-center mb-4">
-                <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/reputation app triad blue and repoutation gold_1762804622669.png" alt="/reputation" className="w-16 h-16" />
-                </div>
-                <div className="flex justify-center mb-2">
-                  <img src="/attached_assets/: reputation color triad black and D59600_1762806224295.png" alt="/reputation" className="h-5" />
-                </div>
-                <p className="text-xs text-gray-600">Review response & reputation management</p>
-              </div>
-              
-              {/* Action Button (BOTTOM) */}
-              <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("reviews")} data-testid="button-respond-reviews">
-                <img src="/attached_assets/reputation app triad blue and repoutation gold_1762804622669.png" alt="" className="w-4 h-4" />
-                <span>Respond</span>
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* 5. Live Chat */}
-          <Card className="hover:shadow-lg transition-shadow" data-testid="card-livechat">
-            <CardContent className="p-6">
-              {/* Results Section (TOP) */}
-              <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/native icons and favicons/: livechat app icon.png" alt="/livechat" className="w-8 h-8" />
-                <div className="text-center">
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div>
-                      <div className="text-lg font-bold text-gray-900">{clientData.livechat?.participationRating || 0}</div>
-                      <p className="text-[9px] text-gray-600">Rating</p>
-                    </div>
-                    <div>
-                      <div className="text-lg font-bold text-gray-900">{clientData.livechat?.inQueue || 0}</div>
-                      <p className="text-[9px] text-gray-600">In Queue</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Icon & Content (MIDDLE) */}
-              <div className="text-center mb-4">
-                <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/native icons and favicons/: livechat app icon.png" alt="/livechat" className="w-16 h-16" />
-                </div>
-                <div className="flex justify-center">
-                  <img src="/attached_assets/logos and wordmarks/: livechat app logo.png" alt="/livechat" className="h-6" />
-                </div>
-                <p className="text-xs text-gray-600">
-                  <span className="inline-flex items-center gap-1">
-                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                    Active chat participation
-                  </span>
-                </p>
-              </div>
-              
-              {/* Action Button (BOTTOM) - Conditional */}
-              {clientData.livechat?.isSetup ? (
-                <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setLocation("/livechat-demo")} data-testid="button-engage-livechat">
-                  <img src="/attached_assets/native icons and favicons/: livechat app icon.png" alt="" className="w-4 h-4" />
-                  <span>Engage</span>
-                </Button>
-              ) : (
-                <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setLocation("/livechat-demo")} data-testid="button-setup-livechat">
-                  <img src="/attached_assets/native icons and favicons/: livechat app icon.png" alt="" className="w-4 h-4" />
-                  <span>Setup Widget</span>
-                </Button>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        {/* Bundle Sections — Anchor + Compass */}
+        {BUNDLE_REGISTRY.map((bundle) => (
+          <BundleSection
+            key={bundle.id}
+            bundle={bundle}
+            apps={getAppsByBundle(bundle.id)}
+            clientData={clientData}
+            onNavigate={setLocation}
+          />
+        ))}
 
         {/* Main Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -671,7 +711,7 @@ export default function ClientPortal() {
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="text-sm text-gray-500">Due today</span>
-                      <Button size="sm" onClick={() => handleCompleteTask("Sync latest business data")}>
+                      <Button size="sm" onClick={() => setActiveTab("tasks")}>
                         Mark Complete
                       </Button>
                     </div>
@@ -683,7 +723,7 @@ export default function ClientPortal() {
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="text-sm text-gray-500">Due this week</span>
-                      <Button size="sm" onClick={() => handleCompleteTask("Update business hours")}>
+                      <Button size="sm" onClick={() => setActiveTab("tasks")}>
                         Mark Complete
                       </Button>
                     </div>
@@ -707,85 +747,6 @@ export default function ClientPortal() {
             </Card>
           </TabsContent>
 
-          {/* Listings Tab */}
-          <TabsContent value="listings">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MapPin className="w-5 h-5" />
-                  Business Listings Management
-                </CardTitle>
-                <CardDescription>Manage your business presence across directories and platforms</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-12">
-                  <Globe className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Native Listings Management Coming Soon</h3>
-                  <p className="text-gray-600 max-w-md mx-auto">
-                    We're building a powerful, 100% autonomous listings platform. Check back soon for updates!
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Reviews Tab */}
-          <TabsContent value="reviews">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Star className="w-5 h-5" />
-                  Review & Reputation Management
-                </CardTitle>
-                <CardDescription>Monitor and respond to reviews across all platforms</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-12">
-                  <MessageSquare className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Native Review Management Coming Soon</h3>
-                  <p className="text-gray-600 max-w-md mx-auto">
-                    We're building a powerful, 100% autonomous review platform. Check back soon for updates!
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Campaigns Tab */}
-          <TabsContent value="campaigns">
-            <Card>
-              <CardHeader>
-                <CardTitle>Marketing Campaigns</CardTitle>
-                <CardDescription>Track and manage your marketing efforts</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                  <div className="text-center p-4 bg-green-50 rounded-lg">
-                    <div className="text-2xl font-bold text-green-600">{clientData.campaigns.active}</div>
-                    <p className="text-sm text-gray-600">Active Campaigns</p>
-                  </div>
-                  <div className="text-center p-4 bg-orange-50 rounded-lg">
-                    <div className="text-2xl font-bold text-orange-600">{clientData.campaigns.pending}</div>
-                    <p className="text-sm text-gray-600">Pending</p>
-                  </div>
-                  <div className="text-center p-4 bg-blue-50 rounded-lg">
-                    <div className="text-2xl font-bold text-blue-600">{clientData.campaigns.performance.reach}</div>
-                    <p className="text-sm text-gray-600">Monthly Reach</p>
-                  </div>
-                </div>
-                <div className="text-center py-8 text-gray-500">
-                  <p>Campaign management interface coming soon...</p>
-                  <p className="text-sm mt-2">Your campaigns will be managed through this dashboard.</p>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Content Management Tab */}
-          <TabsContent value="content">
-            <ContentManagement />
-          </TabsContent>
-
           {/* Tasks Tab */}
           <TabsContent value="tasks">
             <Card>
@@ -794,14 +755,9 @@ export default function ClientPortal() {
                   <CardTitle>Task Management</CardTitle>
                   <CardDescription>Track and manage your business tasks</CardDescription>
                 </div>
-                <Button 
+                <Button
                   data-testid="button-create-task"
-                  onClick={() => {
-                    toast({
-                      title: "Create Task",
-                      description: "Task creation dialog will open here. Connect to backend API to save tasks to database.",
-                    });
-                  }}
+                  onClick={() => setShowTaskDialog(true)}
                 >
                   <CheckSquare className="h-4 w-4 mr-2" />
                   Create Task
@@ -847,110 +803,81 @@ export default function ClientPortal() {
 
                   {/* Task List */}
                   <div className="space-y-3">
-                    {/* High Priority Task */}
-                    <div className="flex items-center justify-between p-4 border-l-4 border-red-500 bg-red-50 rounded-lg">
-                      <div className="flex items-center gap-4 flex-1">
-                        <input type="checkbox" className="h-5 w-5" data-testid="checkbox-task-1" />
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium">Respond to urgent customer reviews</p>
-                            <Badge variant="destructive" data-testid="badge-priority-high">High</Badge>
+                    {(() => {
+                      const tasks = (tasksData?.tasks || []) as any[];
+                      const filtered = tasks.filter((t: any) => {
+                        if (taskFilter === "all") return true;
+                        if (taskFilter === "active") return t.status === "pending";
+                        if (taskFilter === "completed") return t.status === "completed";
+                        if (taskFilter === "overdue") return t.status === "pending" && t.dueDate && new Date(t.dueDate) < new Date();
+                        return true;
+                      });
+                      if (filtered.length === 0) {
+                        return <p className="text-center text-gray-500 py-8">No tasks found. Create one to get started.</p>;
+                      }
+                      return filtered.map((task: any) => {
+                        const priorityColors: Record<string, string> = { urgent: "border-red-500 bg-red-50", high: "border-red-500 bg-red-50", medium: "border-yellow-500 bg-yellow-50", low: "border-blue-500 bg-blue-50" };
+                        const borderClass = priorityColors[task.priority] || "border-gray-300";
+                        const isCompleted = task.status === "completed";
+                        return (
+                          <div key={task.id} className={`flex items-center justify-between p-4 border-l-4 ${borderClass} rounded-lg ${isCompleted ? "opacity-60" : ""}`}>
+                            <div className="flex items-center gap-4 flex-1">
+                              <input type="checkbox" className="h-5 w-5" checked={isCompleted}
+                                onChange={() => toggleTaskMutation.mutate({ id: task.id, status: isCompleted ? "pending" : "completed" })} />
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2">
+                                  <p className={`font-medium ${isCompleted ? "line-through" : ""}`}>{task.title}</p>
+                                  <Badge variant={task.priority === "high" || task.priority === "urgent" ? "destructive" : "secondary"}>
+                                    {task.priority}
+                                  </Badge>
+                                </div>
+                                {task.description && <p className="text-sm text-gray-600 mt-1">{task.description}</p>}
+                                <div className="flex items-center gap-4 mt-2">
+                                  {task.dueDate && <span className="text-xs text-gray-500">Due: {format(new Date(task.dueDate), "MMM d, yyyy")}</span>}
+                                  {task.taskType && <span className="text-xs text-gray-500">{task.taskType}</span>}
+                                </div>
+                              </div>
+                            </div>
+                            {!isCompleted && (
+                              <Button variant="ghost" size="sm" onClick={() => deleteTaskMutation.mutate(task.id)}>Delete</Button>
+                            )}
                           </div>
-                          <p className="text-sm text-gray-600 mt-1">3 negative reviews need immediate attention</p>
-                          <div className="flex items-center gap-4 mt-2">
-                            <span className="text-xs text-gray-500">Due: Today</span>
-                            <span className="text-xs text-gray-500">Reviews</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          data-testid="button-edit-task-1"
-                          onClick={() => toast({ title: "Edit Task", description: "Edit dialog will open. Backend API integration needed." })}
-                        >
-                          Edit
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          data-testid="button-delete-task-1"
-                          onClick={() => toast({ title: "Delete Task", description: "Task deleted. Backend API integration needed for persistence." })}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Medium Priority Task */}
-                    <div className="flex items-center justify-between p-4 border-l-4 border-yellow-500 bg-yellow-50 rounded-lg">
-                      <div className="flex items-center gap-4 flex-1">
-                        <input type="checkbox" className="h-5 w-5" data-testid="checkbox-task-2" />
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium">Update business hours on all listings</p>
-                            <Badge variant="secondary" data-testid="badge-priority-medium">Medium</Badge>
-                          </div>
-                          <p className="text-sm text-gray-600 mt-1">Sync holiday hours across 50+ directories</p>
-                          <div className="flex items-center gap-4 mt-2">
-                            <span className="text-xs text-gray-500">Due: This Week</span>
-                            <span className="text-xs text-gray-500">Listings</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm" data-testid="button-edit-task-2">Edit</Button>
-                        <Button variant="ghost" size="sm" data-testid="button-delete-task-2">Delete</Button>
-                      </div>
-                    </div>
-
-                    {/* Low Priority Task */}
-                    <div className="flex items-center justify-between p-4 border-l-4 border-blue-500 bg-blue-50 rounded-lg">
-                      <div className="flex items-center gap-4 flex-1">
-                        <input type="checkbox" className="h-5 w-5" data-testid="checkbox-task-3" />
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium">Review analytics and performance metrics</p>
-                            <Badge variant="outline" data-testid="badge-priority-low">Low</Badge>
-                          </div>
-                          <p className="text-sm text-gray-600 mt-1">Monthly performance review</p>
-                          <div className="flex items-center gap-4 mt-2">
-                            <span className="text-xs text-gray-500">Due: Next Week</span>
-                            <span className="text-xs text-gray-500">Analytics</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm" data-testid="button-edit-task-3">Edit</Button>
-                        <Button variant="ghost" size="sm" data-testid="button-delete-task-3">Delete</Button>
-                      </div>
-                    </div>
-
-                    {/* Completed Task */}
-                    <div className="flex items-center justify-between p-4 border rounded-lg bg-gray-50 opacity-60">
-                      <div className="flex items-center gap-4 flex-1">
-                        <input type="checkbox" className="h-5 w-5" checked disabled data-testid="checkbox-task-4" />
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium line-through">Set up email integration</p>
-                            <Badge variant="outline" data-testid="badge-status-completed">Completed</Badge>
-                          </div>
-                          <p className="text-sm text-gray-500 mt-1">Connected Gmail and Outlook accounts</p>
-                          <div className="flex items-center gap-4 mt-2">
-                            <span className="text-xs text-gray-500">Completed: Yesterday</span>
-                            <span className="text-xs text-gray-500">Setup</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                        );
+                      });
+                    })()}
                   </div>
 
-                  <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                    <p className="text-sm text-blue-900">
-                      <strong>Task Categories:</strong> Reviews, Listings, Campaigns, Setup, Analytics, Social Media, Messages
-                    </p>
-                  </div>
+                  {/* Create Task Dialog */}
+                  {showTaskDialog && (
+                    <div className="mt-4 p-4 border rounded-lg bg-gray-50 space-y-3">
+                      <h4 className="font-medium">New Task</h4>
+                      <input id="new-task-title" placeholder="Task title" className="w-full border rounded px-3 py-2 text-sm" />
+                      <input id="new-task-desc" placeholder="Description (optional)" className="w-full border rounded px-3 py-2 text-sm" />
+                      <div className="flex gap-3">
+                        <select id="new-task-priority" className="border rounded px-3 py-2 text-sm">
+                          <option value="low">Low</option>
+                          <option value="medium" selected>Medium</option>
+                          <option value="high">High</option>
+                          <option value="urgent">Urgent</option>
+                        </select>
+                        <input id="new-task-due" type="date" className="border rounded px-3 py-2 text-sm" />
+                      </div>
+                      <div className="flex gap-2">
+                        <Button size="sm" onClick={() => {
+                          const title = (document.getElementById("new-task-title") as HTMLInputElement)?.value;
+                          if (!title) { toast({ title: "Title required" }); return; }
+                          createTaskMutation.mutate({
+                            clientId: parseInt(clientId!),
+                            title,
+                            description: (document.getElementById("new-task-desc") as HTMLInputElement)?.value || undefined,
+                            priority: (document.getElementById("new-task-priority") as HTMLSelectElement)?.value || "medium",
+                            dueDate: (document.getElementById("new-task-due") as HTMLInputElement)?.value ? new Date((document.getElementById("new-task-due") as HTMLInputElement).value).toISOString() : undefined,
+                          });
+                        }}>Save Task</Button>
+                        <Button size="sm" variant="outline" onClick={() => setShowTaskDialog(false)}>Cancel</Button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -1132,6 +1059,9 @@ export default function ClientPortal() {
       </div>
       </div>
       </div>
+      <Footer />
+
+      <SetupNotifications />
     </div>
   );
 }

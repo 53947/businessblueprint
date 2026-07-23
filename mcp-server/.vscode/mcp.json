@@ -1,9 +1,0 @@
-{
-  "servers": {
-    "replit-agents-mcp": {
-      "type": "stdio",
-      "command": "node",
-      "args": ["build/index.js"]
-    }
-  }
-}

@@ -1,5 +1,5 @@
 /**
- * Content Management API Routes
+ * Post Management API Routes
  * Handles posts, media, platforms, scheduling, analytics, and AI assistance
  */
 
@@ -25,12 +25,13 @@ import { MediaStorageService } from '../services/mediaStorage';
 import { publishPost } from '../workers/contentPublisher';
 import { PlatformFactory } from '../services/platforms/platformFactory';
 import { isDemoAccountById } from '../utils/demoAccounts';
+import { unifiedAI } from '../services/ai-provider';
 
 const router = Router();
 const mediaStorage = new MediaStorageService();
 
 /**
- * Middleware: Check if client has Content Management access
+ * Middleware: Check if client has Post Management access
  * Demo accounts get full access without subscription checks
  */
 async function requireContentAccess(req: Request, res: Response, next: Function) {
@@ -60,14 +61,14 @@ async function requireContentAccess(req: Request, res: Response, next: Function)
       .where(
         and(
           eq(subscriptions.clientId, clientId),
-          sql`${subscriptionAddons.name} LIKE '%Content Management%'`
+          sql`${subscriptionAddons.name} LIKE '%Post Management%'`
         )
       )
       .limit(1);
 
     if (hasAccess.length === 0) {
       return res.status(403).json({ 
-        message: 'Content Management not available. Please upgrade your subscription.' 
+        message: 'Post Management not available. Please upgrade your subscription.'
       });
     }
 
@@ -96,7 +97,7 @@ async function getPlatformLimits(clientId: number): Promise<{ maxPlatforms: numb
     .where(
       and(
         eq(subscriptions.clientId, clientId),
-        sql`${subscriptionAddons.name} LIKE '%Content Management%'`
+        sql`${subscriptionAddons.name} LIKE '%Post Management%'`
       )
     )
     .limit(1);
@@ -112,7 +113,7 @@ async function getPlatformLimits(clientId: number): Promise<{ maxPlatforms: numb
 // ===== POSTS ROUTES =====
 
 /**
- * GET /api/content/:clientId/posts
+ * GET /api/post/:clientId/posts
  * List all posts for a client
  */
 router.get('/:clientId/posts', requireContentAccess, async (req: Request, res: Response) => {
@@ -143,7 +144,7 @@ router.get('/:clientId/posts', requireContentAccess, async (req: Request, res: R
 });
 
 /**
- * GET /api/content/:clientId/posts/:postId
+ * GET /api/post/:clientId/posts/:postId
  * Get a single post
  */
 router.get('/:clientId/posts/:postId', requireContentAccess, async (req: Request, res: Response) => {
@@ -171,7 +172,7 @@ router.get('/:clientId/posts/:postId', requireContentAccess, async (req: Request
 });
 
 /**
- * POST /api/content/:clientId/posts
+ * POST /api/post/:clientId/posts
  * Create a new post
  */
 router.post('/:clientId/posts', requireContentAccess, async (req: Request, res: Response) => {
@@ -216,7 +217,7 @@ router.post('/:clientId/posts', requireContentAccess, async (req: Request, res: 
 });
 
 /**
- * PUT /api/content/:clientId/posts/:postId
+ * PUT /api/post/:clientId/posts/:postId
  * Update a post
  */
 router.put('/:clientId/posts/:postId', requireContentAccess, async (req: Request, res: Response) => {
@@ -267,7 +268,7 @@ router.put('/:clientId/posts/:postId', requireContentAccess, async (req: Request
 });
 
 /**
- * DELETE /api/content/:clientId/posts/:postId
+ * DELETE /api/post/:clientId/posts/:postId
  * Delete a post
  */
 router.delete('/:clientId/posts/:postId', requireContentAccess, async (req: Request, res: Response) => {
@@ -295,7 +296,7 @@ router.delete('/:clientId/posts/:postId', requireContentAccess, async (req: Requ
 });
 
 /**
- * POST /api/content/:clientId/posts/:postId/publish
+ * POST /api/post/:clientId/posts/:postId/publish
  * Publish a post immediately or schedule it
  */
 router.post('/:clientId/posts/:postId/publish', requireContentAccess, async (req: Request, res: Response) => {
@@ -366,7 +367,7 @@ router.post('/:clientId/posts/:postId/publish', requireContentAccess, async (req
 // ===== SCHEDULING ROUTES =====
 
 /**
- * GET /api/content/:clientId/schedule
+ * GET /api/post/:clientId/schedule
  * Get all scheduled posts
  */
 router.get('/:clientId/schedule', requireContentAccess, async (req: Request, res: Response) => {
@@ -390,7 +391,7 @@ router.get('/:clientId/schedule', requireContentAccess, async (req: Request, res
 });
 
 /**
- * PUT /api/content/:clientId/schedule/:postId
+ * PUT /api/post/:clientId/schedule/:postId
  * Update schedule time for a post
  */
 router.put('/:clientId/schedule/:postId', requireContentAccess, async (req: Request, res: Response) => {
@@ -449,7 +450,7 @@ router.put('/:clientId/schedule/:postId', requireContentAccess, async (req: Requ
 });
 
 /**
- * DELETE /api/content/:clientId/schedule/:postId
+ * DELETE /api/post/:clientId/schedule/:postId
  * Cancel a scheduled post
  */
 router.delete('/:clientId/schedule/:postId', requireContentAccess, async (req: Request, res: Response) => {
@@ -501,7 +502,7 @@ router.delete('/:clientId/schedule/:postId', requireContentAccess, async (req: R
 // ===== MEDIA ROUTES =====
 
 /**
- * GET /api/content/:clientId/media
+ * GET /api/post/:clientId/media
  * List all media for a client
  */
 router.get('/:clientId/media', requireContentAccess, async (req: Request, res: Response) => {
@@ -532,7 +533,7 @@ router.get('/:clientId/media', requireContentAccess, async (req: Request, res: R
 });
 
 /**
- * POST /api/content/:clientId/media
+ * POST /api/post/:clientId/media
  * Upload media file
  */
 router.post('/:clientId/media', requireContentAccess, async (req: Request, res: Response) => {
@@ -565,7 +566,7 @@ router.post('/:clientId/media', requireContentAccess, async (req: Request, res: 
 });
 
 /**
- * DELETE /api/content/:clientId/media/:mediaId
+ * DELETE /api/post/:clientId/media/:mediaId
  * Delete media
  */
 router.delete('/:clientId/media/:mediaId', requireContentAccess, async (req: Request, res: Response) => {
@@ -589,7 +590,7 @@ router.delete('/:clientId/media/:mediaId', requireContentAccess, async (req: Req
 // ===== PLATFORM ACCOUNTS ROUTES =====
 
 /**
- * GET /api/content/:clientId/platforms
+ * GET /api/post/:clientId/platforms
  * List connected social media accounts
  */
 router.get('/:clientId/platforms', requireContentAccess, async (req: Request, res: Response) => {
@@ -616,7 +617,7 @@ router.get('/:clientId/platforms', requireContentAccess, async (req: Request, re
 });
 
 /**
- * POST /api/content/:clientId/platforms
+ * POST /api/post/:clientId/platforms
  * Connect a new social media account
  */
 router.post('/:clientId/platforms', requireContentAccess, async (req: Request, res: Response) => {
@@ -682,7 +683,7 @@ router.post('/:clientId/platforms', requireContentAccess, async (req: Request, r
 });
 
 /**
- * DELETE /api/content/:clientId/platforms/:accountId
+ * DELETE /api/post/:clientId/platforms/:accountId
  * Disconnect a social media account
  */
 router.delete('/:clientId/platforms/:accountId', requireContentAccess, async (req: Request, res: Response) => {
@@ -712,7 +713,7 @@ router.delete('/:clientId/platforms/:accountId', requireContentAccess, async (re
 // ===== ANALYTICS ROUTES =====
 
 /**
- * GET /api/content/:clientId/analytics
+ * GET /api/post/:clientId/analytics
  * Get analytics summary
  */
 router.get('/:clientId/analytics', requireContentAccess, async (req: Request, res: Response) => {
@@ -749,33 +750,72 @@ router.get('/:clientId/analytics', requireContentAccess, async (req: Request, re
   }
 });
 
+/**
+ * POST /api/post/:clientId/analytics/sync
+ * Trigger analytics sync for all published posts
+ */
+router.post('/:clientId/analytics/sync', requireContentAccess, async (req: Request, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const { analyticsSyncService } = await import('../services/analyticsSync');
+    const result = await analyticsSyncService.syncClientAnalytics(clientId);
+    res.json({ success: true, ...result });
+  } catch (error) {
+    console.error('[Content] Error syncing analytics:', error);
+    res.status(500).json({ message: 'Failed to sync analytics' });
+  }
+});
+
 // ===== AI ASSISTANCE ROUTES =====
 
 /**
- * POST /api/content/:clientId/ai/suggest
+ * POST /api/post/:clientId/ai/suggest
  * Generate AI-powered caption suggestions for social posts
  */
 router.post('/:clientId/ai/suggest', requireContentAccess, async (req: Request, res: Response) => {
   try {
     const { prompt = 'Generate social media post ideas' } = req.body;
 
-    const suggestions = [
-      `Here's a compelling ${prompt} idea that resonates with your audience and drives engagement.`,
-      `Try this approach: A ${prompt} that highlights customer value and creates urgency.`,
-      `Consider this angle: Share your expertise through a ${prompt} that educates and entertains.`,
-      `This ${prompt} hooks attention immediately with a question your audience wants answered.`,
-      `Use this structure: Story → Challenge → Solution format for maximum ${prompt} impact.`,
-    ];
+    const result = await unifiedAI.getCompletion('claude', {
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a social media marketing expert for small local businesses. Generate 5 actionable social media post ideas. Return ONLY a JSON array of 5 strings, each being a complete post idea. No markdown, no explanation — just the JSON array.',
+        },
+        {
+          role: 'user',
+          content: `Generate 5 social media post ideas for: ${prompt}`,
+        },
+      ],
+      temperature: 0.8,
+      maxTokens: 500,
+    });
+
+    let suggestions: string[];
+    try {
+      suggestions = JSON.parse(result.content);
+    } catch {
+      suggestions = result.content.split('\n').filter((s: string) => s.trim()).slice(0, 5);
+    }
 
     res.json({ suggestions });
   } catch (error) {
     console.error('[Content] Error generating suggestions:', error);
-    res.status(500).json({ message: 'Failed to generate suggestions' });
+    // Graceful fallback
+    res.json({
+      suggestions: [
+        `Share a behind-the-scenes look at your business to build trust.`,
+        `Highlight a customer success story or testimonial.`,
+        `Post a quick tip related to your industry that helps your audience.`,
+        `Announce a limited-time offer or seasonal promotion.`,
+        `Ask your audience a question to boost engagement.`,
+      ],
+    });
   }
 });
 
 /**
- * POST /api/content/:clientId/ai/caption
+ * POST /api/post/:clientId/ai/caption
  * Generate AI caption for a post
  */
 router.post('/:clientId/ai/caption', requireContentAccess, async (req: Request, res: Response) => {
@@ -786,18 +826,45 @@ router.post('/:clientId/ai/caption', requireContentAccess, async (req: Request, 
       return res.status(400).json({ message: 'Topic is required' });
     }
 
-    res.json({
-      caption: `AI-generated caption about ${topic} (${tone || 'professional'} tone, ${length || 'medium'} length)`,
-      hashtags: ['#business', '#marketing', '#social'],
+    const lengthGuide = length === 'short' ? '1-2 sentences' : length === 'long' ? '3-5 sentences' : '2-3 sentences';
+
+    const result = await unifiedAI.getCompletion('claude', {
+      messages: [
+        {
+          role: 'system',
+          content: `You are a social media copywriter for small local businesses. Write engaging captions that feel human, not corporate. Return ONLY a JSON object with "caption" (string) and "hashtags" (array of 3-5 strings). No markdown.`,
+        },
+        {
+          role: 'user',
+          content: `Write a ${tone || 'professional'} social media caption (${lengthGuide}) about: ${topic}`,
+        },
+      ],
+      temperature: 0.7,
+      maxTokens: 300,
     });
+
+    let parsed: { caption: string; hashtags: string[] };
+    try {
+      parsed = JSON.parse(result.content);
+    } catch {
+      parsed = {
+        caption: result.content.replace(/```json|```/g, '').trim(),
+        hashtags: ['#business', '#local', '#community'],
+      };
+    }
+
+    res.json(parsed);
   } catch (error) {
     console.error('[Content] Error generating caption:', error);
-    res.status(500).json({ message: 'Failed to generate caption' });
+    res.json({
+      caption: `Check out what's new at our business! We're excited to share this with you.`,
+      hashtags: ['#business', '#local', '#community'],
+    });
   }
 });
 
 /**
- * POST /api/content/:clientId/ai/hashtags
+ * POST /api/post/:clientId/ai/hashtags
  * Generate relevant hashtags
  */
 router.post('/:clientId/ai/hashtags', requireContentAccess, async (req: Request, res: Response) => {
@@ -808,12 +875,34 @@ router.post('/:clientId/ai/hashtags', requireContentAccess, async (req: Request,
       return res.status(400).json({ message: 'Content is required' });
     }
 
-    res.json({
-      hashtags: ['#business', '#marketing', '#socialmedia', '#contentcreation'],
+    const result = await unifiedAI.getCompletion('claude', {
+      messages: [
+        {
+          role: 'system',
+          content: `You are a social media hashtag expert. Generate relevant hashtags for the given content and platform. Return ONLY a JSON object with "hashtags" (array of 5-8 strings, each starting with #). No markdown.`,
+        },
+        {
+          role: 'user',
+          content: `Generate hashtags for this ${platform || 'social media'} post:\n\n${content}`,
+        },
+      ],
+      temperature: 0.6,
+      maxTokens: 150,
     });
+
+    let parsed: { hashtags: string[] };
+    try {
+      parsed = JSON.parse(result.content);
+    } catch {
+      parsed = { hashtags: ['#business', '#marketing', '#socialmedia', '#local'] };
+    }
+
+    res.json(parsed);
   } catch (error) {
     console.error('[Content] Error generating hashtags:', error);
-    res.status(500).json({ message: 'Failed to generate hashtags' });
+    res.json({
+      hashtags: ['#business', '#marketing', '#socialmedia', '#local'],
+    });
   }
 });
 

@@ -5,35 +5,55 @@ import { storage } from "./storage";
 import { randomBytes } from "crypto";
 import contentRoutes from "./routes/content";
 import metaRoutes from "./routes/meta";
+import googleRoutes from "./routes/google";
+import linkedinRoutes from "./routes/linkedin";
+import tiktokRoutes from "./routes/tiktok";
+import snapchatRoutes from "./routes/snapchat";
+import pinterestRoutes from "./routes/pinterest";
+import nextdoorRoutes from "./routes/nextdoor";
+import spotifyRoutes from "./routes/spotify";
+import microsoftAdsRoutes from "./routes/microsoft-ads";
 import { tasksRouter } from "./routes/tasks";
 import brandColorsRoutes from "./routes/brand-colors";
 import { registerBillingAdminRoutes } from "./routes/billing-admin";
 import { registerEmailAdminRoutes } from "./routes/email-admin";
-import { crmRouter } from "./routes/crm";
-import { publicApiRouter } from "./routes/api";
 import { registerPaymentRoutes } from "./routes/payments";
+import { crmRouter } from "./routes/crm";
+import { setupTasksRouter } from "./routes/setup-tasks";
+import { setupNotesRouter } from "./routes/setup-notes";
+import { publicApiRouter } from "./routes/api";
 import { listingDistributionRouter } from "./routes/listing-distribution";
+import { dnbRouter } from "./routes/dnb";
+import { chatRouter } from "./routes/chat";
+import { aiCoachRouter } from "./routes/ai-coach";
+import { registerSendRoutes } from "./routes/send";
+import { registerOptimizeRoutes } from "./routes/optimize";
+import { amplifyRouter } from "./routes/amplify";
+import { convertRouter } from "./routes/convert";
+import { registerSubscriptionRoutes } from "./routes/subscriptions";
 import {
+  assessments,
   insertAssessmentSchema,
-  subscriptionPlans,
-  subscriptionAddons,
   subscriptions,
-  insertSubscriptionSchema,
-  insertSendContactSchema,
-  insertSendListSchema,
   livechatSessions,
   insertLivechatSessionSchema,
   inboxConversations,
   inboxMessages2,
   brandAssets,
   crmContacts,
+  crmCompanies,
   crmDeals,
   crmTasks,
+  crmNotes,
   crmTimeline,
   supportTickets,
   ticketComments,
   prescriptions,
   clients,
+  magicLinkTokens,
+  setupTasks,
+  setupNotes,
+  setupTaskEvents,
   insertSupportTicketSchema,
   insertTicketCommentSchema,
   updateSupportTicketSchema,
@@ -45,19 +65,23 @@ import {
   listingMetricsSnapshots,
   updateBusinessListingSchema,
   insertBusinessListingSchema,
+  socialMediaAccounts,
+  sendCampaigns,
+  chatWidgetSettings,
 } from "@shared/schema";
 import { GoogleBusinessService } from "./services/googleBusiness";
-import { OpenAIAnalysisService } from "./services/openai";
+import { AssessmentAIService } from "./services/assessment-ai";
 import { ResendEmailService } from "./services/resend-email";
 import { inboxEmailService } from "./services/inbox-email";
+import { telnyxService } from "./services/telnyx";
 import { aiCoachService } from "./services/aiCoach";
-import { PricingEngine } from "./services/pricing";
-import { NMIService } from "./services/nmi";
 import { productRecommendationService } from "./services/productRecommendations";
 import { reviewAI } from "./services/reviewAI";
 import { jwtService } from "./services/jwt";
 import { presenceScannerService } from "./services/presenceScanner";
 import { listingSyncService } from "./services/listingSync";
+import { reviewSyncService } from "./services/reviewSync";
+import { analyticsSyncService } from "./services/analyticsSync";
 import { scansBlueService } from "./services/scansblue";
 import { sendAssessmentConfirmationEmail, sendAdminNotification } from "./services/assessment-emails";
 import { dashboardAccess } from "@shared/schema";
@@ -65,7 +89,8 @@ import { eq, desc, and, or, lte, sql, count, avg } from "drizzle-orm";
 import { db } from "./db";
 import { z } from "zod";
 import { requireAuth, type AuthenticatedRequest } from "./middleware/auth";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { setupAuth, isAuthenticated } from "./auth";
+import { authRouter } from "./routes/auth";
 import { requireClientPortalAccess } from "./middleware/clientPortalAuth";
 
 // Listing platform display name mappings
@@ -87,29 +112,114 @@ function platformInternalName(display: string): string {
   return entry ? entry[0] : display.toLowerCase().replace(/\s+/g, "_");
 }
 
+/**
+ * Middleware for CRM and Tasks routes.
+ * Accepts client portal sessions (any client), admin sessions, and JWT tokens.
+ * Unlike isAuthenticated, does NOT require isAdmin for client sessions.
+ */
+function requireClientOrAdminAccess(req: any, res: any, next: any) {
+  // DEV MODE BYPASS
+  if (process.env.NODE_ENV !== 'production') {
+    return next();
+  }
+
+  const session = req.session as any;
+
+  // 1. Client portal session — ANY client, admin or not
+  if (session?.clientId) {
+    return next();
+  }
+
+  // 2. Admin credential/magic-link session
+  if (session?.userId) {
+    return next();
+  }
+
+  // 3. Passport session (legacy Replit OIDC)
+  if (req.isAuthenticated && req.isAuthenticated()) {
+    return next();
+  }
+
+  // 4. JWT Bearer token from Authorization header
+  const authHeader = req.headers?.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    try {
+      const token = authHeader.replace('Bearer ', '');
+      const payload = jwtService.verifyToken(token);
+      if (payload?.clientId) {
+        (req as any).clientId = payload.clientId;
+        return next();
+      }
+    } catch (e) {
+      // Token invalid — fall through to 401
+    }
+  }
+
+  return res.status(401).json({ message: "Unauthorized" });
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   await setupAuth(app);
 
-  // Serve favicon.ico from attached_assets
+  // Register credential/magic-link auth routes (for production login)
+  app.use(authRouter);
+
+  // Health check for Railway
+  app.get("/api/health", (_req, res) => {
+    res.json({ status: "ok", timestamp: new Date().toISOString() });
+  });
+
+  // Serve favicon.ico from attached_assets (short cache — OGA manages the real favicon)
   app.get("/favicon.ico", (req, res) => {
+    res.setHeader("Cache-Control", "public, max-age=300");
     res.sendFile(
       path.resolve(
         process.cwd(),
-        "attached_assets/Blueprint_Favicon_1762489845363.ico",
+        "attached_assets/brand/bb-favicon.png",
       ),
     );
   });
 
+  // Serve / chat widget script (for embedding on customer websites)
+  app.get("/chat/widget.js", (req, res) => {
+    res.setHeader("Content-Type", "application/javascript");
+    res.setHeader("Cache-Control", "public, max-age=3600");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.sendFile(path.resolve(process.cwd(), "client/public/chat-widget.js"));
+  });
+
   app.get("/api/auth/user", async (req: any, res) => {
     try {
-      // Return null if not authenticated instead of 401
+      // Dev mode: return synthetic dev user if not otherwise authenticated
+      if (process.env.NODE_ENV !== 'production') {
+        if (req.isAuthenticated && req.isAuthenticated()) {
+          const userId = req.user.claims.sub;
+          const user = await storage.getUser(userId);
+          return res.json({ user: user || { id: 'dev-user', email: 'dev@localhost', firstName: 'Dev', lastName: 'User' } });
+        }
+        // Return dev user so frontend auth checks pass
+        return res.json({
+          user: { id: 'dev-user', email: 'dev@localhost', firstName: 'Dev', lastName: 'User' }
+        });
+      }
+
+      // Production: check credential session
+      const session = req.session as any;
+      if (session?.userId) {
+        const user = await storage.getUser(session.userId);
+        if (user) {
+          return res.json({ user });
+        }
+      }
+
+      // Check Replit OIDC session
       if (!req.isAuthenticated || !req.isAuthenticated()) {
         return res.json({ user: null });
       }
 
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
-      res.json(user);
+      res.json({ user: user || null });
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });
@@ -117,7 +227,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   const googleService = new GoogleBusinessService();
-  const aiService = new OpenAIAnalysisService();
+  const aiService = new AssessmentAIService();
   const emailService = new ResendEmailService();
 
   // Temporary setup endpoint to create demo accounts (for Meta review)
@@ -125,8 +235,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const demoAccounts = [
         {
-          companyName: "Demo Restaurant",
-          email: "demo@businessblueprint.io",
+          companyName: "TriadBlue Inc.",
+          email: "53947@triadblue.com",
+          accountStatus: "active" as const,
+          isAdmin: true,
+        },
+        {
+          companyName: "BusinessBlueprint User",
+          email: "53947@businessblueprint.io",
+          accountStatus: "active" as const,
+        },
+        {
+          companyName: "businessblueprint.io",
+          email: "admin@businessblueprint.io",
           accountStatus: "active" as const,
         },
         {
@@ -174,8 +295,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertAssessmentSchema.parse(req.body);
 
-      // Create assessment with pending status
+      // Create assessment with pending status (smsConsent flows through validatedData)
       const assessment = await storage.createAssessment(validatedData);
+
+      // Capture SMS consent metadata for TCPA compliance if user opted in
+      const consentIp = (req.headers['x-forwarded-for'] as string) || req.ip || null;
+      const consentDate = validatedData.smsConsent ? new Date() : null;
 
       // Create or find client account for this email
       let client = await storage.getClientByEmail(validatedData.email);
@@ -189,11 +314,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
           `${validatedData.city}, ${validatedData.state} ${validatedData.zipCode}`,
           validatedData.country || 'United States'
         ].filter(Boolean).join('\n');
-        
+
         client = await storage.createClient({
           companyName: validatedData.businessName,
           email: validatedData.email,
           phone: validatedData.phone,
+          smsConsent: validatedData.smsConsent || false,
+          smsConsentDate: consentDate,
+          smsConsentIp: validatedData.smsConsent ? consentIp : null,
           website: validatedData.website || undefined,
           address: fullAddress,
           accountStatus: "active" as const,
@@ -263,7 +391,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             title: `Digital IQ Assessment started for ${validatedData.businessName}`,
             description: `Assessment ID: ${assessment.id}`,
             occurredAt: new Date(),
-            sourceApp: "relationships",
+            sourceApp: "connect",
             actorType: "system",
           });
         } else {
@@ -456,6 +584,140 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get scan results for an assessment (used by the scan-first form to poll for completion)
+  app.get("/api/assessments/:id/scan-results", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+
+      const assessment = await storage.getAssessment(id);
+      if (!assessment) return res.status(404).json({ error: "Assessment not found" });
+
+      // Check if scan is complete by looking for analysisResults
+      const results = assessment.analysisResults as any;
+      if (!results) {
+        return res.json({ status: assessment.status === "failed" ? "failed" : "scanning", progress: null });
+      }
+
+      const presenceScan = results.presenceScan || {};
+      return res.json({
+        status: "complete",
+        detections: presenceScan.website?.detections || null,
+        socialMedia: presenceScan.socialMedia || null,
+        directories: presenceScan.directories || null,
+        reviews: presenceScan.reviews || null,
+        website: presenceScan.website || null,
+      });
+    } catch (error) {
+      console.error("Error fetching scan results:", error);
+      res.status(500).json({ error: "Failed to fetch scan results" });
+    }
+  });
+
+  // Submit operational data (auto-detected + confirmed + manual answers) — scan-first form Step 3→4
+  app.patch("/api/assessments/:id/operational", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+
+      const assessment = await storage.getAssessment(id);
+      if (!assessment) return res.status(404).json({ error: "Assessment not found" });
+
+      // Extract tracking metadata before updating
+      const scanDetectionsData = req.body._scanDetections || null;
+      const scanCorrectionsData = req.body._scanCorrections || null;
+
+      // Build the operational fields update (only known assessment columns)
+      const operationalColumns = [
+        'collectsEmails', 'lastEmailCampaign', 'emailListSize', 'sendsSMS', 'lastSMSCampaign',
+        'lastSocialPost', 'socialPostFrequency', 'socialContentCreator',
+        'lastReviewResponse', 'reviewResponseRate', 'lastNewReview',
+        'inquiryResponseTime', 'hasUnifiedInbox', 'missedInquiries',
+        'hasLiveChat', 'lastChatConversation', 'chatResponseTime',
+        'lastListingUpdate', 'listingConsistency', 'lastGBPPost', 'lastGBPPhoto',
+        'lastWebsiteUpdate', 'hasBlog',
+        'usesCRM', 'crmPlatform', 'lastCRMFollowup', 'hasAutomation',
+        'runsAds', 'lastAdCampaign', 'monthlyAdBudget',
+      ];
+
+      const updateData: Record<string, any> = {};
+      for (const col of operationalColumns) {
+        if (req.body[col] !== undefined) {
+          updateData[col] = req.body[col];
+        }
+      }
+
+      // Include detection tracking
+      updateData.scanDetections = scanDetectionsData;
+      updateData.scanCorrections = scanCorrectionsData;
+      updateData.updatedAt = new Date();
+
+      await db.update(assessments).set(updateData).where(eq(assessments.id, id));
+
+      // Re-fetch the updated assessment for scoring
+      const updatedAssessment = await storage.getAssessment(id);
+      if (!updatedAssessment) return res.status(404).json({ error: "Assessment not found after update" });
+
+      // Recalculate operational score with the new data
+      const operationalScore = presenceScannerService.calculateOperationalScore({
+        collectsEmails: updatedAssessment.collectsEmails,
+        lastEmailCampaign: updatedAssessment.lastEmailCampaign,
+        emailListSize: updatedAssessment.emailListSize,
+        sendsSMS: updatedAssessment.sendsSMS,
+        lastSMSCampaign: updatedAssessment.lastSMSCampaign,
+        lastSocialPost: updatedAssessment.lastSocialPost,
+        socialPostFrequency: updatedAssessment.socialPostFrequency,
+        socialContentCreator: updatedAssessment.socialContentCreator,
+        lastReviewResponse: updatedAssessment.lastReviewResponse,
+        reviewResponseRate: updatedAssessment.reviewResponseRate,
+        lastNewReview: updatedAssessment.lastNewReview,
+        inquiryResponseTime: updatedAssessment.inquiryResponseTime,
+        hasUnifiedInbox: updatedAssessment.hasUnifiedInbox,
+        missedInquiries: updatedAssessment.missedInquiries,
+        hasLiveChat: updatedAssessment.hasLiveChat,
+        lastChatConversation: updatedAssessment.lastChatConversation,
+        chatResponseTime: updatedAssessment.chatResponseTime,
+        lastListingUpdate: updatedAssessment.lastListingUpdate,
+        listingConsistency: updatedAssessment.listingConsistency,
+        lastGBPPost: updatedAssessment.lastGBPPost,
+        lastGBPPhoto: updatedAssessment.lastGBPPhoto,
+        lastWebsiteUpdate: updatedAssessment.lastWebsiteUpdate,
+        hasBlog: updatedAssessment.hasBlog,
+        usesCRM: updatedAssessment.usesCRM,
+        crmPlatform: updatedAssessment.crmPlatform,
+        lastCRMFollowup: updatedAssessment.lastCRMFollowup,
+        hasAutomation: updatedAssessment.hasAutomation,
+        runsAds: updatedAssessment.runsAds,
+        lastAdCampaign: updatedAssessment.lastAdCampaign,
+        monthlyAdBudget: updatedAssessment.monthlyAdBudget,
+      });
+
+      // Get scan score from existing analysis results
+      const existingResults = updatedAssessment.analysisResults as any;
+      const scanScore = existingResults?.scanScore || existingResults?.presenceScan?.overall?.digitalIQScore || 0;
+      const combinedDigitalIQ = presenceScannerService.calculateCombinedDigitalIQ(scanScore, operationalScore);
+
+      // Update the analysisResults with recalculated scores
+      const updatedAnalysis = {
+        ...existingResults,
+        digitalScore: combinedDigitalIQ,
+        operationalScore: operationalScore,
+      };
+
+      await storage.updateAssessment(id, {
+        analysisResults: updatedAnalysis,
+        digitalScore: combinedDigitalIQ,
+      });
+
+      console.log(`[Assessment] Operational data updated for ${id}: Scan=${scanScore}/70 + Operational=${operationalScore}/70 = ${combinedDigitalIQ}/140`);
+
+      res.json({ success: true, assessmentId: id, digitalScore: combinedDigitalIQ });
+    } catch (error) {
+      console.error("Error updating operational data:", error);
+      res.status(500).json({ error: "Failed to update operational data" });
+    }
+  });
+
   // Send pathway reminder email (can be triggered manually or scheduled)
   app.post("/api/assessments/:id/send-pathway-reminder", async (req, res) => {
     try {
@@ -621,57 +883,92 @@ export async function registerRoutes(app: Express): Promise<Server> {
           client,
           digitalScore: 75, // Could be calculated from various factors
           lastUpdated: client.updatedAt,
-          listings: {
-            total: client.enabledFeatures
-              ? client.enabledFeatures.split(",").length
-              : 0,
-            verified: client.enabledFeatures
-              ? client.enabledFeatures.split(",").length - 1
-              : 0,
-            pending: 1,
-            citations: 12, // Placeholder for citations count
-            platforms: ["Google Business", "Yelp", "Facebook", "Apple Maps"],
-          },
-          reviews: {
-            average: 4.3,
-            total: 156,
-            recent: 12,
-            response_rate: 85,
-          },
+          listings: await (async () => {
+            try {
+              const allListings = await db
+                .select()
+                .from(businessListings)
+                .where(eq(businessListings.clientId, clientId));
+              const activeCount = allListings.filter((l) => l.status === "active").length;
+              const pendingCount = allListings.filter((l) => l.status === "pending").length;
+              const platforms = Array.from(new Set(allListings.map((l) => l.platform)));
+              return {
+                total: allListings.length,
+                verified: activeCount,
+                pending: pendingCount,
+                citations: allListings.length,
+                platforms,
+              };
+            } catch {
+              return { total: 0, verified: 0, pending: 0, citations: 0, platforms: [] };
+            }
+          })(),
+          reviews: await (async () => {
+            try {
+              const analytics = await reviewSyncService.getClientReviewAnalytics(clientId);
+              return {
+                average: analytics.averageRating,
+                total: analytics.totalReviews,
+                recent: analytics.totalReviews, // All reviews are "recent" for now
+                response_rate: analytics.responseRate,
+              };
+            } catch {
+              return { average: 0, total: 0, recent: 0, response_rate: 0 };
+            }
+          })(),
           campaigns: {
             active: campaigns.filter((c: any) => c.status === "active").length,
             pending: campaigns.filter((c: any) => c.status === "draft").length,
             total: campaigns.length,
             performance: {
-              reach: 2340,
-              clicks: 89,
-              conversions: 12,
+              reach: campaigns.reduce((sum: number, c: any) => sum + (c.sentCount || 0), 0),
+              clicks: campaigns.reduce((sum: number, c: any) => sum + (c.clickCount || 0), 0),
+              conversions: campaigns.reduce((sum: number, c: any) => sum + (c.conversionCount || 0), 0),
             },
             latest: latestCampaign
               ? {
                   name: latestCampaign.name || "Recent Campaign",
                   status: latestCampaign.status || "active",
-                  unsubscribes: 3, // Placeholder - will be from analytics
-                  clickThroughs: 47, // Placeholder
-                  purchases: 8, // Placeholder
-                  sent: 250, // Placeholder - will be from campaign analytics
+                  unsubscribes: (latestCampaign as any).unsubscribeCount || 0,
+                  clickThroughs: (latestCampaign as any).clickCount || 0,
+                  purchases: (latestCampaign as any).conversionCount || 0,
+                  sent: (latestCampaign as any).sentCount || 0,
                 }
               : null,
           },
-          socialMedia: {
-            isSetup: false, // Placeholder - check if profiles connected
-            newLikes: 24,
-            newComments: 8,
-            newMessages: 5,
-            connectedProfiles: 0,
-          },
-          livechat: {
-            isSetup: false, // Placeholder - check if widget installed
-            participationRating: 4.8,
-            inQueue: 2,
-            totalChats: 145,
-            avgResponseTime: "2.3 min",
-          },
+          socialMedia: await (async () => {
+            try {
+              const accounts = await db.select().from(socialMediaAccounts)
+                .where(and(eq(socialMediaAccounts.clientId, clientId), eq(socialMediaAccounts.isActive, true)));
+              return {
+                isSetup: accounts.length > 0,
+                connectedProfiles: accounts.length,
+                newLikes: 0,
+                newComments: 0,
+                newMessages: 0,
+              };
+            } catch {
+              return { isSetup: false, connectedProfiles: 0, newLikes: 0, newComments: 0, newMessages: 0 };
+            }
+          })(),
+          livechat: await (async () => {
+            try {
+              const [widgetSettings] = await db.select().from(chatWidgetSettings)
+                .where(eq(chatWidgetSettings.clientId, clientId)).limit(1);
+              const sessions = await db.select().from(livechatSessions)
+                .where(eq(livechatSessions.clientId, clientId));
+              const activeSessions = sessions.filter((s: any) => s.status === "active" || s.status === "waiting");
+              return {
+                isSetup: !!widgetSettings,
+                participationRating: 0,
+                inQueue: activeSessions.length,
+                totalChats: sessions.length,
+                avgResponseTime: "N/A",
+              };
+            } catch {
+              return { isSetup: false, participationRating: 0, inQueue: 0, totalChats: 0, avgResponseTime: "N/A" };
+            }
+          })(),
           messages: {
             unread: messages.filter((m: any) => !m.isRead).length,
             total: messages.length,
@@ -703,6 +1000,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching clients:", error);
       res.status(500).json({ message: "Failed to fetch clients" });
+    }
+  });
+
+  // Delete a client and all related data (admin only, blocked for protected clients)
+  app.delete("/api/admin/clients/:id", isAuthenticated, async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      if (isNaN(clientId)) {
+        return res.status(400).json({ success: false, message: "Invalid client ID" });
+      }
+
+      // Check if client exists
+      const [client] = await db.select().from(clients).where(eq(clients.id, clientId)).limit(1);
+      if (!client) {
+        return res.status(404).json({ success: false, message: "Client not found" });
+      }
+
+      // Check if protected
+      if (client.isProtected) {
+        return res.status(403).json({
+          success: false,
+          message: "This client is protected and cannot be deleted. Remove protection first.",
+        });
+      }
+
+      // Delete related data in order (foreign key constraints)
+      // Timeline events
+      await db.delete(crmTimeline).where(eq(crmTimeline.clientId, clientId));
+      // CRM notes
+      await db.delete(crmNotes).where(eq(crmNotes.clientId, clientId));
+      // CRM tasks
+      await db.delete(crmTasks).where(eq(crmTasks.clientId, clientId));
+      // CRM deals
+      await db.delete(crmDeals).where(eq(crmDeals.clientId, clientId));
+      // CRM contacts
+      await db.delete(crmContacts).where(eq(crmContacts.clientId, clientId));
+      // CRM companies
+      await db.delete(crmCompanies).where(eq(crmCompanies.clientId, clientId));
+      // Setup tasks and notes
+      await db.delete(setupTasks).where(eq(setupTasks.clientId, clientId));
+      await db.delete(setupNotes).where(eq(setupNotes.clientId, clientId));
+      await db.delete(setupTaskEvents).where(eq(setupTaskEvents.clientId, clientId));
+      // Magic link tokens
+      await db.delete(magicLinkTokens).where(eq(magicLinkTokens.email, client.email));
+      // Note: assessments are NOT linked to clients via clientId — they're keyed by email,
+      // so they remain in place after a client is deleted (assessment data is preserved).
+      // Finally delete the client
+      await db.delete(clients).where(eq(clients.id, clientId));
+
+      console.log(`[Admin] Deleted client ${clientId} (${client.email})`);
+      res.json({ success: true, message: `Client ${client.companyName} deleted successfully` });
+    } catch (error: any) {
+      console.error("[Admin] Delete client error:", error);
+      res.status(500).json({ success: false, message: "Failed to delete client: " + error.message });
     }
   });
 
@@ -952,6 +1303,146 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // ========================================
+  // PORTAL - Subscription & Billing (Client Access)
+  // ========================================
+
+  // Get current client's subscription details
+  app.get("/api/portal/subscription", requireClientPortalAccess, async (req: any, res) => {
+    try {
+      const clientId = req.clientId;
+      const subView = await storage.getClientSubscription(clientId);
+
+      if (!subView) {
+        return res.json({ subscription: null });
+      }
+
+      // Shape response to match what the client portal billing tab expects
+      res.json({
+        subscription: {
+          id: subView.subscription.id,
+          status: subView.subscription.status,
+          billingCycle: subView.subscription.billingCycle,
+          totalAmount: subView.subscription.totalAmount,
+          nextBillingDate: subView.nextBillingDate,
+          lastPaymentDate: subView.lastPaymentDate,
+          plan: {
+            id: subView.plan.id,
+            name: subView.plan.name,
+            pathway: subView.plan.pathway,
+            tierLevel: subView.plan.tierLevel,
+          },
+          addons: subView.addons.map((a) => ({
+            id: a.addon.id,
+            name: a.addon.name,
+            price: a.unitPrice,
+            quantity: a.quantity,
+          })),
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching portal subscription:", error);
+      res.status(500).json({ message: "Failed to fetch subscription" });
+    }
+  });
+
+  // Update current client's business profile (requires typed-name confirmation)
+  app.patch("/api/portal/profile", requireClientPortalAccess, async (req: any, res) => {
+    try {
+      const clientId = req.clientId;
+      const { companyName, phone, address, website, confirmationText, smsConsent } = req.body;
+
+      if (!clientId) {
+        return res.status(401).json({ success: false, message: "Not authenticated" });
+      }
+
+      // Get current client data
+      const [client] = await db.select().from(clients).where(eq(clients.id, clientId)).limit(1);
+      if (!client) {
+        return res.status(404).json({ success: false, message: "Account not found" });
+      }
+
+      // Require confirmation: user must type their company name to confirm changes
+      if (!confirmationText || confirmationText.trim().toLowerCase() !== client.companyName.trim().toLowerCase()) {
+        return res.status(400).json({
+          success: false,
+          message: "Please type your current business name to confirm changes",
+        });
+      }
+
+      // Build update object — only include fields that were provided
+      const updates: Record<string, any> = { updatedAt: new Date() };
+      if (companyName !== undefined) updates.companyName = companyName.trim();
+      if (phone !== undefined) {
+        const trimmedPhone = phone.trim() || null;
+        const phoneChanged = trimmedPhone !== ((client.phone || "").trim() || null);
+        // TCPA: require explicit consent on any phone change
+        if (phoneChanged && trimmedPhone && !smsConsent) {
+          return res.status(400).json({
+            success: false,
+            message: "You must agree to receive SMS notifications to update your phone number.",
+          });
+        }
+        updates.phone = trimmedPhone;
+        if (phoneChanged && trimmedPhone && smsConsent) {
+          updates.smsConsent = true;
+          updates.smsConsentDate = new Date();
+          updates.smsConsentIp = (req.headers['x-forwarded-for'] as string) || req.ip || null;
+        }
+      }
+      if (address !== undefined) updates.address = address.trim() || null;
+      if (website !== undefined) updates.website = website.trim() || null;
+
+      await db.update(clients).set(updates).where(eq(clients.id, clientId));
+
+      // Log timeline event
+      try {
+        const existingContact = await db.select().from(crmContacts).where(eq(crmContacts.clientId, clientId)).limit(1);
+        if (existingContact.length > 0) {
+          await db.insert(crmTimeline).values({
+            clientId,
+            contactId: existingContact[0].id,
+            eventType: "profile_updated",
+            title: "Business information updated via portal",
+            occurredAt: new Date(),
+            sourceApp: "connect",
+            actorType: "client",
+          });
+        }
+      } catch (timelineError) {
+        console.error("[Profile Update] Timeline logging failed:", timelineError);
+      }
+
+      console.log(`[Profile] Client ${clientId} updated profile`);
+      res.json({ success: true, message: "Profile updated successfully" });
+    } catch (error: any) {
+      console.error("[Profile] Update error:", error);
+      res.status(500).json({ success: false, message: "Failed to update profile" });
+    }
+  });
+
+  // Get current client's billing history
+  app.get("/api/portal/billing-history", requireClientPortalAccess, async (req: any, res) => {
+    try {
+      const clientId = req.clientId;
+      const history = await storage.getClientBillingHistory(clientId, 24);
+
+      res.json({
+        billingHistory: history.map((tx) => ({
+          id: tx.id,
+          amount: tx.amount,
+          status: tx.status,
+          billingDate: tx.billingDate,
+          paidDate: tx.paidDate,
+          invoiceNumber: tx.invoiceNumber,
+        })),
+      });
+    } catch (error) {
+      console.error("Error fetching portal billing history:", error);
+      res.status(500).json({ message: "Failed to fetch billing history" });
+    }
+  });
+
+  // ========================================
   // PORTAL - Prescriptions (Public + Client Access)
   // ========================================
 
@@ -985,6 +1476,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ? await storage.getRecommendationsByAssessmentId(prescription.assessmentId)
         : [];
 
+      // Get product recommendation scores and merge onto recommendations
+      const productScores = prescription.assessmentId
+        ? await storage.getProductRecommendationScores(prescription.assessmentId)
+        : [];
+
+      const enrichedRecommendations = recommendations.map(rec => {
+        const scoreData = productScores.find(ps =>
+          (ps.productId && ps.productId === rec.productId) ||
+          (ps.categoryAffected && ps.categoryAffected === rec.category)
+        );
+        return {
+          ...rec,
+          currentScore: scoreData?.currentScore ?? null,
+          projectedScore: scoreData?.projectedScore ?? null,
+          scoreImprovement: scoreData?.scoreImprovement ?? null,
+        };
+      });
+
       // Mark as viewed if not already
       if (!prescription.viewedAt) {
         await db
@@ -1010,7 +1519,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           industry: assessment.industry,
           createdAt: assessment.createdAt,
         } : null,
-        recommendations,
+        recommendations: enrichedRecommendations,
       });
     } catch (error) {
       console.error("Error fetching prescription by token:", error);
@@ -1129,6 +1638,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ? await storage.getRecommendationsByAssessmentId(prescription.assessmentId)
         : [];
 
+      // Get product recommendation scores and merge onto recommendations
+      const productScores = prescription.assessmentId
+        ? await storage.getProductRecommendationScores(prescription.assessmentId)
+        : [];
+
+      const enrichedRecommendations = recommendations.map(rec => {
+        const scoreData = productScores.find(ps =>
+          (ps.productId && ps.productId === rec.productId) ||
+          (ps.categoryAffected && ps.categoryAffected === rec.category)
+        );
+        return {
+          ...rec,
+          currentScore: scoreData?.currentScore ?? null,
+          projectedScore: scoreData?.projectedScore ?? null,
+          scoreImprovement: scoreData?.scoreImprovement ?? null,
+        };
+      });
+
       // Mark as viewed
       if (!prescription.viewedAt) {
         await db
@@ -1147,7 +1674,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           analysisResults: assessment.analysisResults,
           createdAt: assessment.createdAt,
         } : null,
-        recommendations,
+        recommendations: enrichedRecommendations,
       });
     } catch (error) {
       console.error("Error fetching prescription:", error);
@@ -1242,7 +1769,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Check if token has been used (allow demo accounts to reuse tokens)
       const isDemoEmail = [
-        "demo@businessblueprint.io",
+        "53947@triadblue.com",
+        "53947@businessblueprint.io",
+        "admin@businessblueprint.io",
         "test@businessblueprint.io",
         "agency@businessblueprint.io",
       ].includes(magicToken.email.toLowerCase());
@@ -1352,7 +1881,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             eventType: "portal_login",
             title: `First portal login by ${client.companyName || client.email}`,
             occurredAt: new Date(),
-            sourceApp: "relationships",
+            sourceApp: "connect",
             actorType: "system",
           });
         } else {
@@ -1373,6 +1902,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
           crmError,
         );
         // Don't fail login if CRM sync fails
+      }
+
+      // Transfer assessment data to client record on magic-link login (returning users)
+      try {
+        const existingAssessment = await db
+          .select()
+          .from(assessments)
+          .where(eq(assessments.email, client.email))
+          .orderBy(desc(assessments.createdAt))
+          .limit(1);
+
+        if (existingAssessment.length > 0) {
+          const assess = existingAssessment[0];
+          const clientUpdates: Record<string, any> = {};
+
+          if (assess.phone && !client.phone) clientUpdates.phone = assess.phone;
+          if (assess.address && !client.address) {
+            const addressParts = [assess.address, assess.city, assess.state, assess.zipCode].filter(Boolean);
+            clientUpdates.address = addressParts.join(", ");
+          }
+          if (assess.website && !client.website) clientUpdates.website = assess.website;
+          if (assess.industry && !client.businessCategory) clientUpdates.businessCategory = assess.industry;
+
+          if (Object.keys(clientUpdates).length > 0) {
+            clientUpdates.updatedAt = new Date();
+            await db.update(clients).set(clientUpdates).where(eq(clients.id, client.id));
+            console.log(`[Magic Link Verify] Transferred assessment data to client ${client.id}:`, Object.keys(clientUpdates));
+          }
+
+          // Also update the CRM contact with assessment data
+          try {
+            const [existingCrmContact] = await db
+              .select()
+              .from(crmContacts)
+              .where(eq(crmContacts.clientId, client.id))
+              .limit(1);
+
+            if (existingCrmContact) {
+              const crmUpdates: Record<string, any> = {};
+              if (assess.phone && !existingCrmContact.phone) crmUpdates.phone = assess.phone;
+              if (assess.businessName) {
+                const nameParts = assess.businessName.split(" ");
+                if (!existingCrmContact.firstName || existingCrmContact.firstName === "Portal") {
+                  crmUpdates.firstName = nameParts[0] || existingCrmContact.firstName;
+                }
+                if (nameParts.length > 1 && existingCrmContact.lastName === "User") {
+                  crmUpdates.lastName = nameParts.slice(1).join(" ");
+                }
+              }
+              if (Object.keys(crmUpdates).length > 0) {
+                crmUpdates.updatedAt = new Date();
+                await db.update(crmContacts).set(crmUpdates).where(eq(crmContacts.id, existingCrmContact.id));
+              }
+            }
+          } catch (crmUpdateError) {
+            console.error("[Magic Link Verify] CRM contact update from assessment failed:", crmUpdateError);
+          }
+        }
+      } catch (transferError) {
+        console.error("[Magic Link Verify] Assessment data transfer failed:", transferError);
       }
 
       // Generate JWT token
@@ -1651,26 +2240,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const normalizedEmail = email.toLowerCase().trim();
 
-      // Auto-create demo accounts on first login attempt
-      const demoAccounts: Record<string, string> = {
-        "demo@businessblueprint.io": "Demo Restaurant",
-        "test@businessblueprint.io": "Test Business",
-        "agency@businessblueprint.io": "Social Media Agency",
+      // Auto-create known accounts on first login attempt
+      const autoAccounts: Record<string, { companyName: string; isAdmin?: boolean }> = {
+        "53947@triadblue.com": { companyName: "TriadBlue Inc.", isAdmin: true },
+        "53947@businessblueprint.io": { companyName: "BusinessBlueprint User" },
+        "admin@businessblueprint.io": { companyName: "businessblueprint.io" },
+        "test@businessblueprint.io": { companyName: "Test Business" },
+        "agency@businessblueprint.io": { companyName: "Social Media Agency" },
       };
 
       // Find client by email (case-insensitive, trimmed)
       let client = await storage.getClientByEmail(normalizedEmail);
 
-      // Auto-create demo account if it doesn't exist
-      if (!client && demoAccounts[normalizedEmail]) {
+      // Auto-create account if it doesn't exist
+      if (!client && autoAccounts[normalizedEmail]) {
+        const acct = autoAccounts[normalizedEmail];
         client = await storage.createClient({
-          companyName: demoAccounts[normalizedEmail],
+          companyName: acct.companyName,
           email: normalizedEmail,
           accountStatus: "active" as const,
+          ...(acct.isAdmin && { isAdmin: true }),
         });
         console.log(
-          `[Login] Auto-created demo account: ${normalizedEmail} (ID: ${client.id})`,
+          `[Login] Auto-created account: ${normalizedEmail} (ID: ${client.id}, admin: ${!!acct.isAdmin})`,
         );
+      }
+
+      // Ensure admin flag is always set for hardcoded admin accounts
+      if (client && autoAccounts[normalizedEmail]?.isAdmin && !client.isAdmin) {
+        await db.update(clients).set({ isAdmin: true }).where(eq(clients.id, client.id));
+        client = { ...client, isAdmin: true };
       }
 
       if (!client) {
@@ -1687,7 +2286,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Token expires in 24 hours for demo accounts, 15 minutes for others
       const expiresAt = new Date();
       const isDemoAccount = [
-        "demo@businessblueprint.io",
+        "53947@triadblue.com",
+        "53947@businessblueprint.io",
+        "admin@businessblueprint.io",
         "test@businessblueprint.io",
         "agency@businessblueprint.io",
       ].includes(normalizedEmail);
@@ -1762,6 +2363,263 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Client Portal Registration - Email + Password
+  app.post("/api/clients/register", async (req, res) => {
+    try {
+      const { email, password, companyName, phone, smsConsent, emailConsent } = req.body;
+
+      if (!email || !password || !companyName) {
+        return res.status(400).json({
+          success: false,
+          message: "Email, password, and company name are required",
+        });
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({
+          success: false,
+          message: "Please enter a valid email address",
+        });
+      }
+
+      if (password.length < 8) {
+        return res.status(400).json({
+          success: false,
+          message: "Password must be at least 8 characters",
+        });
+      }
+
+      // TCPA: phone requires explicit SMS consent
+      if (phone?.trim() && !smsConsent) {
+        return res.status(400).json({
+          success: false,
+          message: "You must agree to receive SMS notifications to save your phone number.",
+        });
+      }
+
+      const normalizedEmail = email.trim().toLowerCase();
+
+      const existing = await storage.getClientByEmail(normalizedEmail);
+      if (existing) {
+        return res.status(409).json({
+          success: false,
+          message: "An account with this email already exists. Please log in.",
+        });
+      }
+
+      const bcrypt = await import("bcryptjs");
+      const passwordHash = await bcrypt.hash(password, 12);
+
+      const consentIp = (req.headers['x-forwarded-for'] as string) || req.ip || null;
+
+      const client = await storage.createClient({
+        companyName: companyName.trim(),
+        email: normalizedEmail,
+        passwordHash,
+        phone: phone?.trim() || null,
+        smsConsent: smsConsent || false,
+        smsConsentDate: smsConsent ? new Date() : null,
+        smsConsentIp: smsConsent ? consentIp : null,
+        emailConsent: emailConsent || false,
+        emailConsentDate: emailConsent ? new Date() : null,
+        emailConsentIp: emailConsent ? consentIp : null,
+        accountStatus: "active",
+      });
+
+      // Auto-create CRM contact
+      try {
+        const [crmContact] = await db
+          .insert(crmContacts)
+          .values({
+            clientId: client.id,
+            firstName: companyName.trim().split(" ")[0] || "New",
+            lastName: "Client",
+            email: normalizedEmail,
+            lifecycleStage: "lead",
+            leadSource: "portal_signup",
+          })
+          .returning();
+
+        await db.insert(crmTimeline).values({
+          clientId: client.id,
+          contactId: crmContact.id,
+          eventType: "account_created",
+          title: `Account created for ${companyName}`,
+          occurredAt: new Date(),
+          sourceApp: "connect",
+          actorType: "system",
+        });
+      } catch (crmError) {
+        console.error("[Register] CRM contact creation failed:", crmError);
+      }
+
+      const jwtToken = await jwtService.createDashboardToken(client.id, client.email);
+
+      (req.session as any).clientId = client.id;
+      (req.session as any).email = client.email;
+      (req.session as any).isAdmin = false;
+
+      // Link any existing assessment to this client
+      try {
+        const existingAssessment = await db
+          .select()
+          .from(assessments)
+          .where(eq(assessments.email, normalizedEmail))
+          .orderBy(desc(assessments.createdAt))
+          .limit(1);
+
+        if (existingAssessment.length > 0 && !existingAssessment[0].clientId) {
+          await db
+            .update(assessments)
+            .set({ clientId: client.id })
+            .where(eq(assessments.id, existingAssessment[0].id));
+          console.log(`[Register] Linked assessment ${existingAssessment[0].id} to new client ${client.id}`);
+        }
+
+        // Transfer assessment data to client record (fills in phone, address, website, etc.)
+        if (existingAssessment.length > 0) {
+          const assess = existingAssessment[0];
+          const clientUpdates: Record<string, any> = {};
+
+          if (assess.phone && !client.phone) clientUpdates.phone = assess.phone;
+          if (assess.address && !client.address) {
+            const addressParts = [assess.address, assess.city, assess.state, assess.zipCode].filter(Boolean);
+            clientUpdates.address = addressParts.join(", ");
+          }
+          if (assess.website && !client.website) clientUpdates.website = assess.website;
+          if (assess.industry && !client.businessCategory) clientUpdates.businessCategory = assess.industry;
+
+          if (Object.keys(clientUpdates).length > 0) {
+            clientUpdates.updatedAt = new Date();
+            await db.update(clients).set(clientUpdates).where(eq(clients.id, client.id));
+            console.log(`[Register] Transferred assessment data to client ${client.id}:`, Object.keys(clientUpdates));
+          }
+
+          // Also update the CRM contact with assessment data
+          try {
+            const [existingCrmContact] = await db
+              .select()
+              .from(crmContacts)
+              .where(eq(crmContacts.clientId, client.id))
+              .limit(1);
+
+            if (existingCrmContact) {
+              const crmUpdates: Record<string, any> = {};
+              if (assess.phone && !existingCrmContact.phone) crmUpdates.phone = assess.phone;
+              if (assess.businessName) {
+                const nameParts = assess.businessName.split(" ");
+                if (!existingCrmContact.firstName || existingCrmContact.firstName === "New") {
+                  crmUpdates.firstName = nameParts[0] || existingCrmContact.firstName;
+                }
+                if (nameParts.length > 1 && existingCrmContact.lastName === "Client") {
+                  crmUpdates.lastName = nameParts.slice(1).join(" ");
+                }
+              }
+              if (Object.keys(crmUpdates).length > 0) {
+                crmUpdates.updatedAt = new Date();
+                await db.update(crmContacts).set(crmUpdates).where(eq(crmContacts.id, existingCrmContact.id));
+              }
+            }
+          } catch (crmUpdateError) {
+            console.error("[Register] CRM contact update from assessment failed:", crmUpdateError);
+          }
+        }
+      } catch (linkError) {
+        console.error("[Register] Assessment linking failed:", linkError);
+      }
+
+      console.log(`[Register] New account created: ${normalizedEmail} (ID: ${client.id})`);
+
+      res.json({
+        success: true,
+        client: {
+          id: client.id,
+          companyName: client.companyName,
+          email: client.email,
+        },
+        token: jwtToken,
+        message: "Account created successfully",
+      });
+    } catch (error: any) {
+      console.error("[Register] Error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Registration failed. Please try again.",
+      });
+    }
+  });
+
+  // Client Portal Login - Email + Password
+  app.post("/api/clients/password-login", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+
+      if (!email || !password) {
+        return res.status(400).json({
+          success: false,
+          message: "Email and password are required",
+        });
+      }
+
+      const normalizedEmail = email.trim().toLowerCase();
+      const client = await storage.getClientByEmail(normalizedEmail);
+
+      if (!client) {
+        return res.status(401).json({
+          success: false,
+          message: "Invalid email or password",
+        });
+      }
+
+      if (!client.passwordHash) {
+        return res.status(401).json({
+          success: false,
+          message: "This account uses magic link login. Please click 'Send Login Link' instead, or set a password in your account settings.",
+        });
+      }
+
+      const bcrypt = await import("bcryptjs");
+      const isValid = await bcrypt.compare(password, client.passwordHash);
+      if (!isValid) {
+        return res.status(401).json({
+          success: false,
+          message: "Invalid email or password",
+        });
+      }
+
+      await storage.updateClient(client.id, {
+        lastLoginTime: new Date(),
+        loginCount: (client.loginCount || 0) + 1,
+      });
+
+      const jwtToken = await jwtService.createDashboardToken(client.id, client.email);
+
+      (req.session as any).clientId = client.id;
+      (req.session as any).email = client.email;
+      (req.session as any).isAdmin = client.isAdmin || false;
+
+      console.log(`[Login] Password login: ${normalizedEmail} (ID: ${client.id})`);
+
+      res.json({
+        success: true,
+        client: {
+          id: client.id,
+          companyName: client.companyName,
+          email: client.email,
+        },
+        token: jwtToken,
+        message: "Login successful",
+      });
+    } catch (error: any) {
+      console.error("[Login] Password login error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Login failed. Please try again.",
+      });
+    }
+  });
+
   // Client Portal endpoints
   app.get("/api/client/dashboard/:clientId", async (req, res) => {
     try {
@@ -1796,7 +2654,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/client/listings/:clientId", async (req, res) => {
+  app.get("/api/client/list/:clientId", async (req, res) => {
     try {
       const clientId = parseInt(req.params.clientId);
       const client = await storage.getClient(clientId);
@@ -1821,14 +2679,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json({ total, verified, pending, platforms });
     } catch (error) {
-      console.error("Client listings error:", error);
-      res.status(500).json({ error: "Failed to load listings data" });
+      console.error("Client list error:", error);
+      res.status(500).json({ error: "Failed to load list data" });
     }
   });
 
   // Get all business listings for a client
   app.get(
-    "/api/clients/:id/listings",
+    "/api/clients/:id/list",
     requireClientPortalAccess,
     async (req: any, res) => {
       try {
@@ -1866,14 +2724,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.json(listings);
       } catch (error) {
         console.error("Error fetching client listings:", error);
-        res.status(500).json({ error: "Failed to fetch listings" });
+        res.status(500).json({ error: "Failed to fetch list" });
       }
     },
   );
 
   // Get listing metrics for a client
   app.get(
-    "/api/clients/:id/listings/metrics",
+    "/api/clients/:id/list/metrics",
     requireClientPortalAccess,
     async (req: any, res) => {
       try {
@@ -1961,44 +2819,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(404).json({ error: "Client not found" });
         }
 
-        // Mock reviews data
-        const reviews = [
-          {
-            id: 1,
-            platform: "Google",
-            rating: 5,
-            reviewText:
-              "Excellent service! The team was professional and delivered beyond expectations.",
-            reviewerName: "Sarah J.",
-            reviewDate: new Date().toISOString(),
-            sentiment: "positive",
-          },
-          {
-            id: 2,
-            platform: "Yelp",
-            rating: 2,
-            reviewText:
-              "Service was slow and the staff seemed uninterested. Not what I expected.",
-            reviewerName: "Mike T.",
-            reviewDate: new Date(Date.now() - 86400000).toISOString(),
-            sentiment: "negative",
-          },
-          {
-            id: 3,
-            platform: "Facebook",
-            rating: 4,
-            reviewText:
-              "Good experience overall. A few minor issues but nothing major.",
-            reviewerName: "Jennifer L.",
-            reviewDate: new Date(Date.now() - 172800000).toISOString(),
-            response:
-              "Thank you for your feedback! We appreciate your business.",
-            responseDate: new Date(Date.now() - 86400000).toISOString(),
-            sentiment: "positive",
-          },
-        ];
+        const reviews = await reviewSyncService.getClientReviews(clientId);
 
-        res.json(reviews);
+        res.json(
+          reviews.map((r) => ({
+            id: r.id,
+            platform: r.platform.charAt(0).toUpperCase() + r.platform.slice(1),
+            rating: r.rating,
+            reviewText: r.reviewText || "",
+            reviewerName: r.reviewerName,
+            reviewDate: r.reviewDate.toISOString(),
+            response: r.response || undefined,
+            responseDate: r.responseDate?.toISOString() || undefined,
+            sentiment: r.sentiment || "neutral",
+          })),
+        );
       } catch (error) {
         console.error("Error fetching client reviews:", error);
         res.status(500).json({ error: "Failed to fetch reviews" });
@@ -2023,20 +2858,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(404).json({ error: "Client not found" });
         }
 
-        // Mock analytics - will be replaced with real data
-        const analytics = {
-          averageRating: 4.6,
-          totalReviews: 347,
-          positiveCount: 289,
-          negativeCount: 23,
-          neutralCount: 35,
-          responseRate: 87.5,
-          platformBreakdown: {
-            google: 198,
-            yelp: 124,
-            facebook: 25,
-          },
-        };
+        const analytics = await reviewSyncService.getClientReviewAnalytics(clientId);
 
         res.json(analytics);
       } catch (error) {
@@ -2064,18 +2886,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Client not found" });
       }
 
-      let reviewResponse = response;
-
-      // If AI response requested, generate using ReviewAI service
-      if (useAI && !response) {
-        // This would call the ReviewAI service to generate a response
-        // For now, return success with mock response
-        reviewResponse =
-          "Thank you for your feedback! We truly appreciate your business and are committed to providing excellent service.";
+      // Fetch the actual review data from the database
+      const review = await reviewSyncService.getReviewById(reviewId);
+      if (!review) {
+        return res.status(404).json({ error: "Review not found" });
       }
 
-      // In production, this would post the response to the review platform
-      // For now, just return success
+      let reviewResponse = response;
+      let isAI = false;
+
+      // If AI response requested, generate using ReviewAI service with actual review data
+      if (useAI && !response) {
+        try {
+          const { reviewAI } = await import("./services/reviewAI");
+          reviewResponse = await reviewAI.generateReviewResponse({
+            reviewText: review.reviewText || "",
+            rating: review.rating,
+            platform: review.platform,
+            businessName: client.companyName || "our business",
+          });
+          isAI = true;
+        } catch {
+          reviewResponse =
+            "Thank you for your feedback! We truly appreciate your business and are committed to providing excellent service.";
+          isAI = true;
+        }
+      }
+
+      // Save response to database
+      await reviewSyncService.respondToReview(reviewId, reviewResponse, isAI);
+
       res.json({
         success: true,
         response: reviewResponse,
@@ -2087,8 +2927,88 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Sync reviews from Google + Yelp
+  app.post(
+    "/api/clients/:id/reviews/sync",
+    requireClientPortalAccess,
+    async (req: any, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ error: "Invalid client ID" });
+        }
+
+        const client = await storage.getClient(clientId);
+        if (!client) {
+          return res.status(404).json({ error: "Client not found" });
+        }
+
+        const businessName = client.companyName || "";
+        if (!businessName) {
+          return res.status(400).json({ error: "Client has no business name set" });
+        }
+
+        const result = await reviewSyncService.syncClientReviews(
+          clientId,
+          businessName,
+          client.address || undefined,
+          client.phone || undefined,
+        );
+
+        res.json({
+          success: true,
+          ...result,
+        });
+      } catch (error) {
+        console.error("Error syncing reviews:", error);
+        res.status(500).json({ error: "Failed to sync reviews" });
+      }
+    },
+  );
+
+  // Sync content analytics from connected platforms
+  app.post(
+    "/api/clients/:id/analytics/sync",
+    requireClientPortalAccess,
+    async (req: any, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ error: "Invalid client ID" });
+        }
+
+        const result = await analyticsSyncService.syncClientAnalytics(clientId);
+        res.json({ success: true, ...result });
+      } catch (error) {
+        console.error("Error syncing analytics:", error);
+        res.status(500).json({ error: "Failed to sync analytics" });
+      }
+    },
+  );
+
+  // Get aggregated analytics summary for a client
+  app.get(
+    "/api/clients/:id/analytics/summary",
+    requireClientPortalAccess,
+    async (req: any, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ error: "Invalid client ID" });
+        }
+
+        const summary =
+          await analyticsSyncService.getClientAnalyticsSummary(clientId);
+        res.json(summary);
+      } catch (error) {
+        console.error("Error fetching analytics summary:", error);
+        res.status(500).json({ error: "Failed to fetch analytics" });
+      }
+    },
+  );
+
   // Create a manual business listing
-  app.post("/api/clients/:id/listings", async (req, res) => {
+  app.post("/api/clients/:id/list", async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
 
@@ -2145,7 +3065,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Sync/discover business listings from Google Places + Yelp
-  app.post("/api/clients/:id/listings/sync", async (req, res) => {
+  app.post("/api/clients/:id/list/sync", async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
 
@@ -2158,7 +3078,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Client not found" });
       }
 
-      const businessName = client.companyName || client.name;
+      const businessName = client.companyName || "";
       if (!businessName) {
         return res.status(400).json({ error: "Client has no business name set" });
       }
@@ -2181,6 +3101,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         client.address || undefined,
         client.phone || undefined,
       );
+
+      // Also sync reviews alongside listings
+      try {
+        await reviewSyncService.syncClientReviews(
+          clientId,
+          businessName,
+          client.address || undefined,
+          client.phone || undefined,
+        );
+      } catch (reviewErr) {
+        console.error("Review sync error (non-blocking):", reviewErr);
+      }
 
       // Update sync log
       await db
@@ -2205,8 +3137,77 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Trigger metrics snapshot for listings (manual sync for views/clicks/calls)
+  app.post(
+    "/api/clients/:id/list/metrics/sync",
+    requireClientPortalAccess,
+    async (req: any, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ error: "Invalid client ID" });
+        }
+
+        const client = await storage.getClient(clientId);
+        if (!client) {
+          return res.status(404).json({ error: "Client not found" });
+        }
+
+        // Get all active listings for this client
+        const listings = await db
+          .select()
+          .from(businessListings)
+          .where(eq(businessListings.clientId, clientId));
+
+        if (listings.length === 0) {
+          return res.json({ success: true, snapshotsCreated: 0, message: "No listings to snapshot" });
+        }
+
+        const now = new Date();
+        const periodStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const periodEnd = new Date(periodStart.getTime() + 24 * 60 * 60 * 1000);
+
+        // Create a daily snapshot for each listing
+        // Real metrics come from platform APIs (Google Business Insights, etc.)
+        // This endpoint captures a snapshot; platform adapters will enrich with real data when connected
+        let snapshotsCreated = 0;
+        for (const listing of listings) {
+          // Check if snapshot already exists for today
+          const existing = await db
+            .select()
+            .from(listingMetricsSnapshots)
+            .where(
+              and(
+                eq(listingMetricsSnapshots.clientId, clientId),
+                eq(listingMetricsSnapshots.listingId, listing.id),
+                eq(listingMetricsSnapshots.periodStart, periodStart),
+              ),
+            );
+
+          if (existing.length === 0) {
+            await db.insert(listingMetricsSnapshots).values({
+              clientId,
+              listingId: listing.id,
+              views: 0,
+              clicks: 0,
+              calls: 0,
+              periodStart,
+              periodEnd,
+            });
+            snapshotsCreated++;
+          }
+        }
+
+        res.json({ success: true, snapshotsCreated, totalListings: listings.length });
+      } catch (error) {
+        console.error("Error syncing listing metrics:", error);
+        res.status(500).json({ error: "Failed to sync metrics" });
+      }
+    },
+  );
+
   // Update a business listing
-  app.patch("/api/clients/:id/listings/:listingId", async (req, res) => {
+  app.patch("/api/clients/:id/list/:listingId", async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
       const listingId = parseInt(req.params.listingId);
@@ -2293,1428 +3294,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Subscription Management endpoints
+  // Subscription, pricing, marketplace, and product routes (extracted to server/routes/subscriptions.ts)
+  registerSubscriptionRoutes(app, emailService);
 
-  // Get available subscription plans
-  app.get("/api/subscription-plans", async (req, res) => {
-    try {
-      const plans = await db
-        .select()
-        .from(subscriptionPlans)
-        .where(eq(subscriptionPlans.isActive, true));
+  // Send marketing routes (extracted to server/routes/send.ts)
+  registerSendRoutes(app);
 
-      res.json({
-        success: true,
-        plans: plans.map((plan) => ({
-          ...plan,
-          features: Array.isArray(plan.features) ? plan.features : [],
-          popular: plan.tierLevel === "professional",
-          recommended: plan.pathway === "diy" && plan.tierLevel === "basic",
-        })),
-      });
-    } catch (error) {
-      console.error("Error fetching subscription plans:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to fetch subscription plans",
-      });
-    }
-  });
+  // SEO Optimization routes (extracted to server/routes/optimize.ts)
+  registerOptimizeRoutes(app);
 
-  // Get available subscription addons
-  app.get("/api/subscription-addons", async (req, res) => {
-    try {
-      const addons = await db
-        .select()
-        .from(subscriptionAddons)
-        .where(eq(subscriptionAddons.isActive, true));
+  // Amplify paid advertising routes (extracted to server/routes/amplify.ts)
+  app.use(amplifyRouter);
 
-      // Map icons for frontend based on category
-      const categoryIconMap: Record<string, string> = {
-        seo: "Globe",
-        social: "Users",
-        ppc: "Zap",
-        content: "Sparkles",
-        email: "Users",
-        reputation: "Star",
-        analytics: "Sparkles",
-        website: "Globe",
-        "ai-coach": "Brain",
-        coaching: "Ship",
-      };
-
-      const addonsWithIcons = addons.map((addon) => ({
-        ...addon,
-        icon: categoryIconMap[addon.category as string] || "Sparkles",
-        billingType: addon.billingCycle === "one_time" ? "one_time" : "monthly",
-      }));
-
-      res.json({
-        success: true,
-        addons: addonsWithIcons,
-      });
-    } catch (error) {
-      console.error("Error fetching subscription addons:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to fetch subscription addons",
-      });
-    }
-  });
-
-  // Marketplace orders - Process payment for à la carte items
-  app.post("/api/marketplace/orders", async (req, res) => {
-    try {
-      // Validate request body
-      const orderSchema = z.object({
-        items: z.array(
-          z.object({
-            id: z.string(),
-            name: z.string(),
-            price: z.number(),
-            quantity: z.number(),
-            type: z.enum(["app", "addon"]),
-          }),
-        ),
-        paymentToken: z.string().min(16, "Valid payment token required"),
-        customerInfo: z.object({
-          firstName: z.string().min(1, "First name is required"),
-          lastName: z.string().min(1, "Last name is required"),
-          email: z.string().email("Valid email required"),
-          phone: z.string().optional(),
-          address: z.string().optional(),
-          city: z.string().optional(),
-          state: z.string().optional(),
-          zip: z.string().optional(),
-        }),
-        totals: z.object({
-          subtotal: z.number(),
-          tax: z.number(),
-          total: z.number(),
-        }),
-      });
-
-      const validation = orderSchema.safeParse(req.body);
-      if (!validation.success) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid order data",
-          errors: validation.error.errors,
-        });
-      }
-
-      const { items, paymentToken, customerInfo, totals } = validation.data;
-
-      // SECURITY: Recalculate totals server-side
-      const calculatedSubtotal = items.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0,
-      );
-      const calculatedTax = calculatedSubtotal * 0.08; // 8% tax
-      const calculatedTotal = calculatedSubtotal + calculatedTax;
-
-      // Verify client-provided totals match server calculations (within 1 cent for rounding)
-      if (Math.abs(calculatedTotal - totals.total) > 0.01) {
-        return res.status(400).json({
-          success: false,
-          message: "Order total mismatch. Please refresh and try again.",
-        });
-      }
-
-      // Create recurring subscription with NMI for the monthly total
-      const nmiRequest = {
-        planId: "marketplace-order-" + Date.now(), // Unique identifier
-        customerData: {
-          firstName: customerInfo.firstName,
-          lastName: customerInfo.lastName,
-          email: customerInfo.email,
-          phone: customerInfo.phone || "",
-          address: customerInfo.address || "",
-          city: customerInfo.city || "",
-          state: customerInfo.state || "",
-          zip: customerInfo.zip || "",
-        },
-        paymentToken,
-        planAmount: calculatedTotal.toFixed(2),
-        billingCycle: "monthly" as const,
-      };
-
-      const nmiResult = await NMIService.createSubscription(nmiRequest);
-
-      if (nmiResult.response !== "1") {
-        return res.status(400).json({
-          success: false,
-          message: nmiResult.responsetext || "Payment processing failed",
-        });
-      }
-
-      // Log successful order (could save to database if needed)
-      console.log("✅ Marketplace order successful:", {
-        subscriptionId: nmiResult.subscription_id,
-        customerEmail: customerInfo.email,
-        items: items.length,
-        total: calculatedTotal,
-      });
-
-      res.json({
-        success: true,
-        message: "Order processed successfully",
-        subscriptionId: nmiResult.subscription_id,
-        items: items.map((item) => item.name),
-      });
-    } catch (error) {
-      console.error("Error processing marketplace order:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to process order. Please try again.",
-      });
-    }
-  });
-
-  // Calculate pricing for selected plan and addons
-  app.post("/api/pricing/calculate", async (req, res) => {
-    try {
-      const {
-        planId,
-        addons: selectedAddons = [],
-        billingCycle = "monthly",
-      } = req.body;
-
-      if (!planId) {
-        return res.status(400).json({
-          success: false,
-          message: "Plan ID is required",
-        });
-      }
-
-      // Get plan details
-      const plan = await db
-        .select()
-        .from(subscriptionPlans)
-        .where(eq(subscriptionPlans.planId, planId))
-        .limit(1);
-
-      if (plan.length === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "Plan not found",
-        });
-      }
-
-      // Get addon details
-      const addons = await db
-        .select()
-        .from(subscriptionAddons)
-        .where(eq(subscriptionAddons.isActive, true));
-
-      // Calculate pricing using PricingEngine
-      const pricing = PricingEngine.calculateSubscriptionPrice(
-        plan[0],
-        addons,
-        selectedAddons,
-        billingCycle,
-      );
-
-      res.json({
-        success: true,
-        pricing,
-      });
-    } catch (error) {
-      console.error("Error calculating pricing:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to calculate pricing",
-      });
-    }
-  });
-
-  // Calculate bundle pricing from assessment recommendations
-  app.post("/api/pricing/calculate-bundle", async (req, res) => {
-    try {
-      const {
-        assessmentId,
-        pathway,
-        productIds = [],
-        billingCycle = "monthly",
-      } = req.body;
-
-      if (!assessmentId || !pathway) {
-        return res.status(400).json({
-          success: false,
-          message: "Assessment ID and pathway are required",
-        });
-      }
-
-      // Get the appropriate plan based on pathway (DIY only)
-      const planIdMap: Record<string, string> = {
-        diy: "diy-platform",
-      };
-
-      const planStringId = planIdMap[pathway];
-      const [plan] = await db
-        .select()
-        .from(subscriptionPlans)
-        .where(eq(subscriptionPlans.planId, planStringId))
-        .limit(1);
-
-      if (!plan) {
-        return res.status(404).json({
-          success: false,
-          message: "Plan not found for pathway",
-        });
-      }
-
-      // Get selected products with pricing
-      const { products: productsTable } = await import("@shared/schema");
-      const { inArray } = await import("drizzle-orm");
-
-      let selectedProducts: any[] = [];
-      let productsTotal = 0;
-
-      if (productIds.length > 0) {
-        selectedProducts = await db
-          .select()
-          .from(productsTable)
-          .where(inArray(productsTable.id, productIds));
-
-        // Calculate total (DIY pricing only)
-        productsTotal = selectedProducts.reduce((sum, product) => {
-          const price = parseFloat(product.diyPrice || "0");
-          return sum + price;
-        }, 0);
-      }
-
-      // Calculate pricing based on billing cycle
-      const basePriceMonthly = parseFloat(plan.basePrice);
-      const productsMonthly = productsTotal;
-
-      // Multiply by billing cycle months
-      const cycleMonths =
-        billingCycle === "quarterly" ? 3 : billingCycle === "annual" ? 12 : 1;
-      const subtotal = (basePriceMonthly + productsMonthly) * cycleMonths;
-
-      // Apply discount for longer billing cycles
-      let discount = 0;
-      if (billingCycle === "quarterly") {
-        discount = subtotal * 0.05; // 5% discount
-      } else if (billingCycle === "annual") {
-        discount = subtotal * 0.15; // 15% discount
-      }
-
-      const total = subtotal - discount;
-
-      // Transform to frontend-expected format
-      const pricing = {
-        planName: plan.name,
-        planPrice: basePriceMonthly * cycleMonths,
-        selectedAddons: selectedProducts.map((product) => {
-          const monthlyPrice = parseFloat(product.diyPrice || "0");
-          return {
-            name: product.name,
-            price: monthlyPrice * cycleMonths,
-          };
-        }),
-        subtotal,
-        discount,
-        total,
-        billingCycle,
-        savings: discount,
-      };
-
-      res.json({
-        success: true,
-        pricing,
-      });
-    } catch (error) {
-      console.error("Error calculating bundle pricing:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to calculate bundle pricing",
-      });
-    }
-  });
-
-  // Create subscription from assessment
-  app.post("/api/subscriptions/create-from-assessment", async (req, res) => {
-    try {
-      const {
-        assessmentId,
-        pathway,
-        productIds = [],
-        billingCycle = "monthly",
-      } = req.body;
-
-      if (!assessmentId || !pathway) {
-        return res.status(400).json({
-          success: false,
-          message: "Assessment ID and pathway are required",
-        });
-      }
-
-      // Get assessment details
-      const assessment = await storage.getAssessment(assessmentId);
-      if (!assessment) {
-        return res.status(404).json({
-          success: false,
-          message: "Assessment not found",
-        });
-      }
-
-      // Map pathway to plan ID (DIY only)
-      const planIdMap: Record<string, string> = {
-        diy: "diy-platform",
-      };
-
-      const planStringId = planIdMap[pathway];
-      const [plan] = await db
-        .select()
-        .from(subscriptionPlans)
-        .where(eq(subscriptionPlans.planId, planStringId))
-        .limit(1);
-
-      if (!plan) {
-        return res.status(404).json({
-          success: false,
-          message: "Plan not found",
-        });
-      }
-
-      // Get selected products for pricing
-      const { products: productsTable } = await import("@shared/schema");
-      const { inArray } = await import("drizzle-orm");
-
-      let selectedProducts: any[] = [];
-      let productsTotal = 0;
-
-      if (productIds.length > 0) {
-        selectedProducts = await db
-          .select()
-          .from(productsTable)
-          .where(inArray(productsTable.id, productIds));
-
-        productsTotal = selectedProducts.reduce((sum, product) => {
-          const price = parseFloat(product.diyPrice || "0");
-          return sum + price;
-        }, 0);
-      }
-
-      // Calculate pricing based on billing cycle
-      const basePriceMonthly = parseFloat(plan.basePrice);
-      const productsMonthly = productsTotal;
-
-      // Multiply by billing cycle months
-      const cycleMonths =
-        billingCycle === "quarterly" ? 3 : billingCycle === "annual" ? 12 : 1;
-      const subtotal = (basePriceMonthly + productsMonthly) * cycleMonths;
-
-      // Apply discount for longer billing cycles
-      let discount = 0;
-      if (billingCycle === "quarterly") {
-        discount = subtotal * 0.05;
-      } else if (billingCycle === "annual") {
-        discount = subtotal * 0.15;
-      }
-
-      const total = subtotal - discount;
-
-      // Prepare subscription data with all required fields
-      const subscriptionData = {
-        assessmentId,
-        planId: plan.id,
-        status: "pending_payment" as const,
-        baseAmount: (basePriceMonthly * cycleMonths).toString(),
-        addonAmount: (productsMonthly * cycleMonths).toString(),
-        totalAmount: total.toString(),
-        billingCycle,
-      };
-
-      // Create the subscription
-      const subscription = await db
-        .insert(subscriptions)
-        .values(subscriptionData)
-        .returning();
-
-      // Send enrollment confirmation email (assessment already fetched above)
-      if (assessment) {
-        const pathwayName = "DIY Platform";
-        const planName = `${plan.name} (${pathwayName})`;
-
-        // Get selected product names for features list
-        const featuresPromises = selectedProducts.map(async (prod) => {
-          const product = selectedProducts.find((p) => p.id === prod.id);
-          return product?.name || "";
-        });
-        const productNames = await Promise.all(featuresPromises);
-
-        // Build features list
-        const baseFeatures = Array.isArray(plan.features) ? plan.features : [];
-        const allFeatures = [...baseFeatures, ...productNames.filter(Boolean)];
-
-        await emailService.sendEnrollmentConfirmation(assessment.email, {
-          businessName: assessment.businessName,
-          pathway,
-          planName,
-          monthlyPrice: parseFloat(total.toFixed(2)),
-          nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-          features: allFeatures,
-        });
-      }
-
-      res.json({
-        success: true,
-        subscription: subscription[0],
-        message: "Subscription created successfully",
-      });
-    } catch (error) {
-      console.error("Error creating subscription from assessment:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to create subscription",
-      });
-    }
-  });
-
-  // Check trial status for a subscription
-  app.get("/api/subscriptions/:id/trial-status", async (req, res) => {
-    try {
-      const { id } = req.params;
-
-      const [subscription] = await db
-        .select()
-        .from(subscriptions)
-        .where(eq(subscriptions.id, parseInt(id)));
-
-      if (!subscription) {
-        return res.status(404).json({
-          success: false,
-          message: "Subscription not found",
-        });
-      }
-
-      const now = new Date();
-      const isTrialActive =
-        subscription.isTrialActive &&
-        subscription.trialPeriodEnd &&
-        now < subscription.trialPeriodEnd;
-
-      res.json({
-        success: true,
-        trialStatus: {
-          isTrialActive,
-          trialPeriodEnd: subscription.trialPeriodEnd,
-          daysRemaining:
-            isTrialActive && subscription.trialPeriodEnd
-              ? Math.ceil(
-                  (subscription.trialPeriodEnd.getTime() - now.getTime()) /
-                    (24 * 60 * 60 * 1000),
-                )
-              : 0,
-        },
-      });
-    } catch (error) {
-      console.error("Error checking trial status:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to check trial status",
-      });
-    }
-  });
-
-  // Create new subscription
-  app.post("/api/subscriptions", async (req, res) => {
-    try {
-      // Validate request body with Zod schema
-      const subscriptionSchema = z.object({
-        planId: z.string().min(1, "Plan ID is required"),
-        addons: z
-          .array(
-            z.object({
-              addonId: z.string(),
-              quantity: z.number().optional(),
-            }),
-          )
-          .default([]),
-        billingCycle: z.enum(["monthly", "quarterly", "annual"]),
-        paymentToken: z.string().min(16, "Valid payment token required"),
-        customerInfo: z.object({
-          firstName: z.string().min(1, "First name is required"),
-          lastName: z.string().min(1, "Last name is required"),
-          email: z.string().email("Valid email required"),
-          phone: z.string().optional(),
-          address: z.string().optional(),
-          city: z.string().optional(),
-          state: z.string().optional(),
-          zip: z.string().optional(),
-        }),
-      });
-
-      const validation = subscriptionSchema.safeParse(req.body);
-      if (!validation.success) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid subscription data",
-          errors: validation.error.errors,
-        });
-      }
-
-      const {
-        planId,
-        addons: selectedAddons,
-        billingCycle,
-        paymentToken,
-        customerInfo,
-      } = validation.data;
-
-      // Get plan details
-      const plan = await db
-        .select()
-        .from(subscriptionPlans)
-        .where(eq(subscriptionPlans.planId, planId))
-        .limit(1);
-
-      if (plan.length === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "Plan not found",
-        });
-      }
-
-      // Get addon details for subscription creation
-      const addons = await db
-        .select()
-        .from(subscriptionAddons)
-        .where(eq(subscriptionAddons.isActive, true));
-
-      // SECURITY: Recalculate pricing server-side - never trust client amounts
-      const pricing = PricingEngine.calculateSubscriptionPrice(
-        plan[0],
-        addons,
-        selectedAddons,
-        billingCycle,
-      );
-
-      // Handle setup fee separately if present (including setup fee tax)
-      let setupTransactionResult = null;
-      if (pricing.setupFee > 0) {
-        setupTransactionResult = await NMIService.processTransaction(
-          paymentToken,
-          pricing.oneTimeTotal.toFixed(2), // setupFee + setupFeeTax
-          `${plan[0].name} Setup Fee`,
-        );
-
-        if (setupTransactionResult.response !== "1") {
-          return res.status(400).json({
-            success: false,
-            message:
-              setupTransactionResult.responsetext || "Setup fee payment failed",
-          });
-        }
-      }
-
-      // Check if AI Coach addon is selected for trial eligibility
-      const hasAiCoachAddon = selectedAddons.some(
-        (addon) =>
-          addons.find((a) => a.addonId === addon.addonId)?.category ===
-          "ai-coach",
-      );
-
-      // 7-day trial for AI Coach addons
-      const isTrialEligible = hasAiCoachAddon;
-      const trialPeriodEnd = isTrialEligible
-        ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-        : null;
-
-      // Create NMI subscription for recurring charges only (no setup fee components)
-      const recurringAmount = pricing.recurringTotal.toFixed(2); // recurringSubtotal + recurringTax
-      const nmiRequest = {
-        planId: plan[0].planId,
-        customerData: {
-          firstName: customerInfo.firstName,
-          lastName: customerInfo.lastName,
-          email: customerInfo.email,
-          phone: customerInfo.phone || "",
-          address: customerInfo.address || "",
-          city: customerInfo.city || "",
-          state: customerInfo.state || "",
-          zip: customerInfo.zip || "",
-        },
-        paymentToken,
-        planAmount: recurringAmount,
-        billingCycle,
-        startDate: trialPeriodEnd
-          ? trialPeriodEnd.toISOString().split("T")[0]
-          : undefined, // Start billing after trial
-      };
-
-      const nmiResult = await NMIService.createSubscription(nmiRequest);
-
-      if (nmiResult.response !== "1") {
-        return res.status(400).json({
-          success: false,
-          message: nmiResult.responsetext || "Subscription creation failed",
-        });
-      }
-
-      // Create local subscription record with proper separated amounts
-      const subscriptionData = {
-        nmiSubscriptionId: nmiResult.subscription_id,
-        planId: plan[0].id,
-        status: isTrialEligible ? "trial" : "active",
-        baseAmount: pricing.basePrice.toFixed(2),
-        addonAmount: pricing.totalAddons.toFixed(2),
-        totalAmount: pricing.recurringTotal.toFixed(2), // Only recurring charges in subscription record
-        billingCycle,
-        paymentMethod: {
-          type: "card",
-          maskedNumber: "****1234",
-          lastFour: "1234",
-        },
-        currentPeriodStart: new Date(),
-        currentPeriodEnd: calculateNextBillingDate(billingCycle),
-        nextPaymentDate: isTrialEligible
-          ? trialPeriodEnd
-          : calculateNextBillingDate(billingCycle),
-        trialPeriodEnd: trialPeriodEnd,
-        isTrialActive: isTrialEligible,
-      };
-
-      const [newSubscription] = await db
-        .insert(subscriptions)
-        .values(subscriptionData)
-        .returning();
-
-      res.json({
-        success: true,
-        subscription: newSubscription,
-        nmiSubscriptionId: nmiResult.subscription_id,
-        message: "Subscription created successfully",
-      });
-    } catch (error) {
-      console.error("Error creating subscription:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to create subscription",
-      });
-    }
-  });
-
-  // Get product recommendations for an assessment
-  app.get("/api/assessments/:id/product-recommendations", async (req, res) => {
-    try {
-      const assessmentId = parseInt(req.params.id);
-      const recs =
-        await productRecommendationService.getRecommendations(assessmentId);
-
-      // Flatten the nested product structure for frontend
-      const recommendations = recs.map((rec) => ({
-        productId: rec.product.productId, // Use string product ID from catalog
-        productName: rec.product.name,
-        reason: rec.reason,
-        priority: rec.priority,
-        diyPrice: rec.product.diyPrice,
-        category: rec.product.category,
-        currentScore: rec.currentScore,
-        projectedScore: rec.projectedScore,
-        scoreImprovement: rec.scoreImprovement,
-      }));
-
-      res.json({
-        success: true,
-        recommendations,
-      });
-    } catch (error) {
-      console.error("Error fetching product recommendations:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to fetch product recommendations",
-      });
-    }
-  });
-
-  // Get all products (filtered by delivery method)
-  app.get("/api/products", async (req, res) => {
-    try {
-      const deliveryMethod = req.query.deliveryMethod as string | undefined;
-      const category = req.query.category as string | undefined;
-
-      const { products } = await import("@shared/schema");
-      const { eq, and } = await import("drizzle-orm");
-
-      // Build where conditions
-      const conditions = [eq(products.isActive, true)];
-      if (category) {
-        conditions.push(eq(products.category, category));
-      }
-
-      const allProducts = await db
-        .select()
-        .from(products)
-        .where(and(...conditions));
-
-      // Filter by delivery method if specified
-      const filteredProducts = deliveryMethod
-        ? allProducts.filter((p) => p.deliveryMethod?.includes(deliveryMethod))
-        : allProducts;
-
-      res.json({
-        success: true,
-        products: filteredProducts,
-      });
-    } catch (error) {
-      console.error("Error fetching products:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to fetch products",
-      });
-    }
-  });
-
-  // Get single product by ID
-  app.get("/api/products/:id", async (req, res) => {
-    try {
-      const productId = parseInt(req.params.id);
-      const { products } = await import("@shared/schema");
-      const { eq } = await import("drizzle-orm");
-
-      const [product] = await db
-        .select()
-        .from(products)
-        .where(eq(products.id, productId));
-
-      if (!product) {
-        return res.status(404).json({
-          success: false,
-          message: "Product not found",
-        });
-      }
-
-      res.json({
-        success: true,
-        product,
-      });
-    } catch (error) {
-      console.error("Error fetching product:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to fetch product",
-      });
-    }
-  });
-
-  // ============================================================================
-  // /SEND - Email + SMS Marketing Platform API Routes
-  // All routes protected with JWT authentication
-  // ============================================================================
-
-  // Create contact
-  app.post(
-    "/api/send/contacts",
-    requireAuth,
-    async (req: AuthenticatedRequest, res) => {
-      try {
-        const clientId = req.clientId!;
-        const validatedData = insertSendContactSchema.parse(req.body);
-
-        // GDPR/CAN-SPAM Compliance Validation
-        if (!validatedData.email && !validatedData.phone) {
-          return res.status(400).json({
-            success: false,
-            message: "At least one contact method (email or phone) is required",
-          });
-        }
-
-        // Ensure email consent is provided if email is present
-        if (validatedData.email && !validatedData.emailConsent) {
-          return res.status(400).json({
-            success: false,
-            message:
-              "Email consent is required when providing an email address (GDPR/CAN-SPAM compliance)",
-          });
-        }
-
-        // Ensure SMS consent is provided if phone is present
-        if (validatedData.phone && !validatedData.smsConsent) {
-          return res.status(400).json({
-            success: false,
-            message:
-              "SMS consent is required when providing a phone number (TCPA compliance)",
-          });
-        }
-
-        // Force clientId to match authenticated user (prevent cross-client data leakage)
-        const contactData = {
-          ...validatedData,
-          clientId,
-          emailConsentDate: validatedData.emailConsent ? new Date() : null,
-          smsConsentDate: validatedData.smsConsent ? new Date() : null,
-        };
-
-        const contact = await storage.createSendContact(contactData);
-        res.json({ success: true, contact });
-      } catch (error) {
-        console.error("Error creating contact:", error);
-        res.status(400).json({
-          success: false,
-          message:
-            error instanceof Error ? error.message : "Failed to create contact",
-        });
-      }
-    },
-  );
-
-  // Get all contacts for authenticated client (with pagination)
-  app.get(
-    "/api/send/contacts",
-    requireAuth,
-    async (req: AuthenticatedRequest, res) => {
-      try {
-        const clientId = req.clientId!;
-        const limit = Math.min(
-          parseInt(req.query.limit as string) || 100,
-          1000,
-        ); // Max 1000
-        const offset = parseInt(req.query.offset as string) || 0;
-
-        const contacts = await storage.getSendContactsByClient(clientId);
-
-        // Apply pagination
-        const paginatedContacts = contacts.slice(offset, offset + limit);
-
-        res.json({
-          success: true,
-          contacts: paginatedContacts,
-          pagination: {
-            total: contacts.length,
-            limit,
-            offset,
-            hasMore: offset + limit < contacts.length,
-          },
-        });
-      } catch (error) {
-        console.error("Error fetching contacts:", error);
-        res.status(500).json({
-          success: false,
-          message: "Failed to fetch contacts",
-        });
-      }
-    },
-  );
-
-  // Get single contact (with client ownership validation)
-  app.get(
-    "/api/send/contacts/:id",
-    requireAuth,
-    async (req: AuthenticatedRequest, res) => {
-      try {
-        const clientId = req.clientId!;
-        const id = parseInt(req.params.id);
-
-        if (isNaN(id)) {
-          return res.status(400).json({
-            success: false,
-            message: "Invalid contact ID",
-          });
-        }
-
-        const contact = await storage.getSendContact(id);
-
-        if (!contact) {
-          return res.status(404).json({
-            success: false,
-            message: "Contact not found",
-          });
-        }
-
-        // Verify client ownership
-        if (contact.clientId !== clientId) {
-          return res.status(403).json({
-            success: false,
-            message: "Access denied: Contact belongs to another client",
-          });
-        }
-
-        res.json({ success: true, contact });
-      } catch (error) {
-        console.error("Error fetching contact:", error);
-        res.status(500).json({
-          success: false,
-          message: "Failed to fetch contact",
-        });
-      }
-    },
-  );
-
-  // Update contact (with client ownership validation)
-  app.patch(
-    "/api/send/contacts/:id",
-    requireAuth,
-    async (req: AuthenticatedRequest, res) => {
-      try {
-        const clientId = req.clientId!;
-        const id = parseInt(req.params.id);
-
-        if (isNaN(id)) {
-          return res.status(400).json({
-            success: false,
-            message: "Invalid contact ID",
-          });
-        }
-
-        // Verify contact exists and belongs to client
-        const existingContact = await storage.getSendContact(id);
-        if (!existingContact) {
-          return res.status(404).json({
-            success: false,
-            message: "Contact not found",
-          });
-        }
-
-        if (existingContact.clientId !== clientId) {
-          return res.status(403).json({
-            success: false,
-            message: "Access denied: Contact belongs to another client",
-          });
-        }
-
-        const updateData = insertSendContactSchema.partial().parse(req.body);
-
-        // Prevent clientId tampering
-        if ("clientId" in updateData) {
-          delete (updateData as any).clientId;
-        }
-
-        const contact = await storage.updateSendContact(id, updateData);
-        res.json({ success: true, contact });
-      } catch (error) {
-        console.error("Error updating contact:", error);
-        res.status(400).json({
-          success: false,
-          message:
-            error instanceof Error ? error.message : "Failed to update contact",
-        });
-      }
-    },
-  );
-
-  // Delete contact (with client ownership validation)
-  app.delete(
-    "/api/send/contacts/:id",
-    requireAuth,
-    async (req: AuthenticatedRequest, res) => {
-      try {
-        const clientId = req.clientId!;
-        const id = parseInt(req.params.id);
-
-        if (isNaN(id)) {
-          return res.status(400).json({
-            success: false,
-            message: "Invalid contact ID",
-          });
-        }
-
-        // Verify contact exists and belongs to client
-        const existingContact = await storage.getSendContact(id);
-        if (!existingContact) {
-          return res.status(404).json({
-            success: false,
-            message: "Contact not found",
-          });
-        }
-
-        if (existingContact.clientId !== clientId) {
-          return res.status(403).json({
-            success: false,
-            message: "Access denied: Contact belongs to another client",
-          });
-        }
-
-        await storage.deleteSendContact(id);
-        res.json({ success: true, message: "Contact deleted successfully" });
-      } catch (error) {
-        console.error("Error deleting contact:", error);
-        res.status(500).json({
-          success: false,
-          message: "Failed to delete contact",
-        });
-      }
-    },
-  );
-
-  // Create list
-  app.post(
-    "/api/send/lists",
-    requireAuth,
-    async (req: AuthenticatedRequest, res) => {
-      try {
-        const clientId = req.clientId!;
-        const validatedData = insertSendListSchema.parse(req.body);
-
-        // Force clientId to match authenticated user
-        const listData = {
-          ...validatedData,
-          clientId,
-        };
-
-        const list = await storage.createSendList(listData);
-        res.json({ success: true, list });
-      } catch (error) {
-        console.error("Error creating list:", error);
-        res.status(400).json({
-          success: false,
-          message:
-            error instanceof Error ? error.message : "Failed to create list",
-        });
-      }
-    },
-  );
-
-  // Get all lists for authenticated client (with pagination)
-  app.get(
-    "/api/send/lists",
-    requireAuth,
-    async (req: AuthenticatedRequest, res) => {
-      try {
-        const clientId = req.clientId!;
-        const limit = Math.min(
-          parseInt(req.query.limit as string) || 100,
-          1000,
-        ); // Max 1000
-        const offset = parseInt(req.query.offset as string) || 0;
-
-        const lists = await storage.getSendListsByClient(clientId);
-
-        // Apply pagination
-        const paginatedLists = lists.slice(offset, offset + limit);
-
-        res.json({
-          success: true,
-          lists: paginatedLists,
-          pagination: {
-            total: lists.length,
-            limit,
-            offset,
-            hasMore: offset + limit < lists.length,
-          },
-        });
-      } catch (error) {
-        console.error("Error fetching lists:", error);
-        res.status(500).json({
-          success: false,
-          message: "Failed to fetch lists",
-        });
-      }
-    },
-  );
-
-  // Get single list (with client ownership validation)
-  app.get(
-    "/api/send/lists/:id",
-    requireAuth,
-    async (req: AuthenticatedRequest, res) => {
-      try {
-        const clientId = req.clientId!;
-        const id = parseInt(req.params.id);
-
-        if (isNaN(id)) {
-          return res.status(400).json({
-            success: false,
-            message: "Invalid list ID",
-          });
-        }
-
-        const list = await storage.getSendList(id);
-
-        if (!list) {
-          return res.status(404).json({
-            success: false,
-            message: "List not found",
-          });
-        }
-
-        // Verify client ownership
-        if (list.clientId !== clientId) {
-          return res.status(403).json({
-            success: false,
-            message: "Access denied: List belongs to another client",
-          });
-        }
-
-        res.json({ success: true, list });
-      } catch (error) {
-        console.error("Error fetching list:", error);
-        res.status(500).json({
-          success: false,
-          message: "Failed to fetch list",
-        });
-      }
-    },
-  );
-
-  // Update list (with client ownership validation)
-  app.patch(
-    "/api/send/lists/:id",
-    requireAuth,
-    async (req: AuthenticatedRequest, res) => {
-      try {
-        const clientId = req.clientId!;
-        const id = parseInt(req.params.id);
-
-        if (isNaN(id)) {
-          return res.status(400).json({
-            success: false,
-            message: "Invalid list ID",
-          });
-        }
-
-        // Verify list exists and belongs to client
-        const existingList = await storage.getSendList(id);
-        if (!existingList) {
-          return res.status(404).json({
-            success: false,
-            message: "List not found",
-          });
-        }
-
-        if (existingList.clientId !== clientId) {
-          return res.status(403).json({
-            success: false,
-            message: "Access denied: List belongs to another client",
-          });
-        }
-
-        const updateData = insertSendListSchema.partial().parse(req.body);
-
-        // Prevent clientId tampering
-        if ("clientId" in updateData) {
-          delete (updateData as any).clientId;
-        }
-
-        const list = await storage.updateSendList(id, updateData);
-        res.json({ success: true, list });
-      } catch (error) {
-        console.error("Error updating list:", error);
-        res.status(400).json({
-          success: false,
-          message:
-            error instanceof Error ? error.message : "Failed to update list",
-        });
-      }
-    },
-  );
-
-  // Delete list (with client ownership validation)
-  app.delete(
-    "/api/send/lists/:id",
-    requireAuth,
-    async (req: AuthenticatedRequest, res) => {
-      try {
-        const clientId = req.clientId!;
-        const id = parseInt(req.params.id);
-
-        if (isNaN(id)) {
-          return res.status(400).json({
-            success: false,
-            message: "Invalid list ID",
-          });
-        }
-
-        // Verify list exists and belongs to client
-        const existingList = await storage.getSendList(id);
-        if (!existingList) {
-          return res.status(404).json({
-            success: false,
-            message: "List not found",
-          });
-        }
-
-        if (existingList.clientId !== clientId) {
-          return res.status(403).json({
-            success: false,
-            message: "Access denied: List belongs to another client",
-          });
-        }
-
-        await storage.deleteSendList(id);
-        res.json({ success: true, message: "List deleted successfully" });
-      } catch (error) {
-        console.error("Error deleting list:", error);
-        res.status(500).json({
-          success: false,
-          message: "Failed to delete list",
-        });
-      }
-    },
-  );
-
-  // Add contact to list (with ownership validation)
-  app.post(
-    "/api/send/lists/:listId/contacts/:contactId",
-    requireAuth,
-    async (req: AuthenticatedRequest, res) => {
-      try {
-        const clientId = req.clientId!;
-        const listId = parseInt(req.params.listId);
-        const contactId = parseInt(req.params.contactId);
-
-        if (isNaN(listId) || isNaN(contactId)) {
-          return res.status(400).json({
-            success: false,
-            message: "Invalid list or contact ID",
-          });
-        }
-
-        // Verify list and contact both exist and belong to client
-        const [list, contact] = await Promise.all([
-          storage.getSendList(listId),
-          storage.getSendContact(contactId),
-        ]);
-
-        if (!list) {
-          return res.status(404).json({
-            success: false,
-            message: "List not found",
-          });
-        }
-
-        if (!contact) {
-          return res.status(404).json({
-            success: false,
-            message: "Contact not found",
-          });
-        }
-
-        // Verify both belong to the same client
-        if (list.clientId !== clientId || contact.clientId !== clientId) {
-          return res.status(403).json({
-            success: false,
-            message: "Access denied: Resources belong to another client",
-          });
-        }
-
-        await storage.addContactToList(listId, contactId);
-        res.json({
-          success: true,
-          message: "Contact added to list successfully",
-        });
-      } catch (error) {
-        console.error("Error adding contact to list:", error);
-        res.status(500).json({
-          success: false,
-          message: "Failed to add contact to list",
-        });
-      }
-    },
-  );
-
-  // Remove contact from list (with ownership validation)
-  app.delete(
-    "/api/send/lists/:listId/contacts/:contactId",
-    requireAuth,
-    async (req: AuthenticatedRequest, res) => {
-      try {
-        const clientId = req.clientId!;
-        const listId = parseInt(req.params.listId);
-        const contactId = parseInt(req.params.contactId);
-
-        if (isNaN(listId) || isNaN(contactId)) {
-          return res.status(400).json({
-            success: false,
-            message: "Invalid list or contact ID",
-          });
-        }
-
-        // Verify list belongs to client
-        const list = await storage.getSendList(listId);
-        if (!list) {
-          return res.status(404).json({
-            success: false,
-            message: "List not found",
-          });
-        }
-
-        if (list.clientId !== clientId) {
-          return res.status(403).json({
-            success: false,
-            message: "Access denied: List belongs to another client",
-          });
-        }
-
-        await storage.removeContactFromList(listId, contactId);
-        res.json({
-          success: true,
-          message: "Contact removed from list successfully",
-        });
-      } catch (error) {
-        console.error("Error removing contact from list:", error);
-        res.status(500).json({
-          success: false,
-          message: "Failed to remove contact from list",
-        });
-      }
-    },
-  );
-
-  // Get all contacts in a list (with ownership validation and pagination)
-  app.get(
-    "/api/send/lists/:listId/contacts",
-    requireAuth,
-    async (req: AuthenticatedRequest, res) => {
-      try {
-        const clientId = req.clientId!;
-        const listId = parseInt(req.params.listId);
-        const limit = Math.min(
-          parseInt(req.query.limit as string) || 100,
-          1000,
-        ); // Max 1000
-        const offset = parseInt(req.query.offset as string) || 0;
-
-        if (isNaN(listId)) {
-          return res.status(400).json({
-            success: false,
-            message: "Invalid list ID",
-          });
-        }
-
-        // Verify list belongs to client
-        const list = await storage.getSendList(listId);
-        if (!list) {
-          return res.status(404).json({
-            success: false,
-            message: "List not found",
-          });
-        }
-
-        if (list.clientId !== clientId) {
-          return res.status(403).json({
-            success: false,
-            message: "Access denied: List belongs to another client",
-          });
-        }
-
-        const contacts = await storage.getListContacts(listId);
-
-        // Apply pagination
-        const paginatedContacts = contacts.slice(offset, offset + limit);
-
-        res.json({
-          success: true,
-          contacts: paginatedContacts,
-          pagination: {
-            total: contacts.length,
-            limit,
-            offset,
-            hasMore: offset + limit < contacts.length,
-          },
-        });
-      } catch (error) {
-        console.error("Error fetching list contacts:", error);
-        res.status(500).json({
-          success: false,
-          message: "Failed to fetch list contacts",
-        });
-      }
-    },
-  );
+  // / convert lead capture routes (server/routes/convert.ts)
+  // Auth is enforced per-route inside the router — public /public/* and /submit/* endpoints
+  // are intentionally un-middlewared so the embed script and hosted form page work without login.
+  app.use("/api/convert", convertRouter);
 
   // ============================================================================
   // Brand Studio API Routes - Asset Management
@@ -3943,7 +3538,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Set appropriate headers
       res.setHeader("Content-Type", asset.mimeType);
       res.setHeader("Content-Length", buffer.length);
-      res.setHeader("Cache-Control", "public, max-age=31536000"); // Cache for 1 year
+      res.setHeader("Cache-Control", "public, max-age=3600"); // Cache for 1 hour
 
       res.send(buffer);
     } catch (error) {
@@ -3955,17 +3550,127 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Register inbox routes
+  // Register respond routes
   await registerInboxRoutes(app);
 
-  // Content Management Routes
-  app.use("/api/content", contentRoutes);
+  // Post Management Routes
+  app.use('/api/post', contentRoutes);
 
   // Meta (Facebook/Instagram/WhatsApp) Integration Routes
   app.use("/api/meta", metaRoutes);
+  app.use("/api/google", googleRoutes);
+  app.use("/api/linkedin", linkedinRoutes);
+  app.use("/api/tiktok", tiktokRoutes);
+  app.use("/api/snapchat", snapchatRoutes);
+  app.use("/api/pinterest", pinterestRoutes);
+  app.use("/api/nextdoor", nextdoorRoutes);
+  app.use("/api/spotify", spotifyRoutes);
+  app.use("/api/microsoft-ads", microsoftAdsRoutes);
+
+  // Telnyx SMS Webhook — receives inbound SMS and routes to / respond inbox
+  app.post("/api/telnyx/webhook", async (req, res) => {
+    try {
+      // Respond immediately (Telnyx requires 2xx within 2 seconds)
+      res.status(200).json({ ok: true });
+
+      const event = req.body?.data;
+      if (!event || event.event_type !== "message.received") return;
+
+      const payload = event.payload;
+      if (!payload) return;
+
+      const fromNumber = payload.from?.phone_number;
+      const toNumber = payload.to?.[0]?.phone_number || payload.to;
+      const messageText = payload.text || "";
+      const messageId = payload.id;
+
+      if (!fromNumber || !messageText) return;
+
+      // Find which client owns this Telnyx number
+      // Look up by the "to" number in adAccountConnections or use a default client
+      // For now, find conversations with this sender
+      const [existingConv] = await db
+        .select()
+        .from(inboxConversations)
+        .where(
+          and(
+            eq(inboxConversations.contactIdentifier, fromNumber),
+            eq(inboxConversations.primaryChannelType, "sms"),
+          ),
+        )
+        .limit(1);
+
+      if (existingConv) {
+        // Add message to existing conversation
+        await db.insert(inboxMessages2).values({
+          conversationId: existingConv.id,
+          channelType: "sms",
+          messageType: "incoming",
+          direction: "inbound",
+          content: messageText,
+          contentType: "text",
+          fromIdentifier: fromNumber,
+          fromName: existingConv.contactName || fromNumber,
+          toIdentifier: toNumber,
+          toName: "Support",
+          externalMessageId: messageId,
+          status: "delivered",
+          deliveredAt: new Date(),
+          metadata: { provider: "telnyx", event: payload },
+        });
+
+        // Update conversation
+        await db.update(inboxConversations)
+          .set({
+            lastMessageAt: new Date(),
+            lastMessagePreview: messageText.substring(0, 100),
+            unreadCount: (existingConv.unreadCount || 0) + 1,
+            updatedAt: new Date(),
+          })
+          .where(eq(inboxConversations.id, existingConv.id));
+
+        console.log(`[Telnyx] SMS received from ${fromNumber} → conversation ${existingConv.id}`);
+      } else {
+        // Create new conversation for this SMS sender
+        const [newConv] = await db.insert(inboxConversations).values({
+          clientId: 1, // Default client — will be refined when multi-tenant matching is built
+          contactName: fromNumber,
+          contactIdentifier: fromNumber,
+          primaryChannelType: "sms",
+          status: "open",
+          priority: "normal",
+          lastMessageAt: new Date(),
+          lastMessagePreview: messageText.substring(0, 100),
+          unreadCount: 1,
+        }).returning();
+
+        await db.insert(inboxMessages2).values({
+          conversationId: newConv.id,
+          channelType: "sms",
+          messageType: "incoming",
+          direction: "inbound",
+          content: messageText,
+          contentType: "text",
+          fromIdentifier: fromNumber,
+          fromName: fromNumber,
+          toIdentifier: toNumber,
+          toName: "Support",
+          externalMessageId: messageId,
+          status: "delivered",
+          deliveredAt: new Date(),
+          metadata: { provider: "telnyx", event: payload },
+        });
+
+        console.log(`[Telnyx] New SMS conversation from ${fromNumber}`);
+      }
+    } catch (error) {
+      console.error("[Telnyx] Webhook processing error:", error);
+      // Don't send error response — we already sent 200
+    }
+  });
 
   // Task Management Routes (protected by authentication)
-  app.use("/api/tasks", isAuthenticated, tasksRouter);
+  app.use("/api/tasks", requireClientOrAdminAccess, tasksRouter);
 
   // Brand Colors Routes
   app.use("/api/brand-colors", brandColorsRoutes);
@@ -3974,19 +3679,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
   registerBillingAdminRoutes(app);
   registerEmailAdminRoutes(app);
 
-  // CRM (/relationships) Routes
-  app.use("/api/crm", crmRouter);
+  // Payment Routes
+  registerPaymentRoutes(app);
+
+  // CRM (/relationships) Routes — accepts any authenticated client or admin session
+  app.use("/api/crm", requireClientOrAdminAccess, crmRouter);
+
+  // Setup Tasks & Notes — Directions for Use (client portal auth)
+  app.use("/api/setup-tasks", setupTasksRouter);
+  app.use("/api/setup-notes", setupNotesRouter);
+  // Combined endpoint is at /api/setup-tasks/directions-for-use
+
+  // / chat Routes (Live Chat SaaS)
+  app.use("/api/chat", chatRouter);
 
   // Public API v1 Routes (external integrations)
   app.use("/api/v1", publicApiRouter);
 
-  app.use("/api/v1", publicApiRouter);
-
-  // Payment Processing Routes
-  registerPaymentRoutes(app);
+  // AI Coach Routes (conversation history)
+  app.use(aiCoachRouter);
 
   // Listing Distribution Routes (push to 100+ directories)
   app.use("/api", listingDistributionRouter);
+
+  // D&B DUNS Number Routes
+  app.use(dnbRouter);
 
   // Test Email Endpoint (Admin only - for reviewing email templates)
   app.post("/api/admin/test-emails", async (req, res) => {
@@ -4004,9 +3721,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         assessmentId: assessmentId || 1,
         summary: "Your business shows strong potential but has room for improvement in digital presence.",
         recommendations: [
-          { category: "Email & SMS Marketing", title: "Start email campaigns", description: "Begin collecting emails and sending regular newsletters", priority: "high", productId: "send" },
-          { category: "Social Media Content", title: "Increase posting frequency", description: "Post 3-5 times per week on social media", priority: "high", productId: "content" },
-          { category: "Reputation Management", title: "Respond to reviews", description: "Reply to all customer reviews within 24 hours", priority: "medium", productId: "reputation" },
+          { category: "Email & SMS Marketing", title: "Start email campaigns", description: "Begin collecting emails and sending regular newsletters", priority: "high", productId: "promote" },
+          { category: "Social Media Content", title: "Increase posting frequency", description: "Post 3-5 times per week on social media", priority: "high", productId: "post" },
+          { category: "Reputation Management", title: "Respond to reviews", description: "Reply to all customer reviews within 24 hours", priority: "medium", productId: "elevate" },
         ]
       };
       
@@ -4071,20 +3788,29 @@ function calculateNextBillingDate(billingCycle: string): Date {
 async function processAssessmentAsync(
   assessmentId: number,
   googleService: GoogleBusinessService,
-  aiService: OpenAIAnalysisService,
+  aiService: AssessmentAIService,
   emailService: ResendEmailService,
   storage: any,
 ) {
   console.log(`[Assessment Pipeline] ▶️ STARTING background processing for assessment ID: ${assessmentId}`);
   const startTime = Date.now();
-  
+
   // Helper function to log with timing
   const logStep = (step: string, message: string) => {
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
     console.log(`[Assessment Pipeline] [${elapsed}s] ${step}: ${message}`);
   };
-  
+
+  // Hard timeout of 3 minutes — force-fail if pipeline hangs
+  const TIMEOUT_MS = 3 * 60 * 1000;
+  const timeoutPromise = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error("Analysis timed out — please try again")), TIMEOUT_MS)
+  );
+
+  let completed = false;
+
   try {
+    await Promise.race([timeoutPromise, (async () => {
     // Update status to analyzing
     logStep("Step 1", "Updating status to 'analyzing'...");
     await storage.updateAssessment(assessmentId, { status: "analyzing" });
@@ -4173,6 +3899,9 @@ async function processAssessmentAsync(
       crmPlatform: assessment.crmPlatform,
       lastCRMFollowup: assessment.lastCRMFollowup,
       hasAutomation: assessment.hasAutomation,
+      runsAds: assessment.runsAds,
+      lastAdCampaign: assessment.lastAdCampaign,
+      monthlyAdBudget: assessment.monthlyAdBudget,
     });
 
     // Calculate combined Digital IQ score (scan 0-70 + operational 0-70 = 0-140)
@@ -4344,8 +4073,8 @@ async function processAssessmentAsync(
         priority: rec.priority,
         estimatedImpact: rec.estimatedImpact || "moderate",
         estimatedEffort: rec.estimatedEffort || "low",
-        productId: (rec as any).productId || null, // String product ID from catalog (inbox, send, etc.)
-        bundleId: (rec as any).bundleId || null, // String bundle ID if applicable (commverse, localblue)
+        productId: (rec as any).productId || null, // String product ID from catalog (promote, respond, etc.)
+        bundleId: (rec as any).bundleId || null, // String bundle ID if applicable (compass, anchor)
       });
     }
 
@@ -4381,6 +4110,10 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
         }).returning();
 
         console.log(`[Assessment] Created prescription ID ${prescription.id} with token ${accessToken.substring(0, 8)}... for assessment ${assessmentId}`);
+
+        // Tasks are NOT auto-generated here — they generate when the customer
+        // accepts the prescription into their dashboard. That way Day 1 starts
+        // when they start, and they can adjust dates before committing.
       }
     } catch (prescriptionError) {
       console.error("[Assessment] Error creating prescription:", prescriptionError);
@@ -4392,13 +4125,11 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
       // Retrieve Fast Check results if they exist
       let fastCheckData: any = undefined;
       try {
-        const fastCheckResult = await db.query.scansBlueResults?.findFirst({
-          where: (results, { eq, and }) => and(
-            eq(results.assessmentId, assessmentId),
-            eq(results.type, 'fast_check'),
-            eq(results.status, 'completed')
-          )
-        });
+        const [fastCheckResult] = await db.select().from(scansBlueResults).where(and(
+          eq(scansBlueResults.assessmentId, assessmentId),
+          eq(scansBlueResults.type, 'fast_check'),
+          eq(scansBlueResults.status, 'completed')
+        )).limit(1);
         
         if (fastCheckResult) {
           fastCheckData = {
@@ -4447,7 +4178,29 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
       logStep("Step 8", `❌ Coach Blue email ERROR: ${coachEmailError}`);
     }
     
+    // ── EMAIL CADENCE ──────────────────────────────────
+    // Report email already sent above (Step 7)
+    // Coach Blue intro already sent above (Step 8)
+    // Schedule the 5-minute delayed thank-you introduction as a background task
+    const latestAssessment = await storage.getAssessment(assessmentId);
+    if (latestAssessment?.email) {
+      setTimeout(async () => {
+        try {
+          console.log(`[Assessment Cadence] Sending 5-minute delayed Coach Blue intro to ${latestAssessment.email}`);
+          const result = await emailService.sendThankYouIntroduction(latestAssessment.email, {
+            businessName: latestAssessment.businessName,
+            assessmentId,
+          });
+          console.log(`[Assessment Cadence] Coach Blue intro ${result ? 'SENT' : 'FAILED'}`);
+        } catch (err) {
+          console.error(`[Assessment Cadence] Coach Blue intro error (non-blocking):`, err);
+        }
+      }, 5 * 60 * 1000); // 5 minutes
+    }
+
+    completed = true;
     logStep("COMPLETE", `✅ Assessment ${assessmentId} fully processed!`);
+    })()]); // end Promise.race
   } catch (error) {
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
     console.error(`[Assessment Pipeline] [${elapsed}s] ❌ FATAL ERROR processing assessment ${assessmentId}:`, error);
@@ -4470,9 +4223,9 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
               digitalScore: assessment.digitalScore || 50,
               summary: `We've completed your Digital IQ Assessment for ${assessment.businessName}. Due to high demand, some advanced analysis features are still processing. You'll receive a follow-up with additional insights shortly.`,
               recommendations: [
-                { category: 'Email Marketing', title: 'Build Your Email List', description: 'Start collecting customer emails to build relationships.', priority: 'high', productId: 'send' },
-                { category: 'Reputation', title: 'Monitor Reviews', description: 'Respond to customer reviews to build trust.', priority: 'medium', productId: 'reputation' },
-                { category: 'Content', title: 'Create Regular Content', description: 'Post consistently on social media.', priority: 'medium', productId: 'content' },
+                { category: 'Email Marketing', title: 'Build Your Email List', description: 'Start collecting customer emails to build relationships.', priority: 'high', productId: 'promote' },
+                { category: 'Reputation', title: 'Monitor Reviews', description: 'Respond to customer reviews to build trust.', priority: 'medium', productId: 'elevate' },
+                { category: 'Content', title: 'Create Regular Content', description: 'Post consistently on social media.', priority: 'medium', productId: 'post' },
               ],
               assessmentId,
             },
@@ -4513,17 +4266,33 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
         console.error(`[Assessment Pipeline] Could not update status to failed:`, updateError);
       }
     }
+  } finally {
+    // GUARANTEE: assessment status is NEVER left as "pending" or "analyzing"
+    if (!completed) {
+      try {
+        const currentAssessment = await storage.getAssessment(assessmentId);
+        if (currentAssessment && (currentAssessment.status === "pending" || currentAssessment.status === "analyzing")) {
+          const errorMsg = ((Date.now() - startTime) >= TIMEOUT_MS)
+            ? "Analysis timed out — please try again"
+            : "Analysis failed — please try again";
+          await storage.updateAssessment(assessmentId, { status: "failed" });
+          console.error(`[Assessment Pipeline] FINALLY: Force-set assessment ${assessmentId} to 'failed' — ${errorMsg}`);
+        }
+      } catch (finallyError) {
+        console.error(`[Assessment Pipeline] FINALLY: Could not update status:`, finallyError);
+      }
+    }
   }
 }
 
 // ========================================
-// UNIFIED INBOX API ROUTES (Added to registerRoutes)
+// UNIFIED RESPOND API ROUTES (Added to registerRoutes)
 // ========================================
 
 async function registerInboxRoutes(app: Express) {
   // Create livechat session (public - for customer-facing chat widget)
   // Also auto-creates CRM contact if email is provided (Performance tier feature)
-  app.post("/api/inbox/livechat/session", async (req, res) => {
+  app.post("/api/respond/livechat/session", async (req, res) => {
     try {
       const validatedData = insertLivechatSessionSchema.parse(req.body);
 
@@ -4553,7 +4322,7 @@ async function registerInboxRoutes(app: Express) {
             // Log livechat interaction as timeline event
             await db.insert(crmTimeline).values({
               contactId: existing[0].id,
-              eventType: "livechat",
+              eventType: "engage",
               title: "Started live chat session",
               description: `Visitor started a live chat session from ${validatedData.pageUrl || "unknown page"}`,
               metadata: {
@@ -4561,7 +4330,7 @@ async function registerInboxRoutes(app: Express) {
                 pageUrl: validatedData.pageUrl,
                 pageTitle: validatedData.pageTitle,
               },
-              sourceApp: "livechat",
+              sourceApp: "engage",
               occurredAt: new Date(),
             });
           } else {
@@ -4577,7 +4346,7 @@ async function registerInboxRoutes(app: Express) {
                 lastName,
                 email: validatedData.visitorEmail,
                 lifecycleStage: "lead",
-                leadSource: "livechat",
+                leadSource: "engage",
                 customFields: {
                   livechatSessionId: session.sessionId,
                   firstPageUrl: validatedData.pageUrl,
@@ -4595,7 +4364,7 @@ async function registerInboxRoutes(app: Express) {
               title: "Contact created from live chat",
               description: `New contact created when ${validatedData.visitorName} started a live chat session`,
               metadata: { sessionId: session.sessionId },
-              sourceApp: "livechat",
+              sourceApp: "engage",
               occurredAt: new Date(),
             });
           }
@@ -4631,9 +4400,9 @@ async function registerInboxRoutes(app: Express) {
     }
   });
 
-  // Get all conversations for inbox (REQUIRES AUTHENTICATION)
+  // Get all conversations for respond (REQUIRES AUTHENTICATION)
   app.get(
-    "/api/inbox/conversations",
+    "/api/respond/conversations",
     requireAuth,
     async (req: AuthenticatedRequest, res) => {
       try {
@@ -4680,7 +4449,7 @@ async function registerInboxRoutes(app: Express) {
 
   // Get messages for a conversation (REQUIRES AUTHENTICATION)
   app.get(
-    "/api/inbox/conversations/:conversationId/messages",
+    "/api/respond/conversations/:conversationId/messages",
     requireAuth,
     async (req: AuthenticatedRequest, res) => {
       try {
@@ -4721,7 +4490,7 @@ async function registerInboxRoutes(app: Express) {
 
   // Send a message (REQUIRES AUTHENTICATION)
   app.post(
-    "/api/inbox/send-message",
+    "/api/respond/send-message",
     requireAuth,
     async (req: AuthenticatedRequest, res) => {
       try {
@@ -4750,8 +4519,14 @@ async function registerInboxRoutes(app: Express) {
             .json({ error: "Conversation not found or access denied" });
         }
 
-        const agentName = "Agent"; // TODO: Get from client profile
-        const agentEmail = "agent@businessblueprint.io"; // TODO: Get from client profile
+        // Look up client profile for agent name/email
+        const [client] = await db
+          .select({ companyName: clients.companyName, email: clients.email })
+          .from(clients)
+          .where(eq(clients.id, clientId))
+          .limit(1);
+        const agentName = client?.companyName || "Support";
+        const agentEmail = client?.email || "support@businessblueprint.io";
 
         // Send via appropriate channel
         let deliveryStatus = "sent";
@@ -4770,6 +4545,83 @@ async function registerInboxRoutes(app: Express) {
             console.error("Email send error:", errorMessage);
             return res.status(500).json({
               error: "Failed to send email",
+              details: errorMessage,
+            });
+          }
+        } else if (conversation.primaryChannelType === "sms") {
+          const fromPhone = process.env.TELNYX_FROM_NUMBER;
+          if (!fromPhone || !process.env.TELNYX_API_KEY) {
+            return res.status(503).json({
+              error: "SMS sending not configured. TELNYX_API_KEY and TELNYX_FROM_NUMBER required.",
+            });
+          }
+          try {
+            await telnyxService.sendSms({
+              to: conversation.contactIdentifier,
+              from: fromPhone,
+              text: message,
+            });
+            deliveryStatus = "delivered";
+          } catch (smsError: any) {
+            errorMessage = smsError.message;
+            console.error("SMS send error:", errorMessage);
+            return res.status(500).json({
+              error: "Failed to send SMS",
+              details: errorMessage,
+            });
+          }
+        } else if (conversation.primaryChannelType === "facebook" || conversation.primaryChannelType === "instagram") {
+          // Send via Meta Graph API
+          try {
+            // Get the channel connection to find the page access token
+            const channelId = conversation.primaryChannelId;
+            if (!channelId) {
+              return res.status(400).json({ error: "No channel connection for this conversation" });
+            }
+
+            const { inboxChannelConnections } = await import("@shared/schema");
+            const [channel] = await db.select()
+              .from(inboxChannelConnections)
+              .where(eq(inboxChannelConnections.id, channelId));
+
+            if (!channel || !channel.credentials) {
+              return res.status(400).json({ error: "Channel connection not found or missing credentials" });
+            }
+
+            const creds = channel.credentials as any;
+            const pageAccessToken = creds.pageAccessToken;
+            const pageId = creds.pageId;
+
+            if (!pageAccessToken) {
+              return res.status(400).json({ error: "Page access token missing — reconnect your Facebook page" });
+            }
+
+            // Send message via Meta Graph API
+            const recipientId = conversation.contactIdentifier;
+            const metaResponse = await fetch(
+              `https://graph.facebook.com/v21.0/${pageId}/messages`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  recipient: { id: recipientId },
+                  message: { text: message },
+                  access_token: pageAccessToken,
+                }),
+              },
+            );
+
+            const metaData = await metaResponse.json();
+            if (metaData.error) {
+              throw new Error(metaData.error.message || "Meta API error");
+            }
+
+            deliveryStatus = "delivered";
+          } catch (metaError: any) {
+            errorMessage = metaError.message;
+            console.error(`${conversation.primaryChannelType} send error:`, errorMessage);
+            return res.status(500).json({
+              error: `Failed to send ${conversation.primaryChannelType} message`,
               details: errorMessage,
             });
           }
@@ -4796,6 +4648,32 @@ async function registerInboxRoutes(app: Express) {
           .update(inboxConversations)
           .set({ updatedAt: new Date() })
           .where(eq(inboxConversations.id, conversationId));
+
+        // Log to / connect timeline — match contact by email/phone
+        try {
+          const { logContactActivity } = await import('./services/timeline-logger');
+          const { crmContacts: crmContactsTable } = await import('@shared/schema');
+          const [crmContact] = await db.select({ id: crmContactsTable.id })
+            .from(crmContactsTable)
+            .where(and(
+              eq(crmContactsTable.clientId, clientId),
+              eq(crmContactsTable.email, conversation.contactIdentifier),
+            ))
+            .limit(1);
+          if (crmContact) {
+            logContactActivity({
+              clientId,
+              contactId: crmContact.id,
+              eventType: 'message_sent',
+              title: `Reply sent via ${conversation.primaryChannelType}`,
+              description: message.substring(0, 200),
+              sourceApp: 'respond',
+              sourceEntityType: 'message',
+              sourceEntityId: String(newMessage.id),
+              metadata: { channel: conversation.primaryChannelType, messageId: newMessage.id, direction: 'outbound' },
+            });
+          }
+        } catch {}
 
         res.json(newMessage);
       } catch (error) {
@@ -4878,22 +4756,14 @@ async function registerInboxRoutes(app: Express) {
         const assessment = await storage.getAssessment(parsedAssessmentId);
         
         if (assessment) {
-          const purchase = await db.query.scansBluePurchases?.findFirst({
-            where: (purchases: any, { eq }: any) => eq(purchases.assessmentId, parsedAssessmentId)
-          });
+          const [purchase] = await db.select().from(scansBluePurchases).where(eq(scansBluePurchases.assessmentId, parsedAssessmentId)).limit(1);
           
           const customerEmail = purchase?.email || assessment.email;
           
           if (customerEmail) {
-            console.log(`[Webhook] Sending full report email to ${customerEmail}`);
-            const emailService = new ResendEmailService();
-            await emailService.sendScansBlueFullReport(customerEmail, {
-              businessName: assessment.businessName,
-              websiteUrl: url || assessment.website || '',
-              assessmentId: parsedAssessmentId,
-              reportData: reportData || summary || {}
-            });
-            
+            // ScansBlue full report email removed — scansblue.com owns its own email delivery
+            console.log(`[Webhook] ScansBlue report for ${customerEmail} — email delivery handled by scansblue.com`);
+
             if (purchase) {
               await db.update(scansBluePurchases)
                 .set({ reportDeliveredAt: new Date() })
@@ -4909,6 +4779,12 @@ async function registerInboxRoutes(app: Express) {
       console.error('[Webhook] Error processing ScansBlue webhook:', error);
       res.status(500).json({ success: false, error: 'Webhook processing failed' });
     }
+  });
+
+  // 301 redirect — ScansBlue purchase now handled by scansblue.com
+  app.get('/scansblue/purchase', (req, res) => {
+    const qs = new URLSearchParams(req.query as Record<string, string>).toString();
+    res.redirect(301, `https://scansblue.com/purchase${qs ? '?' + qs : ''}`);
   });
 
   // Coach Blue triggers Auditor (internal use for technical analysis)

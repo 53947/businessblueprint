@@ -37,7 +37,6 @@ export default function VerifyMagicLink() {
           
           Object.entries(clientData).forEach(([key, value]) => {
             sessionStorage.setItem(key, value);
-            localStorage.setItem(key, value);
           });
 
           setStatus('success');

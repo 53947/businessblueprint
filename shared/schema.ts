@@ -9,7 +9,8 @@ import {
   integer,
   boolean,
   decimal,
-  unique
+  unique,
+  date
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
@@ -33,6 +34,7 @@ export const users = pgTable("users", {
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
+  passwordHash: varchar("password_hash"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -60,9 +62,10 @@ export const assessments = pgTable("assessments", {
   location: varchar("location", { length: 255 }), // Now optional, computed from city/state
   
   phone: varchar("phone", { length: 20 }).notNull(),
+  smsConsent: boolean("sms_consent").default(false),
   email: varchar("email", { length: 255 }).notNull(),
   website: varchar("website", { length: 500 }),
-  
+
   // Google Business data
   googleBusinessData: jsonb("google_business_data"),
   
@@ -125,7 +128,22 @@ export const assessments = pgTable("assessments", {
   crmPlatform: varchar("crm_platform", { length: 50 }), // salesforce, hubspot, zoho, monday, pipedrive, sheets_excel, other, none
   lastCRMFollowup: varchar("last_crm_followup", { length: 50 }), // past_week, past_month, past_3_months, 3_months_plus, never_no_crm
   hasAutomation: varchar("has_automation", { length: 50 }), // yes_full, yes_partial, no_manual, dont_know
-  
+
+  // Advertising & Paid Media (Q28-Q30)
+  runsAds: varchar("runs_ads", { length: 50 }), // yes_google, yes_meta, yes_both, yes_other, no_interested, no_not_interested
+  lastAdCampaign: varchar("last_ad_campaign", { length: 50 }), // past_week, past_month, past_3_months, past_6_months, 6_months_plus, never
+  monthlyAdBudget: varchar("monthly_ad_budget", { length: 50 }), // none, under_500, 500_1000, 1000_2500, 2500_5000, 5000_plus
+
+  // Assessment detection tracking (scan-first form)
+  scanDetections: jsonb("scan_detections"),   // What was auto-detected by the presence scanner
+  scanCorrections: jsonb("scan_corrections"), // What the user corrected from auto-detected values
+
+  // Business context (assessment fixes prompt)
+  customerFlow: varchar("customer_flow", { length: 50 }),       // in_person, go_to_customers, online, mixed
+  customerDiscovery: varchar("customer_discovery", { length: 50 }), // word_of_mouth, online_search, social_media, advertising, other
+
+  clientId: integer("client_id").references(() => clients.id),
+
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -204,7 +222,7 @@ export const scansBluePurchases = pgTable("scans_blue_purchases", {
   assessmentId: integer("assessment_id").notNull().references(() => assessments.id),
   
   // Provider-agnostic payment fields
-  paymentProvider: varchar("payment_provider", { length: 20 }).notNull().default("stripe"), // 'stripe' or 'swipesblue'
+  paymentProvider: varchar("payment_provider", { length: 20 }).notNull().default("swipesblue"),
   transactionId: text("transaction_id").notNull().unique(), // Stripe session ID or SwipesBlue transaction ID
   paymentIntentId: text("payment_intent_id"), // Provider-specific payment reference
   
@@ -226,10 +244,20 @@ export const clients = pgTable("clients", {
   externalId: text("external_id").unique(), // External reference
   companyName: text("company_name").notNull(),
   email: text("email").notNull().unique(), // Primary login identifier
+  passwordHash: varchar("password_hash"),
   phone: text("phone"),
+  // SMS consent (TCPA compliance)
+  smsConsent: boolean("sms_consent").default(false),
+  smsConsentDate: timestamp("sms_consent_date"),
+  smsConsentIp: varchar("sms_consent_ip", { length: 45 }),
+  // Email consent (CAN-SPAM compliance)
+  emailConsent: boolean("email_consent").default(false),
+  emailConsentDate: timestamp("email_consent_date"),
+  emailConsentIp: varchar("email_consent_ip", { length: 45 }),
   website: text("website"),
   address: text("address"),
   businessCategory: text("business_category"),
+  dunsNumber: varchar("duns_number", { length: 9 }),
   enabledFeatures: text("enabled_features"), // CO,VI,SP,RE,SO,RI
   
   // System protection - prevents automated deletion
@@ -252,7 +280,20 @@ export const clients = pgTable("clients", {
   suspensionReason: text("suspension_reason"), // Reason if suspended
   statusChangedAt: timestamp("status_changed_at"),
   statusChangedBy: integer("status_changed_by"), // Admin ID who changed status
-  
+
+  // External dashboard URL (legacy Vendasta integration)
+  vendastaDashboardUrl: text("vendasta_dashboard_url"),
+
+  // Directions for Use tracking
+  setupProgress: integer("setup_progress").default(0),
+  setupPhase: varchar("setup_phase", { length: 30 }).default("not_started"), // not_started, in_progress, complete, engagement
+
+  // Phase E: / convert Premium subscription ($59/year). Unlocks advanced field
+  // types, conditional logic, multi-step, A/B testing, custom design, and
+  // "remove branding". Enforced server-side by isConvertPremium() helper.
+  convertPremium: boolean("convert_premium").default(false),
+  convertPremiumExpiresAt: timestamp("convert_premium_expires_at"),
+
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -356,6 +397,7 @@ export const insertAssessmentSchema = createInsertSchema(assessments).pick({
   zipCode: true,
   country: true,
   phone: true,
+  smsConsent: true,
   email: true,
   website: true,
   // Operational assessment questions
@@ -386,6 +428,9 @@ export const insertAssessmentSchema = createInsertSchema(assessments).pick({
   crmPlatform: true,
   lastCRMFollowup: true,
   hasAutomation: true,
+  runsAds: true,
+  lastAdCampaign: true,
+  monthlyAdBudget: true,
 });
 
 export const insertRecommendationSchema = createInsertSchema(recommendations).pick({
@@ -404,7 +449,14 @@ export const insertClientSchema = createInsertSchema(clients).pick({
   externalId: true,
   companyName: true,
   email: true,
+  passwordHash: true,
   phone: true,
+  smsConsent: true,
+  smsConsentDate: true,
+  smsConsentIp: true,
+  emailConsent: true,
+  emailConsentDate: true,
+  emailConsentIp: true,
   website: true,
   address: true,
   businessCategory: true,
@@ -504,7 +556,7 @@ export const subscriptionAddons = pgTable("subscription_addons", {
 // Customer subscriptions
 export const subscriptions = pgTable("subscriptions", {
   id: serial("id").primaryKey(),
-  nmiSubscriptionId: varchar("nmi_subscription_id", { length: 100 }).unique(), // NMI subscription ID
+  swipesblueSubscriptionId: varchar("swipesblue_subscription_id", { length: 100 }).unique(),
   assessmentId: integer("assessment_id").references(() => assessments.id),
   clientId: integer("client_id").references(() => clients.id),
   planId: integer("plan_id").references(() => subscriptionPlans.id),
@@ -597,7 +649,7 @@ export const assessmentProductRecommendations = pgTable("assessment_product_reco
 export const billingHistory = pgTable("billing_history", {
   id: serial("id").primaryKey(),
   subscriptionId: integer("subscription_id").references(() => subscriptions.id),
-  nmiTransactionId: varchar("nmi_transaction_id", { length: 100 }),
+  swipesblueTransactionId: varchar("swipesblue_transaction_id", { length: 100 }),
   amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
   status: varchar("status", { length: 30 }).notNull(), // paid, failed, pending, refunded
   billingDate: timestamp("billing_date").notNull(),
@@ -634,7 +686,7 @@ export const insertSubscriptionAddonSchema = createInsertSchema(subscriptionAddo
 });
 
 export const insertSubscriptionSchema = createInsertSchema(subscriptions).pick({
-  nmiSubscriptionId: true,
+  swipesblueSubscriptionId: true,
   assessmentId: true,
   clientId: true,
   planId: true,
@@ -651,7 +703,7 @@ export const insertSubscriptionSchema = createInsertSchema(subscriptions).pick({
 
 export const insertBillingHistorySchema = createInsertSchema(billingHistory).pick({
   subscriptionId: true,
-  nmiTransactionId: true,
+  swipesblueTransactionId: true,
   amount: true,
   status: true,
   billingDate: true,
@@ -1875,6 +1927,7 @@ export const contentPosts = pgTable("content_posts", {
   
   // Post content
   caption: text("caption").notNull(), // Main text
+  fullContent: text("full_content"), // Full post content (longer form)
   hashtags: text("hashtags").array(), // Extracted hashtags
   mediaIds: integer("media_ids").array(), // References to contentMedia
   
@@ -2045,6 +2098,27 @@ export type InsertContentPost = z.infer<typeof insertContentPostSchema>;
 export type ContentAnalytics = typeof contentAnalytics.$inferSelect;
 export type ContentTemplate = typeof contentTemplates.$inferSelect;
 export type InsertContentTemplate = z.infer<typeof insertContentTemplateSchema>;
+
+// ========================================
+// AI COACH CONVERSATION HISTORY
+// ========================================
+
+export const aiCoachConversations = pgTable("ai_coach_conversations", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  title: text("title"), // Auto-generated from first message
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const aiCoachMessages = pgTable("ai_coach_messages", {
+  id: serial("id").primaryKey(),
+  conversationId: integer("conversation_id").references(() => aiCoachConversations.id).notNull(),
+  role: varchar("role", { length: 20 }).notNull(), // "user" | "assistant"
+  content: text("content").notNull(),
+  messageType: varchar("message_type", { length: 30 }), // "guidance" | "help" | "progress"
+  createdAt: timestamp("created_at").defaultNow(),
+});
 
 // ========================================
 // TASK MANAGEMENT SYSTEM
@@ -2407,7 +2481,7 @@ export const crmTimeline = pgTable("crm_timeline", {
   description: text("description"),
   
   // Source app (for integration events)
-  sourceApp: varchar("source_app", { length: 50 }), // relationships, send, inbox, livechat, content, listings, reputation
+  sourceApp: varchar("source_app", { length: 50 }), // promote, respond, engage, post, publish, elevate, optimize, amplify (the 8 spoke apps — CRM-native events have no sourceApp)
   sourceEntityType: varchar("source_entity_type", { length: 50 }), // email, message, post, review, etc.
   sourceEntityId: varchar("source_entity_id", { length: 100 }), // ID in source app
   
@@ -2815,6 +2889,112 @@ export type InsertCrmAutomation = z.infer<typeof insertCrmAutomationSchema>;
 export type CrmAutomationStep = typeof crmAutomationSteps.$inferSelect;
 export type InsertCrmAutomationStep = z.infer<typeof insertCrmAutomationStepSchema>;
 export type CrmAutomationExecution = typeof crmAutomationExecutions.$inferSelect;
+
+// ========================================
+// SETUP TASKS — Directions for Use (system-controlled)
+// Completely separate from CRM Tasks. Different purpose, different data model.
+// These are prescribed setup steps generated from assessments/prescriptions.
+// ========================================
+
+export const setupTasks = pgTable("setup_tasks", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+
+  // Links to knowledge base
+  appId: varchar("app_id", { length: 30 }).notNull(),
+  stepId: varchar("step_id", { length: 100 }).notNull(),
+  substepId: varchar("substep_id", { length: 100 }),
+
+  // Task state
+  status: varchar("status", { length: 20 }).notNull().default("pending"), // pending, in_progress, completed, skipped
+  completedAt: timestamp("completed_at"),
+
+  // Source tracking
+  source: varchar("source", { length: 30 }).notNull().default("prescription"), // prescription, coach_blue, rescan
+  sourceId: integer("source_id"),
+
+  // Display
+  cadenceOrder: integer("cadence_order").notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  estimatedMinutes: integer("estimated_minutes"),
+  suggestedDate: timestamp("suggested_date"),
+
+  // Phase tracking
+  phase: varchar("phase", { length: 20 }).notNull().default("setup"), // setup, maintenance, growth
+
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_setup_tasks_client").on(table.clientId),
+  index("idx_setup_tasks_status").on(table.clientId, table.status),
+  index("idx_setup_tasks_app").on(table.clientId, table.appId),
+]);
+
+export const insertSetupTaskSchema = createInsertSchema(setupTasks).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type SetupTask = typeof setupTasks.$inferSelect;
+export type InsertSetupTask = z.infer<typeof insertSetupTaskSchema>;
+
+// ========================================
+// SETUP NOTES — User's personal notes and to-dos (user-controlled)
+// Attached to Directions for Use steps. Users create, edit, delete freely.
+// ========================================
+
+export const setupNotes = pgTable("setup_notes", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+
+  // Where this note lives
+  appId: varchar("app_id", { length: 30 }).notNull(),
+  stepId: varchar("step_id", { length: 100 }),
+
+  // Note content
+  content: text("content").notNull(),
+  isTodo: boolean("is_todo").notNull().default(false),
+  isCompleted: boolean("is_completed").notNull().default(false),
+  completedAt: timestamp("completed_at"),
+
+  // Ordering
+  sortOrder: integer("sort_order").default(0),
+
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_setup_notes_client").on(table.clientId),
+  index("idx_setup_notes_location").on(table.clientId, table.appId, table.stepId),
+]);
+
+export const insertSetupNoteSchema = createInsertSchema(setupNotes).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type SetupNote = typeof setupNotes.$inferSelect;
+export type InsertSetupNote = z.infer<typeof insertSetupNoteSchema>;
+
+// ========================================
+// SETUP TASK EVENTS — Audit trail for Directions for Use
+// ========================================
+
+export const setupTaskEvents = pgTable("setup_task_events", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  taskId: integer("task_id").references(() => setupTasks.id),
+  eventType: varchar("event_type", { length: 30 }).notNull(), // completed, stalled, nudge_sent, email_sent, reopened
+  metadata: jsonb("metadata"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_setup_events_client").on(table.clientId),
+  index("idx_setup_events_task").on(table.taskId),
+]);
+
+export type SetupTaskEvent = typeof setupTaskEvents.$inferSelect;
 
 // ============================================================================
 // PUBLIC API - API Keys for External Integration
@@ -3263,6 +3443,30 @@ export type ListingSyncLog = typeof listingSyncLogs.$inferSelect;
 export type ListingMetricsSnapshot = typeof listingMetricsSnapshots.$inferSelect;
 
 // ============================================================================
+// BUSINESS REVIEWS — Aggregated from Google, Yelp, Facebook
+// ============================================================================
+
+export const businessReviews = pgTable("business_reviews", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  platform: varchar("platform", { length: 50 }).notNull(), // 'google', 'yelp', 'facebook'
+  platformReviewId: varchar("platform_review_id", { length: 255 }),
+  reviewerName: varchar("reviewer_name", { length: 255 }).notNull(),
+  rating: integer("rating").notNull(), // 1-5
+  reviewText: text("review_text"),
+  reviewDate: timestamp("review_date").notNull(),
+  response: text("response"),
+  responseDate: timestamp("response_date"),
+  isAIGenerated: boolean("is_ai_generated").default(false),
+  sentiment: varchar("sentiment", { length: 20 }).default("neutral"), // 'positive', 'negative', 'neutral'
+  reviewUrl: varchar("review_url", { length: 500 }),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export type BusinessReview = typeof businessReviews.$inferSelect;
+
+// ============================================================================
 // LISTING DISTRIBUTION SYSTEM — Push to 100+ Directories
 // ============================================================================
 
@@ -3313,6 +3517,15 @@ export const canonicalBusinessProfiles = pgTable("canonical_business_profiles", 
   paymentMethods: text("payment_methods").array(),
   amenities: text("amenities").array(),
   serviceArea: jsonb("service_area"),
+
+  // D&B DUNS Number
+  dunsNumber: varchar("duns_number", { length: 9 }),
+  dunsVerified: boolean("duns_verified").default(false),
+  dunsVerifiedAt: timestamp("duns_verified_at"),
+  dunsMatchConfidence: integer("duns_match_confidence"), // 1-10 confidence score from D&B
+  dunsCompanyName: varchar("duns_company_name", { length: 255 }), // Name as registered with D&B
+  dunsAddress: text("duns_address"), // Address as registered with D&B
+  dunsLastChecked: timestamp("duns_last_checked"),
 
   // PIN protection
   editPin: varchar("edit_pin", { length: 255 }), // bcrypt hash of 4-6 digit PIN
@@ -3482,6 +3695,11 @@ export const chatWidgetSettings = pgTable("chat_widget_settings", {
   enableEmoji: boolean("enable_emoji").default(true),
   enablePreChatForm: boolean("enable_pre_chat_form").default(true),
 
+  // Email configuration
+  contactEmail: varchar("contact_email", { length: 255 }),
+  notificationEmail: varchar("notification_email", { length: 255 }),
+  notifyOnNewChat: boolean("notify_on_new_chat").default(true),
+
   isActive: boolean("is_active").default(true),
 
   createdAt: timestamp("created_at").defaultNow(),
@@ -3583,3 +3801,718 @@ export type ChatAgent = typeof chatAgents.$inferSelect;
 export type InsertChatAgent = z.infer<typeof insertChatAgentSchema>;
 export type ChatAnalyticsEvent = typeof chatAnalyticsEvents.$inferSelect;
 export type InsertChatAnalyticsEvent = z.infer<typeof insertChatAnalyticsEventSchema>;
+
+// ==========================================
+// SEO OPTIMIZATION (/ optimize) TABLES
+// ==========================================
+
+/**
+ * SEO Profiles — Main SEO profile per client with domain, target keywords, competitors.
+ */
+export const seoProfiles = pgTable("seo_profiles", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  domain: varchar("domain", { length: 500 }).notNull(),
+  businessName: varchar("business_name", { length: 255 }),
+  industry: varchar("industry", { length: 100 }),
+  location: varchar("location", { length: 255 }),
+  targetKeywords: jsonb("target_keywords"), // string[]
+  competitors: jsonb("competitors"), // string[]
+  localEnabled: boolean("local_enabled").default(false),
+  domainAuthority: integer("domain_authority"),
+  organicTraffic: integer("organic_traffic"),
+  totalBacklinks: integer("total_backlinks"),
+  lastDaCheck: timestamp("last_da_check"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_seo_profile_client").on(table.clientId),
+]);
+
+/**
+ * SEO Scans — Scan results from site crawls and audits.
+ */
+export const seoScans = pgTable("seo_scans", {
+  id: serial("id").primaryKey(),
+  profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+  scanType: varchar("scan_type", { length: 50 }).default("full"), // full, quick, technical, on-page
+  overallScore: integer("overall_score"),
+  performanceScore: integer("performance_score"),
+  seoScore: integer("seo_score"),
+  accessibilityScore: integer("accessibility_score"),
+  metrics: jsonb("metrics"),
+  issues: jsonb("issues"),
+  recommendations: jsonb("recommendations"),
+  status: varchar("status", { length: 20 }).default("pending"), // pending, running, completed, failed
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_seo_scan_profile").on(table.profileId),
+  index("idx_seo_scan_status").on(table.status),
+]);
+
+/**
+ * SEO Keywords — Tracked keywords for a profile.
+ */
+export const seoKeywords = pgTable("seo_keywords", {
+  id: serial("id").primaryKey(),
+  profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+  keyword: varchar("keyword", { length: 500 }).notNull(),
+  searchVolume: integer("search_volume"),
+  difficulty: integer("difficulty"),
+  currentRank: integer("current_rank"),
+  status: varchar("status", { length: 20 }).default("tracking"), // tracking, paused, removed
+  source: varchar("source", { length: 50 }).default("manual"), // manual, ai-suggested, imported
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_seo_keyword_profile").on(table.profileId),
+]);
+
+/**
+ * SEO Keyword Rankings — Daily rank history for tracked keywords.
+ */
+export const seoKeywordRankings = pgTable("seo_keyword_rankings", {
+  id: serial("id").primaryKey(),
+  keywordId: integer("keyword_id").references(() => seoKeywords.id).notNull(),
+  rank: integer("rank"),
+  url: text("url"),
+  date: timestamp("date").defaultNow(),
+}, (table) => [
+  index("idx_seo_ranking_keyword").on(table.keywordId),
+  index("idx_seo_ranking_date").on(table.date),
+]);
+
+/**
+ * SEO Pages — Page-level SEO data and analysis.
+ */
+export const seoPages = pgTable("seo_pages", {
+  id: serial("id").primaryKey(),
+  profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+  url: text("url").notNull(),
+  title: varchar("title", { length: 500 }),
+  metaDescription: text("meta_description"),
+  h1: varchar("h1", { length: 500 }),
+  wordCount: integer("word_count"),
+  score: integer("score"),
+  issues: jsonb("issues"),
+  suggestions: jsonb("suggestions"),
+  lastAnalyzed: timestamp("last_analyzed"),
+  createdAt: timestamp("created_at").defaultNow(),
+  coreWebVitals: jsonb("core_web_vitals"), // { lcp, fid, cls, inp }
+  schemaMarkup: jsonb("schema_markup"), // detected structured data
+  internalLinksIn: integer("internal_links_in").default(0),
+  internalLinksOut: integer("internal_links_out").default(0),
+}, (table) => [
+  index("idx_seo_page_profile").on(table.profileId),
+]);
+
+/**
+ * SEO Technical Issues — Technical issues found during audits.
+ */
+export const seoTechnicalIssues = pgTable("seo_technical_issues", {
+  id: serial("id").primaryKey(),
+  profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+  scanId: integer("scan_id").references(() => seoScans.id),
+  type: varchar("type", { length: 50 }).notNull(), // broken-link, missing-meta, slow-page, no-ssl, etc.
+  severity: varchar("severity", { length: 20 }).default("medium"), // critical, high, medium, low
+  url: text("url"),
+  description: text("description"),
+  howToFix: text("how_to_fix"),
+  status: varchar("status", { length: 20 }).default("open"), // open, resolved, dismissed
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_seo_issue_profile").on(table.profileId),
+  index("idx_seo_issue_severity").on(table.severity),
+]);
+
+/**
+ * SEO Backlinks — Backlink tracking (shell/placeholder).
+ */
+export const seoBacklinks = pgTable("seo_backlinks", {
+  id: serial("id").primaryKey(),
+  profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+  sourceUrl: text("source_url"),
+  targetUrl: text("target_url"),
+  anchorText: varchar("anchor_text", { length: 500 }),
+  domainAuthority: integer("domain_authority"),
+  status: varchar("status", { length: 20 }).default("active"),
+  firstSeen: timestamp("first_seen").defaultNow(),
+  lastSeen: timestamp("last_seen"),
+  isSpam: boolean("is_spam").default(false),
+  spamScore: integer("spam_score"),
+  linkType: varchar("link_type", { length: 20 }), // dofollow, nofollow, ugc, sponsored
+  isNew: boolean("is_new").default(true),
+  isLost: boolean("is_lost").default(false),
+}, (table) => [
+  index("idx_seo_backlink_profile").on(table.profileId),
+]);
+
+/**
+ * SEO Content Briefs — AI-generated content briefs.
+ */
+export const seoContentBriefs = pgTable("seo_content_briefs", {
+  id: serial("id").primaryKey(),
+  profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+  targetKeyword: varchar("target_keyword", { length: 500 }).notNull(),
+  title: varchar("title", { length: 500 }),
+  outline: jsonb("outline"),
+  suggestions: jsonb("suggestions"),
+  wordCountTarget: integer("word_count_target"),
+  status: varchar("status", { length: 20 }).default("draft"), // draft, in-progress, completed
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_seo_brief_profile").on(table.profileId),
+]);
+
+/**
+ * SEO Action Items — AI-generated prioritized action items.
+ */
+export const seoActionItems = pgTable("seo_action_items", {
+  id: serial("id").primaryKey(),
+  profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+  title: varchar("title", { length: 500 }).notNull(),
+  description: text("description"),
+  category: varchar("category", { length: 50 }), // technical, content, keywords, on-page, local
+  priority: varchar("priority", { length: 20 }).default("medium"), // critical, high, medium, low
+  impact: varchar("impact", { length: 20 }).default("medium"), // high, medium, low
+  effort: varchar("effort", { length: 20 }).default("medium"), // high, medium, low
+  status: varchar("status", { length: 20 }).default("pending"), // pending, in-progress, completed, dismissed
+  dueDate: timestamp("due_date"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_seo_action_profile").on(table.profileId),
+  index("idx_seo_action_status").on(table.status),
+]);
+
+/**
+ * SEO Reports — Report snapshots (shell/placeholder).
+ */
+export const seoReports = pgTable("seo_reports", {
+  id: serial("id").primaryKey(),
+  profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+  type: varchar("type", { length: 50 }).default("monthly"),
+  period: varchar("period", { length: 50 }),
+  data: jsonb("data"),
+  generatedAt: timestamp("generated_at").defaultNow(),
+}, (table) => [
+  index("idx_seo_report_profile").on(table.profileId),
+]);
+
+/**
+ * SEO Competitors — Competitor tracking (shell/placeholder).
+ */
+export const seoCompetitors = pgTable("seo_competitors", {
+  id: serial("id").primaryKey(),
+  profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+  domain: varchar("domain", { length: 500 }).notNull(),
+  name: varchar("name", { length: 255 }),
+  domainAuthority: integer("domain_authority"),
+  estimatedTraffic: integer("estimated_traffic"),
+  totalBacklinks: integer("total_backlinks"),
+  totalKeywords: integer("total_keywords"),
+  lastChecked: timestamp("last_checked"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_seo_competitor_profile").on(table.profileId),
+]);
+
+/**
+ * SEO Competitor Data — Competitor metrics (shell/placeholder).
+ */
+export const seoCompetitorData = pgTable("seo_competitor_data", {
+  id: serial("id").primaryKey(),
+  competitorId: integer("competitor_id").references(() => seoCompetitors.id).notNull(),
+  metric: varchar("metric", { length: 100 }),
+  value: text("value"),
+  date: timestamp("date").defaultNow(),
+}, (table) => [
+  index("idx_seo_comp_data_competitor").on(table.competitorId),
+]);
+
+/**
+ * SEO Local Rankings — Local rank tracking by location.
+ */
+export const seoLocalRankings = pgTable("seo_local_rankings", {
+  id: serial("id").primaryKey(),
+  profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+  keywordId: integer("keyword_id").references(() => seoKeywords.id),
+  keyword: varchar("keyword", { length: 500 }).notNull(),
+  location: varchar("location", { length: 255 }).notNull(),
+  mapPackPosition: integer("map_pack_position"), // 1-3, null = not in pack
+  organicPosition: integer("organic_position"), // 1-100, null = not found
+  checkedAt: timestamp("checked_at").defaultNow(),
+}, (table) => [
+  index("idx_seo_local_rank_profile").on(table.profileId),
+  index("idx_seo_local_rank_keyword").on(table.keywordId),
+]);
+
+// SEO Optimization Schemas
+export const insertSeoProfileSchema = createInsertSchema(seoProfiles);
+export const insertSeoScanSchema = createInsertSchema(seoScans);
+export const insertSeoKeywordSchema = createInsertSchema(seoKeywords);
+export const insertSeoKeywordRankingSchema = createInsertSchema(seoKeywordRankings);
+export const insertSeoPageSchema = createInsertSchema(seoPages);
+export const insertSeoTechnicalIssueSchema = createInsertSchema(seoTechnicalIssues);
+export const insertSeoBacklinkSchema = createInsertSchema(seoBacklinks);
+export const insertSeoContentBriefSchema = createInsertSchema(seoContentBriefs);
+export const insertSeoActionItemSchema = createInsertSchema(seoActionItems);
+export const insertSeoReportSchema = createInsertSchema(seoReports);
+export const insertSeoCompetitorSchema = createInsertSchema(seoCompetitors);
+export const insertSeoCompetitorDataSchema = createInsertSchema(seoCompetitorData);
+export const insertSeoLocalRankingSchema = createInsertSchema(seoLocalRankings);
+
+// SEO Optimization Types
+export type SeoProfile = typeof seoProfiles.$inferSelect;
+export type InsertSeoProfile = z.infer<typeof insertSeoProfileSchema>;
+export type SeoScan = typeof seoScans.$inferSelect;
+export type InsertSeoScan = z.infer<typeof insertSeoScanSchema>;
+export type SeoKeyword = typeof seoKeywords.$inferSelect;
+export type InsertSeoKeyword = z.infer<typeof insertSeoKeywordSchema>;
+export type SeoKeywordRanking = typeof seoKeywordRankings.$inferSelect;
+export type InsertSeoKeywordRanking = z.infer<typeof insertSeoKeywordRankingSchema>;
+export type SeoPage = typeof seoPages.$inferSelect;
+export type InsertSeoPage = z.infer<typeof insertSeoPageSchema>;
+export type SeoTechnicalIssue = typeof seoTechnicalIssues.$inferSelect;
+export type InsertSeoTechnicalIssue = z.infer<typeof insertSeoTechnicalIssueSchema>;
+export type SeoBacklink = typeof seoBacklinks.$inferSelect;
+export type InsertSeoBacklink = z.infer<typeof insertSeoBacklinkSchema>;
+export type SeoContentBrief = typeof seoContentBriefs.$inferSelect;
+export type InsertSeoContentBrief = z.infer<typeof insertSeoContentBriefSchema>;
+export type SeoActionItem = typeof seoActionItems.$inferSelect;
+export type InsertSeoActionItem = z.infer<typeof insertSeoActionItemSchema>;
+export type SeoReport = typeof seoReports.$inferSelect;
+export type InsertSeoReport = z.infer<typeof insertSeoReportSchema>;
+export type SeoCompetitor = typeof seoCompetitors.$inferSelect;
+export type InsertSeoCompetitor = z.infer<typeof insertSeoCompetitorSchema>;
+export type SeoCompetitorData = typeof seoCompetitorData.$inferSelect;
+export type InsertSeoCompetitorData = z.infer<typeof insertSeoCompetitorDataSchema>;
+export type SeoLocalRanking = typeof seoLocalRankings.$inferSelect;
+export type InsertSeoLocalRanking = z.infer<typeof insertSeoLocalRankingSchema>;
+
+// ============================================================
+// /amplify - Ad Account Connections & Campaign Management
+// ============================================================
+
+export const adAccountConnections = pgTable("ad_account_connections", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  platform: text("platform"), // meta, google, microsoft, reddit, tiktok, linkedin, snapchat, pinterest
+  accountId: text("account_id"),
+  accountName: text("account_name"),
+  accessToken: text("access_token"), // encrypted
+  refreshToken: text("refresh_token"), // encrypted
+  tokenExpiresAt: timestamp("token_expires_at"),
+  status: text("status").default("active"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const amplifyCampaigns = pgTable("amplify_campaigns", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  platform: text("platform"),
+  externalCampaignId: text("external_campaign_id"),
+  name: text("name").notNull(),
+  objective: text("objective"),
+  status: text("status").default("draft"),
+  dailyBudget: decimal("daily_budget"),
+  lifetimeBudget: decimal("lifetime_budget"),
+  startDate: timestamp("start_date"),
+  endDate: timestamp("end_date"),
+  spendToDate: decimal("spend_to_date").default("0"),
+  impressions: integer("impressions").default(0),
+  clicks: integer("clicks").default(0),
+  conversions: integer("conversions").default(0),
+  roas: decimal("roas"),
+  redditPixelInstalled: boolean("reddit_pixel_installed"),
+  redditEngagementScore: integer("reddit_engagement_score"),
+  redditCommentCount: integer("reddit_comment_count").default(0),
+  redditUpvoteRatio: decimal("reddit_upvote_ratio"),
+  redditSentiment: text("reddit_sentiment"),
+  redditLastSentimentCheck: timestamp("reddit_last_sentiment_check"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const amplifyAdSets = pgTable("amplify_ad_sets", {
+  id: serial("id").primaryKey(),
+  campaignId: integer("campaign_id").references(() => amplifyCampaigns.id),
+  externalAdSetId: text("external_ad_set_id"),
+  name: text("name").notNull(),
+  targetingSummary: jsonb("targeting_summary"),
+  budget: decimal("budget"),
+  status: text("status").default("active"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const amplifyAds = pgTable("amplify_ads", {
+  id: serial("id").primaryKey(),
+  adSetId: integer("ad_set_id").references(() => amplifyAdSets.id),
+  externalAdId: text("external_ad_id"),
+  name: text("name"),
+  headline: text("headline"),
+  body: text("body"),
+  mediaUrl: text("media_url"),
+  cta: text("cta"),
+  status: text("status").default("active"),
+  impressions: integer("impressions").default(0),
+  clicks: integer("clicks").default(0),
+  spend: decimal("spend").default("0"),
+  conversions: integer("conversions").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const amplifyAudiences = pgTable("amplify_audiences", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  platform: text("platform"),
+  audienceName: text("audience_name").notNull(),
+  audienceType: text("audience_type"),
+  externalAudienceId: text("external_audience_id"),
+  sizeEstimate: integer("size_estimate"),
+  sourceType: varchar("source_type", { length: 50 }),
+  crmFilter: jsonb("crm_filter"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const amplifyBudgetAllocations = pgTable("amplify_budget_allocations", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  month: text("month").notNull(),
+  totalBudget: decimal("total_budget").notNull(),
+  metaAllocation: decimal("meta_allocation").default("0"),
+  googleAllocation: decimal("google_allocation").default("0"),
+  microsoftAllocation: decimal("microsoft_allocation").default("0"),
+  redditAllocation: decimal("reddit_allocation").default("0"),
+  otherAllocations: jsonb("other_allocations"),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const amplifySpendAlerts = pgTable("amplify_spend_alerts", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  platform: text("platform"),
+  thresholdAmount: decimal("threshold_amount").notNull(),
+  thresholdType: text("threshold_type").notNull(),
+  notificationSent: boolean("notification_sent").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const redditAdComments = pgTable("reddit_ad_comments", {
+  id: serial("id").primaryKey(),
+  campaignId: integer("campaign_id").references(() => amplifyCampaigns.id),
+  externalCommentId: text("external_comment_id"),
+  authorUsername: text("author_username"),
+  commentText: text("comment_text"),
+  sentiment: text("sentiment"),
+  suggestedResponse: text("suggested_response"),
+  responded: boolean("responded").default(false),
+  respondedAt: timestamp("responded_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Amplify Insert Schemas
+export const insertAdAccountConnectionSchema = createInsertSchema(adAccountConnections);
+export const insertAmplifyCampaignSchema = createInsertSchema(amplifyCampaigns);
+export const insertAmplifyAdSetSchema = createInsertSchema(amplifyAdSets);
+export const insertAmplifyAdSchema = createInsertSchema(amplifyAds);
+export const insertAmplifyAudienceSchema = createInsertSchema(amplifyAudiences);
+export const insertAmplifyBudgetAllocationSchema = createInsertSchema(amplifyBudgetAllocations);
+export const insertAmplifySpendAlertSchema = createInsertSchema(amplifySpendAlerts);
+export const insertRedditAdCommentSchema = createInsertSchema(redditAdComments);
+
+// Amplify Types
+export type AdAccountConnection = typeof adAccountConnections.$inferSelect;
+export type InsertAdAccountConnection = z.infer<typeof insertAdAccountConnectionSchema>;
+export type AmplifyCampaign = typeof amplifyCampaigns.$inferSelect;
+export type InsertAmplifyCampaign = z.infer<typeof insertAmplifyCampaignSchema>;
+export type AmplifyAdSet = typeof amplifyAdSets.$inferSelect;
+export type InsertAmplifyAdSet = z.infer<typeof insertAmplifyAdSetSchema>;
+export type AmplifyAd = typeof amplifyAds.$inferSelect;
+export type InsertAmplifyAd = z.infer<typeof insertAmplifyAdSchema>;
+export type AmplifyAudience = typeof amplifyAudiences.$inferSelect;
+export type InsertAmplifyAudience = z.infer<typeof insertAmplifyAudienceSchema>;
+export type AmplifyBudgetAllocation = typeof amplifyBudgetAllocations.$inferSelect;
+export type InsertAmplifyBudgetAllocation = z.infer<typeof insertAmplifyBudgetAllocationSchema>;
+export type AmplifySpendAlert = typeof amplifySpendAlerts.$inferSelect;
+export type InsertAmplifySpendAlert = z.infer<typeof insertAmplifySpendAlertSchema>;
+export type RedditAdComment = typeof redditAdComments.$inferSelect;
+export type InsertRedditAdComment = z.infer<typeof insertRedditAdCommentSchema>;
+
+// ═══════════════════════════════════════
+// / convert — Lead Capture and Conversion Tool
+// ═══════════════════════════════════════
+
+export const convertForms = pgTable("convert_forms", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+
+  // Form identity
+  name: varchar("name", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 100 }).notNull(),
+  formType: varchar("form_type", { length: 30 }).notNull(), // form, popup, optin
+  status: varchar("status", { length: 20 }).notNull().default("draft"), // draft, published, archived
+
+  // Deployment context
+  deployTarget: varchar("deploy_target", { length: 30 }).notNull().default("website"), // website, email, sms
+
+  // Design
+  templateId: varchar("template_id", { length: 50 }),
+  brandColor: varchar("brand_color", { length: 7 }),
+  customCss: text("custom_css"),
+  showBranding: boolean("show_branding").notNull().default(true),
+  logoUrl: text("logo_url"),
+
+  // Popup settings (form_type = 'popup')
+  popupTrigger: varchar("popup_trigger", { length: 30 }), // exit_intent, scroll, time_delay, click, page_load
+  popupDelaySeconds: integer("popup_delay_seconds"),
+  popupScrollPercent: integer("popup_scroll_percent"),
+  popupPosition: varchar("popup_position", { length: 20 }), // center, bottom_right, bottom_left, top_bar, slide_left, slide_right
+  popupShowFrequency: varchar("popup_show_frequency", { length: 30 }), // once, once_per_session, every_visit
+  popupStartDate: timestamp("popup_start_date"),
+  popupEndDate: timestamp("popup_end_date"),
+
+  // Opt-in settings (form_type = 'optin')
+  optinType: varchar("optin_type", { length: 30 }), // email_only, sms_only, email_and_sms, newsletter
+  consentTextEmail: text("consent_text_email"),
+  consentTextSms: text("consent_text_sms"),
+  doubleOptin: boolean("double_optin").default(false),
+
+  // Thank you / redirect
+  thankYouType: varchar("thank_you_type", { length: 20 }).default("message"), // message, redirect, close
+  thankYouMessage: text("thank_you_message"),
+  thankYouRedirectUrl: text("thank_you_redirect_url"),
+
+  // Autoresponder
+  autoresponderEnabled: boolean("autoresponder_enabled").default(false),
+  autoresponderSubject: text("autoresponder_subject"),
+  autoresponderBody: text("autoresponder_body"),
+  autoresponderDelayMinutes: integer("autoresponder_delay_minutes").default(0),
+
+  // Notification
+  notifyEmail: varchar("notify_email", { length: 255 }),
+  notifyEnabled: boolean("notify_enabled").default(true),
+
+  // Analytics counters
+  viewCount: integer("view_count").default(0),
+  startCount: integer("start_count").default(0),
+  submissionCount: integer("submission_count").default(0),
+
+  // Campaign tracking
+  sourceCampaignId: integer("source_campaign_id"),
+  utmSource: varchar("utm_source", { length: 100 }),
+  utmMedium: varchar("utm_medium", { length: 100 }),
+  utmCampaign: varchar("utm_campaign", { length: 100 }),
+
+  // Builder state — design (theme/colors/layout) + settings (form-level config)
+  design: jsonb("design"),
+  settings: jsonb("settings"),
+
+  // Phase E: links this form to a convert_ab_tests row when it's a variant
+  // (the original form and the duplicated Variant B both have the same abTestId)
+  abTestId: integer("ab_test_id"),
+
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+  publishedAt: timestamp("published_at"),
+}, (table) => [
+  unique().on(table.clientId, table.slug),
+  index("idx_convert_forms_client").on(table.clientId),
+  index("idx_convert_forms_status").on(table.status),
+  index("idx_convert_forms_ab_test").on(table.abTestId),
+]);
+
+export const convertFormFields = pgTable("convert_form_fields", {
+  id: serial("id").primaryKey(),
+  formId: integer("form_id").references(() => convertForms.id, { onDelete: "cascade" }).notNull(),
+
+  // Field definition
+  fieldType: varchar("field_type", { length: 30 }).notNull(), // text, email, phone, textarea, select, radio, checkbox, heading, paragraph, hidden
+  label: text("label").notNull(),
+  placeholder: text("placeholder"),
+  helpText: text("help_text"),
+
+  // Validation
+  isRequired: boolean("is_required").default(false),
+  validationPattern: text("validation_pattern"),
+  validationMessage: text("validation_message"),
+  minLength: integer("min_length"),
+  maxLength: integer("max_length"),
+
+  // Options (for select, radio, checkbox)
+  options: jsonb("options"), // [{value, label, selected?}]
+
+  // Conditional logic
+  conditionalRules: jsonb("conditional_rules"), // [{fieldId, operator, value, action}]
+
+  // Layout
+  sortOrder: integer("sort_order").notNull().default(0),
+  columnSpan: integer("column_span").default(2), // 1 = half, 2 = full
+  pageNumber: integer("page_number").default(1),
+
+  // Hidden field default
+  defaultValue: text("default_value"),
+
+  // CRM mapping
+  mapsTo: varchar("maps_to", { length: 50 }), // crm_first_name, crm_last_name, crm_email, crm_phone, crm_company, email_consent, sms_consent, custom
+
+  // Type-specific config (fileTypes, maxFileSize, ratingScale, dateFormat, paymentAmount, etc.)
+  config: jsonb("config"),
+
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_convert_fields_form").on(table.formId),
+]);
+
+export const convertSubmissions = pgTable("convert_submissions", {
+  id: serial("id").primaryKey(),
+  formId: integer("form_id").references(() => convertForms.id, { onDelete: "cascade" }).notNull(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+
+  // Submission data
+  data: jsonb("data").notNull(), // {fieldId: value, ...}
+
+  // Contact creation
+  crmContactId: integer("crm_contact_id"),
+  sendContactId: integer("send_contact_id"),
+
+  // Consent captured
+  emailConsent: boolean("email_consent").default(false),
+  smsConsent: boolean("sms_consent").default(false),
+  consentIp: varchar("consent_ip", { length: 45 }),
+  consentTimestamp: timestamp("consent_timestamp"),
+
+  // Source tracking
+  sourceUrl: text("source_url"),
+  referrerUrl: text("referrer_url"),
+  utmSource: varchar("utm_source", { length: 100 }),
+  utmMedium: varchar("utm_medium", { length: 100 }),
+  utmCampaign: varchar("utm_campaign", { length: 100 }),
+  userAgent: text("user_agent"),
+
+  // Phase D: direct FK to send_campaigns for / promote attribution.
+  // Populated on submit when utm_source=promote and utm_campaign is a numeric ID.
+  // Coexists with the string UTM columns above — string UTM tracks any source,
+  // sourceCampaignId is the / promote-specific relational link.
+  sourceCampaignId: integer("source_campaign_id"),
+
+  // Double opt-in
+  doubleOptinToken: varchar("double_optin_token", { length: 64 }),
+  doubleOptinConfirmed: boolean("double_optin_confirmed").default(false),
+  doubleOptinConfirmedAt: timestamp("double_optin_confirmed_at"),
+
+  // Status — CRM lifecycle ("has the business owner followed up yet")
+  status: varchar("status", { length: 20 }).default("new"), // new, read, contacted, converted, spam
+
+  // Payment lifecycle (separate state machine from CRM status — Phase C)
+  //   none      = non-payment form, always "completed"
+  //   pending   = payment session created, awaiting checkout.session.completed webhook
+  //   completed = payment successful, downstream pipeline (CRM / send / timeline) fired
+  //   failed    = swipesblue reported failure; submission remains inspectable
+  paymentStatus: varchar("payment_status", { length: 20 }).default("none"),
+  paymentSessionId: varchar("payment_session_id", { length: 128 }),
+  paymentAmount: integer("payment_amount"), // cents
+  paymentCurrency: varchar("payment_currency", { length: 10 }),
+
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_convert_subs_form").on(table.formId),
+  index("idx_convert_subs_client").on(table.clientId),
+  index("idx_convert_subs_created").on(table.createdAt),
+  index("idx_convert_subs_payment_session").on(table.paymentSessionId),
+]);
+
+export const convertTemplates = pgTable("convert_templates", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 100 }).notNull().unique(),
+  category: varchar("category", { length: 50 }).notNull(), // contact, lead_capture, feedback, registration, appointment, newsletter, quote, contest, survey, custom
+  formType: varchar("form_type", { length: 30 }).notNull(), // form, popup, optin
+  deployTarget: varchar("deploy_target", { length: 30 }).notNull(), // website, email, sms
+  description: text("description"),
+  previewImageUrl: text("preview_image_url"),
+  fields: jsonb("fields").notNull(), // array of field definitions
+  design: jsonb("design").notNull(), // {brandColor, layout, thankYouMessage, etc.}
+  presetColors: jsonb("preset_colors"), // ["#8000FF", "#008060", ...]
+  isFree: boolean("is_free").default(true),
+  isActive: boolean("is_active").default(true),
+  sortOrder: integer("sort_order").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// ═══════════════════════════════════════
+// / convert — Phase E: Analytics + A/B testing
+// ═══════════════════════════════════════
+
+// Daily aggregated analytics — one row per form per day. Populated incrementally
+// by the /public, /start, and /submit endpoints via trackAnalyticsEvent().
+export const convertAnalyticsDaily = pgTable("convert_analytics_daily", {
+  id: serial("id").primaryKey(),
+  formId: integer("form_id").references(() => convertForms.id, { onDelete: "cascade" }).notNull(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  date: date("date").notNull(),
+
+  views: integer("views").default(0),
+  starts: integer("starts").default(0),
+  submissions: integer("submissions").default(0),
+
+  // Source breakdown: [{source, medium, count}]
+  sourceBreakdown: jsonb("source_breakdown"),
+
+  // Multi-step drop-off: [{step, reached, completed}]
+  stepData: jsonb("step_data"),
+
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_convert_analytics_form_date").on(table.formId, table.date),
+  index("idx_convert_analytics_client").on(table.clientId),
+  unique().on(table.formId, table.date),
+]);
+
+// A/B tests — each test splits traffic between the original form and one or
+// more variants. Variant forms live in convert_forms with abTestId set.
+export const convertAbTests = pgTable("convert_ab_tests", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  status: varchar("status", { length: 20 }).notNull().default("draft"), // draft, running, completed, cancelled
+  originalFormId: integer("original_form_id").references(() => convertForms.id).notNull(),
+
+  // Traffic split — array of {formId, percentage}. Percentages sum to 100.
+  trafficSplit: jsonb("traffic_split").notNull(),
+
+  // Winner declaration
+  winnerMetric: varchar("winner_metric", { length: 30 }).notNull().default("conversion_rate"), // conversion_rate, submissions, start_rate
+  winnerFormId: integer("winner_form_id").references(() => convertForms.id),
+  winnerDeclaredAt: timestamp("winner_declared_at"),
+
+  // Timing
+  startedAt: timestamp("started_at"),
+  endedAt: timestamp("ended_at"),
+  minSampleSize: integer("min_sample_size").default(100),
+
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_convert_ab_client").on(table.clientId),
+  index("idx_convert_ab_original").on(table.originalFormId),
+]);
+
+export const insertConvertFormSchema = createInsertSchema(convertForms);
+export const insertConvertFieldSchema = createInsertSchema(convertFormFields);
+export const insertConvertSubmissionSchema = createInsertSchema(convertSubmissions);
+export const insertConvertTemplateSchema = createInsertSchema(convertTemplates);
+export const insertConvertAnalyticsDailySchema = createInsertSchema(convertAnalyticsDaily);
+export const insertConvertAbTestSchema = createInsertSchema(convertAbTests);
+
+export type ConvertForm = typeof convertForms.$inferSelect;
+export type InsertConvertForm = z.infer<typeof insertConvertFormSchema>;
+export type ConvertFormField = typeof convertFormFields.$inferSelect;
+export type InsertConvertFormField = z.infer<typeof insertConvertFieldSchema>;
+export type ConvertSubmission = typeof convertSubmissions.$inferSelect;
+export type InsertConvertSubmission = z.infer<typeof insertConvertSubmissionSchema>;
+export type ConvertTemplate = typeof convertTemplates.$inferSelect;
+export type InsertConvertTemplate = z.infer<typeof insertConvertTemplateSchema>;
+export type ConvertAnalyticsDaily = typeof convertAnalyticsDaily.$inferSelect;
+export type InsertConvertAnalyticsDaily = z.infer<typeof insertConvertAnalyticsDailySchema>;
+export type ConvertAbTest = typeof convertAbTests.$inferSelect;
+export type InsertConvertAbTest = z.infer<typeof insertConvertAbTestSchema>;

@@ -17,10 +17,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { DIYIcon, ALCIcon } from "@/components/pathway-icons";
-import sendIcon from "@assets/native icons and favicons/: send app icon.png";
-import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
-import livechatIcon from "@assets/native icons and favicons/: livechat app icon.png";
-import commverseIcon from "@assets/logos and wordmarks/: commverse bundle logo.png";
+import { AppIcon } from "@/components/app-name";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -245,7 +242,7 @@ export default function PathwaysPage() {
               Included in All Plans
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Commverse Communication Apps
+              Compass Suite Communication Apps
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Four proprietary apps that work together to streamline all your
@@ -254,22 +251,18 @@ export default function PathwaysPage() {
           </div>
 
           <div className="grid md:grid-cols-4 gap-6">
-            {/* /send */}
+            {/* / promote */}
             <Card className="border-2 border-yellow-200 hover:border-yellow-400 hover:shadow-xl transition-all">
               <CardContent className="p-6">
                 <div className="flex items-center justify-center mb-4">
-                  <img
-                    src={sendIcon}
-                    alt="/send"
-                    className="h-16 w-16 object-contain"
-                  />
+                  <AppIcon name="Mail" size={64} color="#1844A6" />
                 </div>
                 <h3
-                  className="text-xl font-bold text-gray-900 mb-2 text-center"
+                  className="text-xl font-bold text-gray-900 mb-2 text-center font-['Archivo_Semi_Expanded']"
                   style={{ fontWeight: 600 }}
                 >
-                  <span style={{ color: "#09080E" }}>/</span>
-                  <span style={{ color: "#FFD700" }}>send</span>
+                  <span style={{ color: "#09080E" }}>/</span>{' '}
+                  <span style={{ color: "#FFEF45", textShadow: "0 0 1px #000" }}>promote</span>
                 </h3>
                 <p className="text-sm text-gray-600 mb-4 text-center">
                   Email & SMS Marketing Platform
@@ -291,22 +284,18 @@ export default function PathwaysPage() {
               </CardContent>
             </Card>
 
-            {/* /inbox */}
+            {/* /respond */}
             <Card className="border-2 border-blue-200 hover:border-blue-400 hover:shadow-xl transition-all">
               <CardContent className="p-6">
                 <div className="flex items-center justify-center mb-4">
-                  <img
-                    src={inboxIcon}
-                    alt="/inbox"
-                    className="h-16 w-16 object-contain"
-                  />
+                  <AppIcon name="Inbox" size={64} color="#001882" />
                 </div>
                 <h3
                   className="text-xl font-bold text-gray-900 mb-2 text-center"
                   style={{ fontWeight: 600 }}
                 >
                   <span style={{ color: "#09080E" }}>/</span>
-                  <span style={{ color: "#0080FF" }}>inbox</span>
+                  <span style={{ color: "#0080FF" }}>respond</span>
                 </h3>
                 <p className="text-sm text-gray-600 mb-4 text-center">
                   Unified Communications Hub
@@ -328,22 +317,18 @@ export default function PathwaysPage() {
               </CardContent>
             </Card>
 
-            {/* /livechat */}
+            {/* / engage */}
             <Card className="border-2 border-purple-200 hover:border-purple-400 hover:shadow-xl transition-all">
               <CardContent className="p-6">
                 <div className="flex items-center justify-center mb-4">
-                  <img
-                    src={livechatIcon}
-                    alt="/livechat"
-                    className="h-16 w-16 object-contain"
-                  />
+                  <AppIcon name="MessageCircle" size={64} color="#660099" />
                 </div>
                 <h3
-                  className="text-xl font-bold text-gray-900 mb-2 text-center"
+                  className="text-xl font-bold text-gray-900 mb-2 text-center font-['Archivo_Semi_Expanded']"
                   style={{ fontWeight: 600 }}
                 >
-                  <span style={{ color: "#09080E" }}>/</span>
-                  <span style={{ color: "#8000FF" }}>livechat</span>
+                  <span style={{ color: "#09080E" }}>/</span>{' '}
+                  <span style={{ color: "#8000FF" }}>engage</span>
                 </h3>
                 <p className="text-sm text-gray-600 mb-4 text-center">
                   Website Live Chat Widget
@@ -365,22 +350,18 @@ export default function PathwaysPage() {
               </CardContent>
             </Card>
 
-            {/* /content */}
+            {/* /post */}
             <Card className="border-2 border-pink-200 hover:border-pink-400 hover:shadow-xl transition-all">
               <CardContent className="p-6">
                 <div className="flex items-center justify-center mb-4">
-                  <img
-                    src={commverseIcon}
-                    alt="/content"
-                    className="h-16 w-16 object-contain"
-                  />
+                  <AppIcon name="Share2" size={64} color="#FF44CC" />
                 </div>
                 <h3
                   className="text-xl font-bold text-gray-900 mb-2 text-center"
                   style={{ fontWeight: 600 }}
                 >
                   <span style={{ color: "#09080E" }}>/</span>
-                  <span style={{ color: "#E91EBC" }}>content</span>
+                  <span style={{ color: "#E91EBC" }}>post</span>
                 </h3>
                 <p className="text-sm text-gray-600 mb-4 text-center">
                   Social Media Management

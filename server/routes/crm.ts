@@ -500,8 +500,17 @@ crmRouter.delete("/contacts/:id", async (req, res) => {
     // Get the contact first to get clientId for webhook
     const [contact] = await db.select().from(crmContacts).where(eq(crmContacts.id, id));
     
+    // Clean up all FK-linked rows before deleting the contact itself
+    await db.delete(crmTimeline).where(eq(crmTimeline.contactId, id));
+    await db.delete(crmNotes).where(eq(crmNotes.contactId, id));
+    await db.delete(crmTasks).where(eq(crmTasks.contactId, id));
+    await db.delete(crmSegmentMembers).where(eq(crmSegmentMembers.contactId, id));
+    await db.delete(crmAppointments).where(eq(crmAppointments.contactId, id));
+    await db.delete(crmAutomationExecutions).where(eq(crmAutomationExecutions.contactId, id));
+    await db.delete(crmDeals).where(eq(crmDeals.contactId, id));
+
     await db.delete(crmContacts).where(eq(crmContacts.id, id));
-    
+
     // Dispatch webhook event
     if (contact) {
       dispatchWebhookEvent(contact.clientId, 'contact.deleted', { id, email: contact.email });
@@ -1190,6 +1199,84 @@ crmRouter.post("/timeline", async (req, res) => {
 });
 
 // ============================================================================
+// TIMELINE SUMMARY — per-app activity for a contact
+// ============================================================================
+crmRouter.get("/timeline/summary", async (req, res) => {
+  try {
+    const contactId = parseInt(req.query.contactId as string);
+    if (!contactId) return res.status(400).json({ error: "contactId is required" });
+
+    const events = await db
+      .select()
+      .from(crmTimeline)
+      .where(eq(crmTimeline.contactId, contactId))
+      .orderBy(desc(crmTimeline.occurredAt));
+
+    // Group by sourceApp
+    const apps: Record<string, { count: number; lastEvent: string; events: typeof events }> = {};
+
+    for (const event of events) {
+      const app = event.sourceApp || 'connect';
+      if (!apps[app]) {
+        apps[app] = { count: 0, lastEvent: '', events: [] };
+      }
+      apps[app].count++;
+      if (!apps[app].lastEvent || event.occurredAt > new Date(apps[app].lastEvent)) {
+        apps[app].lastEvent = event.occurredAt?.toISOString() || '';
+      }
+      apps[app].events.push(event);
+    }
+
+    // Build summaries
+    const summary: Record<string, { count: number; lastEvent: string; summary: string; rating?: number; platform?: string }> = {};
+
+    for (const [app, data] of Object.entries(apps)) {
+      let summaryText = `${data.count} event${data.count !== 1 ? 's' : ''}`;
+
+      if (app === 'promote') {
+        const sent = data.events.filter(e => e.eventType === 'campaign_sent').length;
+        const opened = data.events.filter(e => e.eventType === 'campaign_opened').length;
+        summaryText = `${sent} email${sent !== 1 ? 's' : ''}${opened > 0 ? `, ${opened} opened` : ''}`;
+      } else if (app === 'elevate') {
+        const review = data.events.find(e => e.eventType === 'review_received');
+        const meta = review?.metadata as any;
+        if (meta?.rating && meta?.platform) {
+          summaryText = '★'.repeat(meta.rating) + ` on ${meta.platform}`;
+          summary[app] = { ...data, summary: summaryText, rating: meta.rating, platform: meta.platform };
+          continue;
+        }
+      } else if (app === 'engage') {
+        summaryText = `${data.count} chat session${data.count !== 1 ? 's' : ''}`;
+      } else if (app === 'respond') {
+        const received = data.events.filter(e => e.eventType === 'message_received').length;
+        const sent = data.events.filter(e => e.eventType === 'message_sent').length;
+        summaryText = `${received} received, ${sent} sent`;
+      } else if (app === 'post') {
+        const likes = data.events.filter(e => e.eventType === 'social_like').length;
+        const comments = data.events.filter(e => e.eventType === 'social_comment').length;
+        const shares = data.events.filter(e => e.eventType === 'social_share').length;
+        const parts = [];
+        if (likes) parts.push(`${likes} like${likes !== 1 ? 's' : ''}`);
+        if (comments) parts.push(`${comments} comment${comments !== 1 ? 's' : ''}`);
+        if (shares) parts.push(`${shares} share${shares !== 1 ? 's' : ''}`);
+        summaryText = parts.length > 0 ? parts.join(', ') : `${data.count} event${data.count !== 1 ? 's' : ''}`;
+      } else if (app === 'amplify') {
+        const spendEvents = data.events.filter(e => e.eventType === 'ad_spend_attributed');
+        const totalSpend = spendEvents.reduce((sum, e) => sum + ((e.metadata as any)?.amount || 0), 0);
+        summaryText = totalSpend > 0 ? `$${totalSpend} ad spend` : `${data.count} ad event${data.count !== 1 ? 's' : ''}`;
+      }
+
+      summary[app] = { count: data.count, lastEvent: data.lastEvent, summary: summaryText };
+    }
+
+    res.json({ apps: summary });
+  } catch (error) {
+    console.error("[CRM] Error fetching timeline summary:", error);
+    res.status(500).json({ error: "Failed to fetch timeline summary" });
+  }
+});
+
+// ============================================================================
 // APPOINTMENTS (Scheduler - Starter tier)
 // ============================================================================
 
@@ -1680,7 +1767,7 @@ crmRouter.get("/integration/lookup", async (req, res) => {
         lastName: contact.lastName,
         email: contact.email,
         phone: contact.phone,
-        title: contact.title,
+        jobTitle: contact.jobTitle,
         lifecycleStage: contact.lifecycleStage,
         leadSource: contact.leadSource,
         customFields: contact.customFields,
@@ -1754,7 +1841,7 @@ crmRouter.get("/integration/context/:id", async (req, res) => {
         lastName: contact.lastName,
         email: contact.email,
         phone: contact.phone,
-        title: contact.title,
+        jobTitle: contact.jobTitle,
         lifecycleStage: contact.lifecycleStage,
         leadSource: contact.leadSource,
         customFields: contact.customFields,
@@ -1768,9 +1855,9 @@ crmRouter.get("/integration/context/:id", async (req, res) => {
       } : null,
       deals: deals.map(d => ({
         id: d.id,
-        title: d.title,
-        value: d.value,
-        stage: d.stage,
+        name: d.name,
+        amount: d.amount,
+        stageId: d.stageId,
         probability: d.probability,
       })),
       recentActivity: recentActivity.map(a => ({
@@ -1782,7 +1869,7 @@ crmRouter.get("/integration/context/:id", async (req, res) => {
         occurredAt: a.occurredAt,
       })),
       tags: contactTags,
-      totalDealValue: deals.reduce((sum, d) => sum + (Number(d.value) || 0), 0),
+      totalDealValue: deals.reduce((sum, d) => sum + (Number(d.amount) || 0), 0),
     });
   } catch (error) {
     console.error("[CRM] Integration context error:", error);

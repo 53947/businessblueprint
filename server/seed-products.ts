@@ -1,13 +1,14 @@
 import { db } from "./db";
 import { products } from "@shared/schema";
 
-// AUTHORIZED PRODUCTS ONLY - Based on shared/products.ts catalog
-// DO NOT add products not in the official catalog
+// AUTHORIZED PRODUCTS ONLY - Based on app-registry.ts (source of truth)
+// Product IDs match app-registry.ts: respond, promote, engage, post, publish, elevate, optimize, amplify, connect
+// Bundle IDs: compass (Compass Suite), anchor (Anchor Suite)
 const authorizedProducts = [
   {
-    productId: "commverse",
-    name: "CommVerse Bundle",
-    description: "Complete Communications Universe - All 4 communication tools (Inbox, Send, Content, LiveChat) in one integrated platform",
+    productId: "compass",
+    name: "Compass Suite",
+    description: "Communication & Marketing Bundle — All 4 communication tools (/ promote, / respond, / engage, / post) in one integrated platform",
     category: "bundle",
     improvesCategory: ["engagement", "visibility"],
     diyPrice: "99.00",
@@ -16,7 +17,7 @@ const authorizedProducts = [
     features: JSON.stringify([
       "All 4 communication tools in one platform",
       "Unified dashboard for all customer communications",
-      "Save $37/month vs buying apps separately",
+      "Save vs buying apps separately",
       "Perfect sync between email, SMS, social, and chat",
       "One login, one bill, complete control"
     ]),
@@ -26,12 +27,12 @@ const authorizedProducts = [
     isActive: true
   },
   {
-    productId: "inbox",
-    name: "Inbox",
-    description: "Unified Communication Hub - Consolidates email, SMS, social messages, live chat into ONE inbox",
+    productId: "respond",
+    name: "/ respond",
+    description: "Unified Multi-Channel Inbox — Consolidates email, SMS, social messages, live chat into ONE inbox",
     category: "core",
     improvesCategory: ["engagement", "visibility"],
-    diyPrice: "34.00",
+    diyPrice: "29.00",
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
@@ -47,12 +48,12 @@ const authorizedProducts = [
     isActive: true
   },
   {
-    productId: "send",
-    name: "Send",
-    description: "Email & SMS Marketing Platform - Build and segment your customer list, create campaigns",
+    productId: "promote",
+    name: "/ promote",
+    description: "Email Campaign Manager — Build and segment your customer list, create campaigns",
     category: "core",
     improvesCategory: ["engagement", "visibility"],
-    diyPrice: "34.00",
+    diyPrice: "29.00",
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
@@ -68,12 +69,12 @@ const authorizedProducts = [
     isActive: true
   },
   {
-    productId: "content",
-    name: "Content",
-    description: "Social Media Management - Schedule posts, create content with AI, track engagement",
+    productId: "post",
+    name: "/ post",
+    description: "Social Media Manager — Schedule posts, create content with AI, track engagement",
     category: "core",
     improvesCategory: ["engagement", "visibility"],
-    diyPrice: "34.00",
+    diyPrice: "29.00",
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
@@ -89,12 +90,12 @@ const authorizedProducts = [
     isActive: true
   },
   {
-    productId: "livechat",
-    name: "LiveChat",
-    description: "Website Chat Widget - Real-time customer support and lead capture",
+    productId: "engage",
+    name: "/ engage",
+    description: "Live Chat Widget — Real-time customer support and lead capture",
     category: "core",
     improvesCategory: ["engagement", "visibility"],
-    diyPrice: "34.00",
+    diyPrice: "29.00",
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
@@ -110,12 +111,33 @@ const authorizedProducts = [
     isActive: true
   },
   {
-    productId: "listings",
-    name: "Listings",
-    description: "Business Listings Management - Manage 50+ directory listings from one dashboard",
+    productId: "anchor",
+    name: "Anchor Suite",
+    description: "Local SEO & Reputation Bundle — / publish, / elevate, / optimize, / amplify in one integrated platform",
+    category: "bundle",
+    improvesCategory: ["visibility", "reviews", "completeness"],
+    diyPrice: "99.00",
+    setupFee: "0.00",
+    billingCycle: "monthly",
+    features: JSON.stringify([
+      "Includes / publish + / elevate + / optimize + / amplify",
+      "Google Business Profile optimization",
+      "Local keyword tracking",
+      "Competitor analysis",
+      "Monthly performance reports"
+    ]),
+    deliveryMethod: ["diy"],
+    estimatedImpact: "+30-50 points",
+    displayOrder: 5,
+    isActive: true
+  },
+  {
+    productId: "publish",
+    name: "/ publish",
+    description: "Business Listings Manager — Manage 50+ directory listings from one dashboard",
     category: "core",
     improvesCategory: ["visibility", "completeness"],
-    diyPrice: "39.00",
+    diyPrice: "29.00",
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
@@ -127,16 +149,16 @@ const authorizedProducts = [
     ]),
     deliveryMethod: ["diy"],
     estimatedImpact: "+20-30 points",
-    displayOrder: 5,
+    displayOrder: 6,
     isActive: true
   },
   {
-    productId: "reputation",
-    name: "Reputation",
-    description: "Ratings & Review Management - Monitor and respond to reviews across all platforms",
+    productId: "elevate",
+    name: "/ elevate",
+    description: "Reputation & Reviews Manager — Monitor and respond to reviews across all platforms",
     category: "core",
     improvesCategory: ["reviews", "engagement"],
-    diyPrice: "39.00",
+    diyPrice: "29.00",
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
@@ -148,34 +170,56 @@ const authorizedProducts = [
     ]),
     deliveryMethod: ["diy"],
     estimatedImpact: "+20-30 points",
-    displayOrder: 6,
-    isActive: true
-  },
-  {
-    productId: "localblue",
-    name: "LocalBlue Bundle",
-    description: "Complete Local Presence Package - Listings + Reputation bundled together",
-    category: "bundle",
-    improvesCategory: ["visibility", "reviews", "completeness"],
-    diyPrice: "59.00",
-    setupFee: "0.00",
-    billingCycle: "monthly",
-    features: JSON.stringify([
-      "Includes Listings + Reputation management",
-      "Google Business Profile optimization",
-      "Local keyword tracking",
-      "Competitor analysis",
-      "Monthly performance reports"
-    ]),
-    deliveryMethod: ["diy"],
-    estimatedImpact: "+30-50 points",
     displayOrder: 7,
     isActive: true
   },
   {
-    productId: "relationships",
-    name: "Relationships CRM",
-    description: "The Truth Center - Centralized customer database and sales pipeline",
+    productId: "optimize",
+    name: "/ optimize",
+    description: "SEO Health Monitor — Complete SEO health monitoring, keyword tracking, and AI-powered optimization",
+    category: "core",
+    improvesCategory: ["visibility", "completeness"],
+    diyPrice: "29.00",
+    setupFee: "0.00",
+    billingCycle: "monthly",
+    features: JSON.stringify([
+      "Real-time SEO health score and monitoring",
+      "AI-powered keyword research and rank tracking",
+      "On-page SEO analysis with actionable suggestions",
+      "Technical SEO audit with fix instructions",
+      "AI content briefs and optimization",
+      "Prioritized action plans"
+    ]),
+    deliveryMethod: ["diy"],
+    estimatedImpact: "+15-25 points",
+    displayOrder: 8,
+    isActive: true
+  },
+  {
+    productId: "amplify",
+    name: "/ amplify",
+    description: "Advertising Platform — Manage and optimize your digital advertising campaigns",
+    category: "core",
+    improvesCategory: ["visibility", "engagement"],
+    diyPrice: "29.00",
+    setupFee: "0.00",
+    billingCycle: "monthly",
+    features: JSON.stringify([
+      "Manage digital advertising campaigns",
+      "Track ad performance and ROI",
+      "Optimize ad spend across platforms",
+      "Targeted audience management",
+      "Performance reporting and analytics"
+    ]),
+    deliveryMethod: ["diy"],
+    estimatedImpact: "+15-25 points",
+    displayOrder: 9,
+    isActive: true
+  },
+  {
+    productId: "connect",
+    name: "/ connect",
+    description: "Customer Relationship Management Tool — Centralized customer database and sales pipeline",
     category: "core",
     improvesCategory: ["engagement", "completeness"],
     diyPrice: "29.00",
@@ -186,17 +230,17 @@ const authorizedProducts = [
       "Track every interaction across all channels",
       "Sales pipeline and opportunity tracking",
       "Automated follow-ups and reminders",
-      "Seamless integration with all CommVerse and LocalBlue tools"
+      "Integration with all Compass and Anchor tools"
     ]),
     deliveryMethod: ["diy"],
     estimatedImpact: "+15-25 points",
-    displayOrder: 8,
+    displayOrder: 10,
     isActive: true
   },
   {
     productId: "hostsBlue",
-    name: "HostsBlue.com",
-    description: "Complete Web Services - Domain, hosting, email, website builder",
+    name: "hostsblue.com",
+    description: "Complete Web Services — Domain, hosting, email, website builder",
     category: "partner",
     improvesCategory: ["completeness", "visibility"],
     diyPrice: "0.00",
@@ -212,13 +256,13 @@ const authorizedProducts = [
     ]),
     deliveryMethod: ["partner"],
     estimatedImpact: "+20-30 points",
-    displayOrder: 9,
+    displayOrder: 11,
     isActive: true
   },
   {
     productId: "swipesBlue",
-    name: "SwipesBlue.com",
-    description: "Payment Processing and E-commerce - Integrated payment gateway",
+    name: "swipesblue.com",
+    description: "Payment Processing — Integrated payment gateway",
     category: "partner",
     improvesCategory: ["engagement"],
     diyPrice: "0.00",
@@ -233,7 +277,7 @@ const authorizedProducts = [
     ]),
     deliveryMethod: ["partner"],
     estimatedImpact: "+10-15 points",
-    displayOrder: 10,
+    displayOrder: 12,
     isActive: true
   }
 ];
@@ -241,13 +285,13 @@ const authorizedProducts = [
 async function seedProducts() {
   try {
     console.log("Seeding AUTHORIZED products only...");
-    console.log("Products: commverse, inbox, send, content, livechat, listings, reputation, localblue, relationships, hostsBlue, swipesBlue");
-    
+    console.log("Products: respond, promote, post, engage, publish, elevate, optimize, amplify, connect, compass, anchor, hostsBlue, swipesBlue");
+
     for (const product of authorizedProducts) {
       await db.insert(products).values(product).onConflictDoNothing();
       console.log(`✓ Seeded: ${product.name} (${product.productId})`);
     }
-    
+
     console.log("\nAuthorized products seeded successfully!");
     process.exit(0);
   } catch (error) {

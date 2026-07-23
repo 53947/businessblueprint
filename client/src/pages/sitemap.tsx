@@ -59,10 +59,10 @@ const statusConfig: Record<RouteStatus, { color: string; label: string; icon: an
 const categoryConfig: Record<string, { icon: any; color: string; description: string }> = {
   Public: { icon: Globe, color: "text-green-600", description: "Accessible to everyone" },
   Assessment: { icon: BarChart3, color: "text-blue-600", description: "Business assessment tools" },
-  "AI Coach": { icon: Brain, color: "text-purple-600", description: "AI-powered coaching" },
+  "Coach Blue": { icon: Brain, color: "text-purple-600", description: "AI-powered coaching" },
   Pricing: { icon: CreditCard, color: "text-emerald-600", description: "Plans and checkout" },
-  Commverse: { icon: MessagesSquare, color: "text-orange-600", description: "Communication suite" },
-  LocalBlue: { icon: Building2, color: "text-pink-600", description: "Local business tools" },
+  "Compass Suite": { icon: MessagesSquare, color: "text-[#FF6B00]", description: "Communication suite" },
+  "Anchor Suite": { icon: Building2, color: "text-pink-600", description: "Local business tools" },
   Relationships: { icon: Users, color: "text-blue-600", description: "CRM and customer management" },
   Portal: { icon: Layout, color: "text-indigo-600", description: "Client portal pages" },
   ScansBlue: { icon: BarChart3, color: "text-cyan-600", description: "Website analysis" },
@@ -81,13 +81,13 @@ const routeIcons: Record<string, any> = {
   "/journey": MapPin,
   "/tour": Play,
   "/biif": Zap,
-  "/relationships": Users,
-  "/relationships/dashboard": Users,
+  "/connect": Users,
+  "/connect/dashboard": Users,
   "/assessment": BarChart3,
   "/dashboard/:id": Map,
   "/find-results": Search,
   "/assessment-checkout": CreditCard,
-  "/ai-coach": Brain,
+  "/coach-blue": Brain,
   "/pricing": CreditCard,
   "/subscription": CreditCard,
   "/pathways": MapPin,
@@ -95,23 +95,23 @@ const routeIcons: Record<string, any> = {
   "/marketplace/checkout": ShoppingCart,
   "/cart": ShoppingCart,
   "/checkout": CreditCard,
-  "/commverse": MessagesSquare,
-  "/commverse-pricing": CreditCard,
-  "/send": Send,
-  "/send/dashboard": Send,
-  "/inbox": Inbox,
-  "/inbox/dashboard": Inbox,
-  "/livechat": MessageSquare,
-  "/livechat/dashboard": MessageSquare,
-  "/livechat-demo": MessageSquare,
-  "/livechat-install": Code,
-  "/content": Pencil,
-  "/content/dashboard": Pencil,
-  "/localblue": Building2,
-  "/listings": Globe,
-  "/listings/dashboard": Globe,
-  "/reputation": Star,
-  "/reputation/dashboard": Star,
+  "/compass": MessagesSquare,
+  "/compass/pricing": CreditCard,
+  "/promote": Send,
+  "/promote/dashboard": Send,
+  "/respond": Inbox,
+  "/respond/dashboard": Inbox,
+  "/engage": MessageSquare,
+  "/engage/dashboard": MessageSquare,
+  "/engage/demo": MessageSquare,
+  "/engage/install": Code,
+  "/post": Pencil,
+  "/post/dashboard": Pencil,
+  "/anchor": Building2,
+  "/publish": Globe,
+  "/publish/dashboard": Globe,
+  "/elevate": Star,
+  "/elevate/dashboard": Star,
   "/portal/login": LogIn,
   "/portal/verify": Mail,
   "/portal/test": Settings,
@@ -134,7 +134,7 @@ const routeIcons: Record<string, any> = {
 export default function Sitemap() {
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(Object.keys(categoryConfig)));
   const [viewMode, setViewMode] = useState<"tree" | "table">("tree");
-  
+
   const toggleCategory = (category: string) => {
     setExpandedCategories(prev => {
       const next = new Set(prev);
@@ -321,7 +321,7 @@ export default function Sitemap() {
                           <tr key={route.path} className="hover:bg-gray-50">
                             <td className="p-4">
                               <Link href={route.isDynamic ? "#" : route.path}>
-                                <code className="text-sm text-blue-600 hover:underline font-mono">{displayPath}</code>
+                                <code className="text-sm text-blue-600 underline font-mono">{displayPath}</code>
                               </Link>
                             </td>
                             <td className="p-4 font-medium text-gray-900">

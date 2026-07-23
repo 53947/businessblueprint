@@ -2,14 +2,13 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { setupWebSocket } from "./websocket";
-import { handleStripeWebhook } from "./routes/stripe-webhook";
+import { paymentWebhookRouter } from "./routes/payment-webhook";
+import { analyticsSyncService } from "./services/analyticsSync";
 
 const app = express();
 
-app.post('/api/stripe/webhook', 
-  express.raw({ type: 'application/json' }),
-  handleStripeWebhook
-);
+// SwipesBlue webhook for subscription events
+app.use(paymentWebhookRouter);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -56,12 +55,20 @@ app.use((req, res, next) => {
   // Export io for use in routes (via global) - available before server starts listening
   (global as any).io = io;
   
-  // Start database-backed scheduler for Content Management
+  // Start database-backed scheduler for Post Management
   try {
     const { startScheduler } = await import('./services/scheduler');
     startScheduler();
   } catch (error) {
     console.error('[Scheduler] Failed to start scheduler:', error);
+  }
+
+  // Start stall detector for Directions for Use reminders
+  try {
+    const { startStallDetector } = await import('./services/stall-detector');
+    startStallDetector();
+  } catch (error) {
+    console.error('[StallDetector] Failed to start stall detector:', error);
   }
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -81,15 +88,16 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = 5000;
+  // Use PORT env var (set by Railway) or default to 5000 (Replit/local dev)
+  const port = parseInt(process.env.PORT || '5000', 10);
   server.listen({
     port,
     host: "0.0.0.0",
     reusePort: true,
   }, () => {
     log(`serving on port ${port}`);
+
+    // Start analytics sync scheduler (every 6 hours)
+    analyticsSyncService.startScheduledSync();
   });
 })();

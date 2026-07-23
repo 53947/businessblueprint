@@ -46,8 +46,7 @@ export async function setupVite(app: Express, server: Server) {
 
     try {
       const clientTemplate = path.resolve(
-        import.meta.dirname,
-        "..",
+        process.cwd(),
         "client",
         "index.html",
       );
@@ -68,8 +67,7 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  // Use import.meta.dirname for consistent path resolution
-  const distPath = path.resolve(import.meta.dirname, "..", "dist", "public");
+  const distPath = path.resolve(process.cwd(), "dist", "public");
   const indexPath = path.join(distPath, "index.html");
 
   log(`Checking for static files at: ${distPath}`, "static");

@@ -1,9 +1,12 @@
 import { Link } from "wouter";
 import { ArrowLeft, Trash2, Database, Clock } from "lucide-react";
+import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
 
 export default function DataDeletion() {
   return (
     <div className="min-h-screen bg-white">
+      <Header />
       <div className="max-w-4xl mx-auto px-6 py-12">
         <Link href="/" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-8">
           <ArrowLeft className="w-4 h-4" />
@@ -32,7 +35,7 @@ export default function DataDeletion() {
             <li><strong>Content:</strong> Social media posts, drafts, and scheduled content</li>
             <li><strong>Communications:</strong> Messages, emails, SMS records</li>
             <li><strong>Analytics Data:</strong> Usage history and engagement metrics</li>
-            <li><strong>AI Coach History:</strong> Conversation logs and recommendations</li>
+            <li><strong>Coach Blue History:</strong> Conversation logs and recommendations</li>
             <li><strong>Payment Information:</strong> Billing details (subject to legal retention requirements)</li>
           </ul>
 
@@ -95,7 +98,7 @@ export default function DataDeletion() {
           <ul className="list-disc pl-6 mb-4">
             <li><strong>Social Media:</strong> Posts published to Facebook, Instagram, LinkedIn, X, etc., remain on those platforms</li>
             <li><strong>Synup:</strong> Listings data managed through Synup may require separate deletion</li>
-            <li><strong>Payment Processors:</strong> Swipes Blue/NMI may retain transaction records</li>
+            <li><strong>Payment Processors:</strong> SwipesBlue may retain transaction records</li>
           </ul>
           <p className="mb-6">
             You must separately contact these platforms to delete data stored with them.
@@ -123,16 +126,17 @@ export default function DataDeletion() {
           <p className="mb-4">
             <strong>Business Blueprint</strong><br />
             Email: privacy@businessblueprint.io<br />
-            Website: <a href="https://businessblueprint.io" className="text-blue-600 hover:underline">businessblueprint.io</a>
+            Website: <a href="https://businessblueprint.io" className="text-blue-600 underline">businessblueprint.io</a>
           </p>
 
           <div className="bg-gray-100 border border-gray-300 rounded-lg p-6 mt-8">
             <p className="text-sm text-gray-700">
-              <strong>Related:</strong> See our <Link href="/privacy" className="text-blue-600 hover:underline">Privacy Policy</Link> and <Link href="/terms" className="text-blue-600 hover:underline">Terms of Service</Link> for more information.
+              <strong>Related:</strong> See our <Link href="/privacy" className="text-blue-600 underline">Privacy Policy</Link> and <Link href="/terms" className="text-blue-600 underline">Terms of Service</Link> for more information.
             </p>
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

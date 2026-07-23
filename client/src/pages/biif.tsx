@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
 import { Building2, MapPin, Phone, Globe, Clock } from "lucide-react";
+import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
 
 const businessInfoSchema = z.object({
   name: z.string().min(2, "Business name is required"),
@@ -96,6 +98,7 @@ export default function BIIF() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4">
+      <Header />
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
@@ -209,7 +212,7 @@ export default function BIIF() {
                         </FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="(555) 123-4567"
+                            placeholder="+1 (555) 000-0000"
                             {...field}
                             data-testid="input-phone"
                           />
@@ -382,11 +385,12 @@ export default function BIIF() {
               Your business information has been submitted and is being synced to 200+ directories.
             </p>
             <p className="text-sm text-gray-500">
-              More steps (photos, Google/Facebook connections) coming soon...
+              You can manage your listings, connect Google and Facebook, and upload photos from your dashboard.
             </p>
           </Card>
         )}
       </div>
+      <Footer />
     </div>
   );
 }

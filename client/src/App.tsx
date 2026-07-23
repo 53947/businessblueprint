@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -9,7 +9,7 @@ import Home from "@/pages/home";
 import Assessment from "@/pages/assessment";
 import Dashboard from "@/pages/dashboard";
 import AssessmentCheckout from "@/pages/assessment-checkout";
-import AICoachPage from "@/pages/ai-coach";
+import CoachBluePage from "@/pages/coach-blue";
 import ClientPortal from "@/pages/client-portal";
 import ClientLogin from "@/pages/client-login";
 import VerifyMagicLink from "@/pages/verify-magic-link";
@@ -19,16 +19,19 @@ import Subscription from "@/pages/subscription";
 import Sitemap from "@/pages/sitemap";
 import Journey from "@/pages/journey";
 import LogoPreview from "@/pages/logo-preview";
-import SendLanding from "@/pages/send-landing";
-import SendDashboard from "@/pages/send-dashboard";
-import InboxLanding from "@/pages/inbox-landing";
-import InboxPage from "@/pages/inbox";
-import LivechatLanding from "@/pages/livechat-landing";
-import LiveChatDemo from "@/pages/livechat-demo";
-import LiveChatInstall from "@/pages/livechat-install";
-import ContentLanding from "@/pages/content-landing";
-import CommverseLanding from "@/pages/commverse-landing";
-import CommversePricing from "@/pages/commverse-pricing";
+import PromoteLanding from "@/pages/promote-landing";
+import PromoteDashboard from "@/pages/promote-dashboard";
+import PromoteCampaignEditor from "@/pages/promote-campaign-editor";
+import PromoteTemplates from "@/pages/promote-templates";
+import RespondLanding from "@/pages/respond-landing";
+import RespondPage from "@/pages/respond";
+import EngageLanding from "@/pages/engage-landing";
+import EngageDemo from "@/pages/engage-demo";
+import EngageDashboard from "@/pages/engage-dashboard";
+import EngageInstall from "@/pages/engage-install";
+import PostLanding from "@/pages/post-landing";
+import CompassLanding from "@/pages/compass-landing";
+import CompassPricing from "@/pages/compass-pricing";
 import PathwaysPage from "@/pages/pathways";
 import PricingPage from "@/pages/pricing";
 import MarketplacePage from "@/pages/marketplace";
@@ -38,27 +41,40 @@ import CheckoutPage from "@/pages/checkout";
 import BIIF from "@/pages/biif";
 import AdminPanel from "@/pages/admin-panel";
 import BrandStudio from "@/pages/brand-studio";
-import ContentManagement from "@/pages/content-management";
-import ReputationManagement from "@/pages/reputation";
-import ListingsManagement from "@/pages/listings";
-import LocalBlueLanding from "@/pages/localblue-landing";
-import ListingsLanding from "@/pages/listings-landing";
-import ReputationLanding from "@/pages/reputation-landing";
+import PostManagement from "@/pages/post-management";
+import ElevateDashboard from "@/pages/elevate-dashboard";
+import PublishDashboard from "@/pages/publish-dashboard";
+import AnchorLanding from "@/pages/anchor-landing";
+import PublishLanding from "@/pages/publish-landing";
+import ElevateLanding from "@/pages/elevate-landing";
+import AmplifyLanding from "@/pages/amplify-landing";
+import AmplifyDashboard from "@/pages/amplify-dashboard";
+import AmplifyRedditWizard from "@/pages/amplify-reddit-wizard";
 import Privacy from "@/pages/privacy";
 import Terms from "@/pages/terms";
 import DataDeletion from "@/pages/data-deletion";
 import PortalTestAccess from "@/pages/portal-test-access";
 import PortalPrescriptions from "@/pages/portal-prescriptions";
 import FindResults from "@/pages/find-results";
-import RelationshipsLanding from "@/pages/relationships-landing";
-import RelationshipsDashboard from "@/pages/relationships";
+import ConnectLanding from "@/pages/connect-landing";
+import ConnectDashboard from "@/pages/connect-dashboard";
+import ConvertLanding from "@/pages/convert-landing";
+import ConvertDashboard from "@/pages/convert-dashboard";
+import ConvertHostedForm from "@/pages/convert-hosted-form";
+import ConvertBuilder from "@/pages/convert-builder";
 import ApiDocs from "@/pages/api-docs";
 import AssessmentConfirmation from "@/pages/assessment-confirmation";
 import KnowledgeBase from "@/pages/knowledge-base";
 import Tour from "@/pages/tour";
-import ScansBluePurchase from "@/pages/scansblue-purchase";
-import ScansBlueSuccess from "@/pages/scansblue-success";
+import OptimizeLanding from "@/pages/optimize-landing";
+import OptimizeSetup from "@/pages/optimize-setup";
+import OptimizeDashboard from "@/pages/optimize";
+import AdminLogin from "@/pages/login";
+import VerifyAdminMagicLink from "@/pages/verify-admin-magic-link";
+import ClientSignup from "@/pages/client-signup";
+import DirectionsForUse from "@/pages/directions-for-use";
 import NotFound from "@/pages/not-found";
+import { ChatWidget } from "@/components/chat-widget";
 
 function Router() {
   return (
@@ -67,12 +83,17 @@ function Router() {
       <Route path="/assessment" component={Assessment} />
       <Route path="/dashboard/:id" component={Dashboard} />
       <Route path="/assessment-checkout" component={AssessmentCheckout} />
-      <Route path="/ai-coach" component={AICoachPage} />
+      <Route path="/coach-blue" component={CoachBluePage} />
+      <Route path="/login" component={AdminLogin} />
+      <Route path="/auth/verify" component={VerifyAdminMagicLink} />
+      <Route path="/auth/login" component={ClientLogin} />
+      <Route path="/auth/signup" component={ClientSignup} />
       <Route path="/portal/login" component={ClientLogin} />
       <Route path="/portal/verify" component={VerifyMagicLink} />
       <Route path="/portal/test" component={PortalTestAccess} />
       <Route path="/portal/dashboard" component={ClientPortal} />
-      <Route path="/portal/inbox" component={InboxPage} />
+      <Route path="/portal/respond" component={RespondPage} />
+      <Route path="/portal/directions" component={DirectionsForUse} />
       <Route path="/portal/prescriptions/:id" component={PortalPrescriptions} />
       <Route path="/portal/prescriptions" component={PortalPrescriptions} />
       <Route path="/portal/prescription/:token" component={PortalPrescriptions} />
@@ -89,41 +110,63 @@ function Router() {
       <Route path="/sitemap" component={Sitemap} />
       <Route path="/journey" component={Journey} />
       <Route path="/logo-preview" component={LogoPreview} />
-      <Route path="/send" component={SendLanding} />
-      <Route path="/send/dashboard" component={SendDashboard} />
-      <Route path="/inbox" component={InboxLanding} />
-      <Route path="/inbox/dashboard" component={InboxPage} />
-      <Route path="/livechat" component={LivechatLanding} />
-      <Route path="/livechat/dashboard" component={LiveChatDemo} />
-      <Route path="/livechat-demo" component={LiveChatDemo} />
-      <Route path="/livechat-install" component={LiveChatInstall} />
-      <Route path="/content" component={ContentLanding} />
-      <Route path="/content/dashboard" component={ContentManagement} />
-      <Route path="/commverse" component={CommverseLanding} />
-      <Route path="/commverse-pricing" component={CommversePricing} />
+      <Route path="/promote" component={PromoteLanding} />
+      <Route path="/promote/dashboard" component={PromoteDashboard} />
+      <Route path="/promote/campaigns/new" component={PromoteCampaignEditor} />
+      <Route path="/promote/campaigns/:id/edit" component={PromoteCampaignEditor} />
+      <Route path="/promote/templates" component={PromoteTemplates} />
+      <Route path="/respond" component={RespondLanding} />
+      <Route path="/respond/dashboard" component={RespondPage} />
+      <Route path="/engage" component={EngageLanding} />
+      <Route path="/engage/dashboard" component={EngageDashboard} />
+      <Route path="/engage/demo" component={EngageDemo} />
+      <Route path="/engage/install" component={EngageInstall} />
+      <Route path="/post" component={PostLanding} />
+      <Route path="/post-landing" component={PostLanding} />
+      <Route path="/post/landing" component={PostLanding} />
+      <Route path="/compass" component={CompassLanding} />
+      <Route path="/compass/pricing" component={CompassPricing} />
       <Route path="/biif" component={BIIF} />
       <Route path="/admin" component={AdminPanel} />
       <Route path="/brand-studio" component={BrandStudio} />
-      <Route path="/localblue" component={LocalBlueLanding} />
-      <Route path="/listings" component={ListingsLanding} />
-      <Route path="/listings/dashboard" component={ListingsManagement} />
-      <Route path="/reputation" component={ReputationLanding} />
-      <Route path="/reputation/dashboard" component={ReputationManagement} />
+      <Route path="/post/dashboard" component={PostManagement} />
+      <Route path="/anchor" component={AnchorLanding} />
+      <Route path="/publish" component={PublishLanding} />
+      <Route path="/elevate" component={ElevateLanding} />
+      <Route path="/elevate/dashboard" component={ElevateDashboard} />
+      <Route path="/optimize" component={OptimizeLanding} />
+      <Route path="/optimize/setup" component={OptimizeSetup} />
+      <Route path="/optimize/dashboard" component={OptimizeDashboard} />
+      <Route path="/amplify" component={AmplifyLanding} />
+      <Route path="/amplify/landing" component={AmplifyLanding} />
+      <Route path="/amplify/dashboard" component={AmplifyDashboard} />
+      <Route path="/amplify/reddit/new" component={AmplifyRedditWizard} />
+      <Route path="/publish/dashboard" component={PublishDashboard} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/terms" component={Terms} />
       <Route path="/data-deletion" component={DataDeletion} />
       <Route path="/find-results" component={FindResults} />
-      <Route path="/relationships" component={RelationshipsLanding} />
-      <Route path="/relationships/dashboard" component={RelationshipsDashboard} />
+      <Route path="/connect" component={ConnectLanding} />
+      <Route path="/connect/dashboard" component={ConnectDashboard} />
+      <Route path="/convert" component={ConvertLanding} />
+      <Route path="/convert/dashboard" component={ConvertDashboard} />
+      <Route path="/convert/builder/new" component={ConvertBuilder} />
+      <Route path="/convert/builder/:formId" component={ConvertBuilder} />
+      <Route path="/convert/f/:formSlug" component={ConvertHostedForm} />
       <Route path="/api-docs" component={ApiDocs} />
       <Route path="/portal/assessment/confirmation" component={AssessmentConfirmation} />
       <Route path="/knowledge-base" component={KnowledgeBase} />
       <Route path="/tour" component={Tour} />
-      <Route path="/scansblue/purchase" component={ScansBluePurchase} />
-      <Route path="/scansblue/success" component={ScansBlueSuccess} />
       <Route component={NotFound} />
     </Switch>
   );
+}
+
+function GlobalChatWidget() {
+  const [location] = useLocation();
+  const isAdminPage = location.startsWith("/admin") || location === "/login";
+  if (isAdminPage) return null;
+  return <ChatWidget />;
 }
 
 function App() {
@@ -146,6 +189,7 @@ function App() {
         <TaskContextMenu>
           <Toaster />
           <Router />
+          <GlobalChatWidget />
         </TaskContextMenu>
       </TooltipProvider>
     </QueryClientProvider>

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { storage } from '../storage';
 import { z } from 'zod';
-import { isAuthenticated } from '../replitAuth';
+import { isAuthenticated } from '../auth';
 import { db } from '../db';
 import { clients } from '@shared/schema';
 import { eq } from 'drizzle-orm';
@@ -18,9 +18,7 @@ const requireAdmin = [isAuthenticated, async (req: any, res: any, next: any): Pr
     }
     
     // Check if user is an admin in the database
-    const user = await db.query.clients.findFirst({
-      where: eq(clients.id, parseInt(userId))
-    });
+    const [user] = await db.select().from(clients).where(eq(clients.id, parseInt(userId))).limit(1);
     
     if (!user || !user.isAdmin) {
       return res.status(403).json({ error: 'Admin access required' });
@@ -179,25 +177,6 @@ export function registerBillingAdminRoutes(router: Router) {
     }
   });
   
-  // GET /api/subscription-plans - Get all available subscription plans (public)
-  router.get('/api/subscription-plans', async (req, res) => {
-    try {
-      const plans = await storage.getAllSubscriptionPlans();
-      res.json({ plans });
-    } catch (error) {
-      console.error('Error fetching subscription plans:', error);
-      res.status(500).json({ error: 'Failed to fetch subscription plans' });
-    }
-  });
-  
-  // GET /api/subscription-addons - Get all available subscription addons (public)
-  router.get('/api/subscription-addons', async (req, res) => {
-    try {
-      const addons = await storage.getAllSubscriptionAddons();
-      res.json({ addons });
-    } catch (error) {
-      console.error('Error fetching subscription addons:', error);
-      res.status(500).json({ error: 'Failed to fetch subscription addons' });
-    }
-  });
+  // NOTE: /api/subscription-plans and /api/subscription-addons are registered
+  // in server/routes/subscriptions.ts (canonical version with richer data transforms)
 }

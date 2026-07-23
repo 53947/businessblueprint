@@ -2,49 +2,41 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { 
-  LayoutDashboard, 
-  CheckSquare,
+import {
   LogOut,
   ChevronLeft,
   ChevronRight,
   Menu,
-  CreditCard
+  Lock,
+  Settings,
+  BarChart3,
+  ClipboardList,
+  Home,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import bbIcon from "@assets/Blueprint_Favicon_1762489845363.png";
-import bbLockup from "@assets/1-Master_business_blueprint_logo_only_1767324548364.png";
-import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
-import inboxLogo from "@assets/logos and wordmarks/: inbox app logo.png";
-import livechatIcon from "@assets/native icons and favicons/: livechat app icon.png";
-import livechatLogo from "@assets/logos and wordmarks/: livechat app logo.png";
-import localSeoIcon from "@assets/native icons and favicons/LOCAL SEO_1762239599463.png";
-import sendIcon from "@assets/native icons and favicons/: send app icon.png";
-import sendLogo from "@assets/logos and wordmarks/: send app logo.png";
-import socialMediaIcon from "@assets/native icons and favicons/: content app icon.png";
-import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
-import listingsIcon from "@assets/listings app_1762804610311.png";
-import listingsLogo from "@assets/: listings color triad black and FF0040_1762806224294.png";
-import reputationIcon from "@assets/reputation app triad blue and repoutation gold_1762804622669.png";
-import reputationLogo from "@assets/: reputation color triad black and D59600_1762806224295.png";
-import settingsIcon from "@assets/native icons and favicons/settings.png";
-import aiCoachIcon from "@assets/Coach Blue as Blue_1762721690836.png";
-import hostsBlueIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
-import hostsBlueWordmark from "@assets/Hosts Blue Lockup_1762931589296.png";
-import swipesBlueIcon from "@assets/swipesblue/swipesblue brandmark.png";
-import swipesBlueWordmark from "@assets/Swipes Blue Lockup_1762931589297.png";
+import { APP_REGISTRY, BUNDLE_REGISTRY } from "@/config/app-registry";
+import { ICON_MAP } from "@/components/app-name";
+const bbIcon = "https://cdn.triadblue.com/brands/businessblueprint/logo-image.png";
+const bbLockup = "https://cdn.triadblue.com/brands/businessblueprint/logo-image-and-logo-text-as-url.png";
+const aiCoachIcon = "https://cdn.triadblue.com/brands/coachblue/logo-image.png";
+const hostsBlueWordmark = "https://cdn.triadblue.com/brands/hostsblue/logo-image-and-logo-text-as-url.png";
+const swipesBlueWordmark = "https://cdn.triadblue.com/brands/swipesblue/logo-image-and-logo-text-as-url.png";
+const builderBlueWordmark = "https://cdn.triadblue.com/brands/builderblue2/logo-image-and-logo-text-as-url.png";
+const scansBlueWordmark = "https://cdn.triadblue.com/brands/scansblue/logo-image-and-logo-text-as-url.png";
+import { CONNECT_CRM, CONVERT_FORM } from "@/config/app-registry";
 
 interface SideNavProps extends React.HTMLAttributes<HTMLDivElement> {
   activeTab?: string;
   onTabChange?: (tab: string) => void;
   onSignOut?: () => void;
   className?: string;
+  enabledFeatures?: string; // Comma-separated feature codes: "RS,LC,SE,PO,LI,RE,AC"
 }
 
 interface NavItem {
   id: string;
   label: string;
-  hoverLabel?: string; // Full industry name shown on hover for Commverse apps
+  hoverLabel?: string; // Full industry name shown on hover for Compass apps
   icon: React.ReactNode;
   logo?: string; // For branded app logos
   badge?: number;
@@ -53,143 +45,156 @@ interface NavItem {
   isDivider?: boolean;
   isHeading?: boolean; // Non-clickable section heading
   hasSpaceBefore?: boolean;
+  featureCode?: string; // Maps to enabledFeatures codes: RS, LC, SE, PO, LI, RE, AC
+  isSlashApp?: boolean; // Renders with "/ appname" protocol
+  appColor?: string; // App brand color for label
+  headingColor?: string; // Brand color for section headings
 }
 
-export function SideNav({ activeTab = "listings", onTabChange, onSignOut, className, ...props }: SideNavProps) {
+export function SideNav({ activeTab = "list", onTabChange, onSignOut, className, enabledFeatures, ...props }: SideNavProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [, setLocation] = useLocation();
 
+  // Parse enabled features into a set for quick lookup
+  const enabledSet = new Set(
+    enabledFeatures ? enabledFeatures.split(",").map((f) => f.trim()) : []
+  );
+  const hasFeatureGating = enabledFeatures !== undefined && enabledFeatures !== "";
+
+  // Feature code mapping (app id → enabledFeatures code)
+  const FEATURE_CODES: Record<string, string> = {
+    respond: "RS", engage: "LC", promote: "SE", post: "PO",
+    publish: "LI", elevate: "RE", optimize: "OP", amplify: "AM",
+  };
+
+  // Build app nav items from registry
+  const buildAppNavItem = (appId: string): NavItem => {
+    const app = APP_REGISTRY.find(a => a.id === appId)!;
+    const Icon = ICON_MAP[app.icon];
+    return {
+      id: app.id,
+      label: app.name,
+      hoverLabel: app.description,
+      icon: Icon ? <Icon className="w-7 h-7" style={{ color: app.color }} /> : null,
+      external: true,
+      href: app.dashboardRoute,
+      featureCode: FEATURE_CODES[app.id],
+      isSlashApp: true,
+      appColor: app.color,
+    };
+  };
+
+  const compassBundle = BUNDLE_REGISTRY.find(b => b.id === "compass")!;
+  const anchorBundle = BUNDLE_REGISTRY.find(b => b.id === "anchor")!;
+
+  // / connect nav item from registry
+  const ConnectIcon = ICON_MAP[CONNECT_CRM.icon];
+  const connectNavItem: NavItem = {
+    id: CONNECT_CRM.id,
+    label: CONNECT_CRM.name,
+    hoverLabel: CONNECT_CRM.description,
+    icon: ConnectIcon ? <ConnectIcon className="w-7 h-7" style={{ color: CONNECT_CRM.color }} /> : null,
+    external: true,
+    href: "/connect/dashboard",
+    featureCode: "CO",
+    isSlashApp: true,
+    appColor: CONNECT_CRM.color,
+  };
+
+  // / convert nav item from registry
+  const ConvertIcon = ICON_MAP[CONVERT_FORM.icon];
+  const convertNavItem: NavItem = {
+    id: CONVERT_FORM.id,
+    label: CONVERT_FORM.name,
+    hoverLabel: CONVERT_FORM.description,
+    icon: ConvertIcon ? <ConvertIcon className="w-7 h-7" style={{ color: CONVERT_FORM.color }} /> : null,
+    external: true,
+    href: "/convert/dashboard",
+    isSlashApp: true,
+    appColor: CONVERT_FORM.color,
+  };
+
   const navItems: NavItem[] = [
-    { 
-      id: "inbox", 
-      label: "inbox",
-      hoverLabel: "Unified Communications",
-      icon: <img src={inboxIcon} alt="/inbox" className="w-7 h-7 object-contain" />,
-      logo: inboxLogo,
-      external: true, 
-      href: "/inbox"
-    },
-    { 
-      id: "livechat", 
-      label: "livechat",
-      hoverLabel: "Live Chat Widget",
-      icon: <img src={livechatIcon} alt="/livechat" className="w-7 h-7 object-contain" />,
-      logo: livechatLogo,
-      external: true, 
-      href: "/livechat" 
-    },
-    { 
-      id: "tasks", 
-      label: "Tasks", 
-      icon: <CheckSquare className="w-7 h-7" /> 
-    },
-    { 
-      id: "billing", 
-      label: "Billing", 
-      icon: <CreditCard className="w-7 h-7" /> 
-    },
-    { 
-      id: "divider-1", 
-      label: "", 
-      icon: null, 
-      isDivider: true 
-    },
-    { 
-      id: "send", 
-      label: "send",
-      hoverLabel: "Email + SMS Marketing",
-      icon: <img src={sendIcon} alt="/send" className="w-7 h-7 object-contain" />,
-      logo: sendLogo,
+    // Dashboard home — always first
+    {
+      id: "dashboard-home",
+      label: "Dashboard",
+      icon: <Home className="w-7 h-7" style={{ color: "#09080E" }} />,
       external: true,
-      href: "/send"
+      href: "/portal/dashboard",
     },
-    { 
-      id: "content", 
-      label: "content",
-      hoverLabel: "Social Media Management",
-      icon: <img src={socialMediaIcon} alt="/content" className="w-7 h-7 object-contain" />,
-      logo: contentLogo,
+    { id: "divider-home", label: "", icon: null, isDivider: true },
+    // / connect CRM + / convert forms (both always free alongside any subscription)
+    connectNavItem,
+    convertNavItem,
+    { id: "divider-0", label: "", icon: null, isDivider: true },
+    // Anchor Suite
+    { id: "anchor-heading", label: "Anchor Suite", icon: null, isHeading: true, headingColor: anchorBundle.color },
+    ...anchorBundle.appIds.map(buildAppNavItem),
+    { id: "divider-1", label: "", icon: null, isDivider: true },
+    // Compass Suite
+    { id: "compass-heading", label: "Compass Suite", icon: null, isHeading: true, headingColor: compassBundle.color },
+    ...compassBundle.appIds.map(buildAppNavItem),
+    { id: "divider-2", label: "", icon: null, isDivider: true },
+    // Your Guide zone
+    {
+      id: "ai-coach",
+      label: "Coach Blue",
+      icon: <img src={aiCoachIcon} alt="Coach Blue" className="w-7 h-7 object-contain" />,
+      external: false,
+    },
+    {
+      id: "digital-iq",
+      label: "Digital IQ",
+      icon: <BarChart3 className="w-7 h-7" style={{ color: "#960D71" }} />,
       external: true,
-      href: "/content"
+      href: "/portal/prescriptions",
     },
-    { 
-      id: "divider-2", 
-      label: "", 
-      icon: null, 
-      isDivider: true 
-    },
-    { 
-      id: "local-seo-heading", 
-      label: "Local SEO Mgmt", 
-      icon: null,
-      isHeading: true
-    },
-    { 
-      id: "listings", 
-      label: "listings",
-      hoverLabel: "Directory Sync & Consistency",
-      icon: <img src={listingsIcon} alt="/listings" className="w-7 h-7 object-contain" />,
-      logo: listingsLogo,
+    {
+      id: "directions-for-use",
+      label: "Directions for Use",
+      icon: <ClipboardList className="w-7 h-7" style={{ color: "#09080E" }} />,
       external: true,
-      href: "/listings"
+      href: "/portal/directions",
     },
-    { 
-      id: "reputation", 
-      label: "reputation",
-      hoverLabel: "Review Response & Reputation Management",
-      icon: <img src={reputationIcon} alt="/reputation" className="w-7 h-7 object-contain" />,
-      logo: reputationLogo,
-      external: true,
-      href: "/reputation"
-    },
-    { 
-      id: "divider-3", 
-      label: "", 
-      icon: null, 
-      isDivider: true 
-    },
-    { 
-      id: "ai-coach", 
-      label: "AI Coach Blue",
-      icon: <img src={aiCoachIcon} alt="AI Coach Blue" className="w-7 h-7 object-contain" />,
-      external: true,
-      href: "/ai-coach"
-    },
-    { 
-      id: "settings", 
-      label: "Settings", 
-      icon: <img src={settingsIcon} alt="Settings" className="w-7 h-7 object-contain" /> 
-    },
-    { 
-      id: "divider-4", 
-      label: "", 
-      icon: null, 
-      isDivider: true 
-    },
-    { 
-      id: "hostsblue", 
-      label: "hostsblue",
-      icon: null,
-      logo: hostsBlueWordmark,
-      external: true,
-      href: "https://hostsblue.com"
-    },
-    { 
-      id: "swipesblue", 
-      label: "swipesblue",
-      icon: null,
-      logo: swipesBlueWordmark,
-      external: true,
-      href: "https://swipesblue.com"
-    },
+    { id: "divider-3", label: "", icon: null, isDivider: true },
+    // Admin zone
+    { id: "settings", label: "Settings", icon: <Settings className="w-7 h-7" /> },
+    { id: "divider-4", label: "", icon: null, isDivider: true },
+    // Platform links
+    { id: "hostsblue", label: "hostsblue.com", icon: null, logo: hostsBlueWordmark, external: true, href: "https://hostsblue.com" },
+    { id: "swipesblue", label: "swipesblue.com", icon: null, logo: swipesBlueWordmark, external: true, href: "https://swipesblue.com" },
+    { id: "builderblue2", label: "builderblue2.com", icon: null, logo: builderBlueWordmark, external: true, href: "https://builderblue2.com" },
+    { id: "scansblue", label: "scansblue.com", icon: null, logo: scansBlueWordmark, external: true, href: "https://scansblue.com" },
   ];
+
+  const isFeatureEnabled = (item: NavItem) => {
+    // If no feature gating, all features are accessible
+    if (!hasFeatureGating) return true;
+    // Items without a feature code are always accessible (dividers, headings, settings, billing, etc.)
+    if (!item.featureCode) return true;
+    return enabledSet.has(item.featureCode);
+  };
 
   const handleNavClick = (item: NavItem, closeMobile: boolean = false) => {
     if (closeMobile) {
       setIsMobileOpen(false);
     }
-    
+
+    // Coach Blue opens the chat widget tab instead of navigating
+    if (item.id === "ai-coach") {
+      window.dispatchEvent(new CustomEvent("openCoachBlue"));
+      if (closeMobile) setIsMobileOpen(false);
+      return;
+    }
+
+    // Block navigation for locked features
+    if (!isFeatureEnabled(item)) {
+      setLocation('/subscription');
+      return;
+    }
+
     if (item.external && item.href) {
       // Check if it's an absolute URL (external site)
       if (item.href.startsWith('http://') || item.href.startsWith('https://')) {
@@ -220,7 +225,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
           return (
             <div key={item.id} className="px-4 py-2 mt-2">
               {!collapsed && (
-                <span className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide" data-testid={`heading-${item.id}`}>
+                <span className="text-sm font-bold uppercase tracking-wide" style={{ color: item.headingColor || '#6B7280' }} data-testid={`heading-${item.id}`}>
                   {item.label}
                 </span>
               )}
@@ -229,6 +234,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
         }
         
         // Render regular nav item
+        const locked = !isFeatureEnabled(item);
         return (
           <button
             key={item.id}
@@ -236,40 +242,47 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
             className={cn(
               "w-full flex items-center gap-3 px-4 rounded-lg transition-all duration-200 text-left group",
               isMobile ? "h-12" : "h-9",
-              activeTab === item.id 
-                ? "bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/20 text-blue-600 dark:text-blue-400 font-semibold shadow-sm" 
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:shadow-sm",
+              locked
+                ? "text-gray-400 dark:text-gray-600 opacity-60"
+                : activeTab === item.id
+                  ? "bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/20 text-blue-600 dark:text-blue-400 font-semibold shadow-sm"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:shadow-sm",
               item.hasSpaceBefore ? "mt-4" : ""
             )}
-            title={item.hoverLabel || undefined}
+            title={locked ? `Upgrade to unlock ${item.hoverLabel || item.label}` : item.hoverLabel || undefined}
             data-testid={`nav-item-${item.id}`}
           >
             {item.icon && (
               <span className={cn(
                 "flex-shrink-0 transition-transform duration-200",
-                activeTab === item.id ? "scale-110" : "group-hover:scale-105"
+                locked ? "" : activeTab === item.id ? "scale-110" : "group-hover:scale-105"
               )}>
                 {item.icon}
               </span>
             )}
             {!collapsed && (
               item.logo ? (
-                <img 
-                  src={item.logo} 
-                  alt={item.label} 
+                <img
+                  src={item.logo}
+                  alt={item.label}
                   className={cn(
                     "flex-1 object-contain object-left",
-                    item.id === "hostsblue" || item.id === "swipesblue" ? "h-7" : "h-5"
+                    ["hostsblue", "swipesblue", "builderblue2", "scansblue"].includes(item.id) ? "h-7" : "h-5",
+                    locked ? "grayscale" : ""
                   )}
-                  data-testid={`logo-nav-${item.id}`} 
+                  data-testid={`logo-nav-${item.id}`}
                 />
               ) : (
-                <span className="flex-1 text-base leading-7" data-testid={`text-nav-${item.id}`}>
-                  {item.label}
+                <span className="flex-1 text-base leading-7" style={{ fontFamily: item.isSlashApp ? 'Archivo Semi Expanded, Archivo, sans-serif' : undefined, fontWeight: item.isSlashApp ? 600 : undefined }} data-testid={`text-nav-${item.id}`}>
+                  {item.isSlashApp && <span style={{ color: '#09080E' }}>/ </span>}
+                  {item.isSlashApp ? <span style={{ color: item.appColor }}>{item.label}</span> : item.label}
                 </span>
               )
             )}
-            {!collapsed && item.badge && (
+            {!collapsed && locked && (
+              <Lock className="flex-shrink-0 w-3.5 h-3.5 text-gray-400" />
+            )}
+            {!collapsed && !locked && item.badge && (
               <span className="flex-shrink-0 bg-red-500 text-white text-xs font-semibold rounded-full px-2.5 py-1 shadow-sm" data-testid={`badge-${item.id}`}>
                 {item.badge}
               </span>

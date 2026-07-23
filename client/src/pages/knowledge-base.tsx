@@ -23,27 +23,23 @@ import {
 } from 'lucide-react';
 
 const DIGITAL_IQ_AREAS = [
-  { number: 1, title: 'Website & SEO Fundamentals', points: 20, desc: 'Is your website fast, secure, and mobile-friendly? Can people find you on Google?' },
-  { number: 2, title: 'Business Listings & Citations', points: 18, desc: 'Are you listed on Google, Yelp, and other directories? Is your information consistent everywhere?' },
-  { number: 3, title: 'Google Business Profile', points: 16, desc: 'Is your profile complete and optimized? Do you post updates and photos regularly?' },
-  { number: 4, title: 'Reputation Management', points: 16, desc: 'Do you respond to reviews? Are you actively managing your online reputation?' },
-  { number: 5, title: 'Review Quality & Quantity', points: 15, desc: 'How many reviews do you have? What\'s your average rating?' },
-  { number: 6, title: 'Customer Response & Timing', points: 15, desc: 'How quickly do you respond to inquiries? Do you have systems to capture every lead?' },
-  { number: 7, title: 'Email & SMS Marketing', points: 15, desc: 'Do you have a customer email list? Do you send regular campaigns?' },
-  { number: 8, title: 'Social Media Content', points: 13, desc: 'Are you active on social media? Do you post regularly?' },
-  { number: 9, title: 'CRM & Organization', points: 12, desc: 'Do you track customer relationships? Are you organized and systematic?' },
+  { number: 1, title: 'Email & SMS Marketing', app: '/ promote', points: '~7.78', desc: 'Do you collect emails? Send campaigns? Follow up with SMS?' },
+  { number: 2, title: 'Social Media Content', app: '/ post', points: '~7.78', desc: 'Are you active on social media? Do you post regularly and consistently?' },
+  { number: 3, title: 'Reputation Management', app: '/ elevate', points: '~7.78', desc: 'Do you respond to reviews? Are you monitoring your ratings across platforms?' },
+  { number: 4, title: 'Unified Inbox & Response', app: '/ respond', points: '~7.78', desc: 'How quickly do you respond to inquiries? Is everything in one place?' },
+  { number: 5, title: 'Live Chat', app: '/ engage', points: '~7.78', desc: 'Do you have live chat on your website? Are conversations being tracked?' },
+  { number: 6, title: 'Business Listings & GBP', app: '/ publish', points: '~7.78', desc: 'Are your listings consistent across directories? Is your Google Business Profile active?' },
+  { number: 7, title: 'Website & SEO', app: '/ optimize', points: '~7.78', desc: 'Is your website fast, secure, and mobile-friendly? Are you ranking for your keywords?' },
+  { number: 8, title: 'CRM & Customer Management', app: '/ connect', points: '~7.78', desc: 'Do you track customer relationships? Is your data organized in one system?' },
+  { number: 9, title: 'Advertising & Paid Media', app: '/ amplify', points: '~7.78', desc: 'Do you run ads? Are your campaigns tracked and optimized?' },
 ];
 
-const GRADE_RANGES = [
-  { grade: 'A+', range: '126-140', label: 'Excellent', color: 'bg-green-500' },
-  { grade: 'A', range: '112-125', label: 'Strong', color: 'bg-green-500' },
-  { grade: 'B+', range: '98-111', label: 'Good', color: 'bg-blue-500' },
-  { grade: 'B', range: '84-97', label: 'Above Average', color: 'bg-blue-500' },
-  { grade: 'C+', range: '70-83', label: 'Average', color: 'bg-orange-500' },
-  { grade: 'C', range: '56-69', label: 'Below Average', color: 'bg-orange-500' },
-  { grade: 'D+', range: '42-55', label: 'Needs Work', color: 'bg-red-500' },
-  { grade: 'D', range: '28-41', label: 'Poor', color: 'bg-red-500' },
-  { grade: 'F', range: '0-27', label: 'Critical', color: 'bg-red-600' },
+const SCORE_RANGES = [
+  { range: '130-140', label: 'Exceptional', color: 'bg-[#008060]' },
+  { range: '115-129', label: 'Strong', color: 'bg-[#1844A6]' },
+  { range: '100-114', label: 'Building Momentum', color: 'bg-[#064A6C]' },
+  { range: '85-99', label: 'Room to Grow', color: 'bg-[#E9B307]' },
+  { range: '70-84', label: 'Getting Started', color: 'bg-[#F97316]' },
 ];
 
 const FAQ_ITEMS = [
@@ -52,16 +48,16 @@ const FAQ_ITEMS = [
   { q: 'Can I retake the assessment?', a: 'Yes! We recommend reassessing every 3-6 months to track progress.' },
   { q: 'Is Coach Blue a real person?', a: 'Coach Blue is an AI powered by advanced language models, trained specifically on digital marketing for local businesses. Think of it as having an expert consultant available 24/7.' },
   { q: 'What if I disagree with a recommendation?', a: 'Every recommendation includes the "why" behind it. You can also ask Coach Blue to explain further or suggest alternatives.' },
-  { q: 'Can I implement this myself or do I need to hire you?', a: 'Both! You can follow the DIY path and do everything yourself with Coach Blue\'s guidance, or choose our Managed Services if you want us to handle it.' },
-  { q: 'How much does this cost?', a: 'The assessment and prescription are free. Implementation costs vary based on whether you DIY or choose Managed Services.' },
+  { q: 'Can I implement this myself?', a: 'Yes. Every step is guided by your Directions for Use and Coach Blue. You follow the plan at your own pace — no technical knowledge required.' },
+  { q: 'How much does this cost?', a: 'The Digital IQ Assessment is free. Apps are $29/mo each, suites are $99/mo. Coach Blue is $99/mo standalone, $59/mo with one suite, or free with both suites.' },
   { q: 'What if I get stuck?', a: 'Coach Blue is always available to help. You can also reach our support team at support@businessblueprint.io' },
 ];
 
 export default function KnowledgeBase() {
   useEffect(() => {
-    document.title = 'How BusinessBlueprint.io Works | Knowledge Base';
+    document.title = 'How businessblueprint.io Works | Knowledge Base';
     
-    const description = 'Learn how BusinessBlueprint.io\'s Digital IQ Assessment measures your online presence across 9 areas and creates custom prescriptions to grow your business.';
+    const description = 'Learn how businessblueprint.io\'s Digital IQ Assessment measures your online presence across 9 areas and creates custom prescriptions to grow your business.';
     
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
@@ -83,7 +79,7 @@ export default function KnowledgeBase() {
       meta.content = content;
     };
 
-    setMetaTag('og:title', 'How BusinessBlueprint.io Works');
+    setMetaTag('og:title', 'How businessblueprint.io Works');
     setMetaTag('og:description', description);
     setMetaTag('og:type', 'website');
     setMetaTag('og:url', window.location.href);
@@ -96,7 +92,7 @@ export default function KnowledgeBase() {
       <section className="py-16" data-testid="section-hero">
         <div className="container mx-auto px-4 max-w-4xl text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-[#0000FF] mb-4" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif' }} data-testid="text-title">
-            How BusinessBlueprint.io Works
+            How businessblueprint.io Works
           </h1>
           <p className="text-xl text-gray-700 mb-8" data-testid="text-subtitle">
             Your guide to understanding our Digital Intelligence Platform
@@ -106,34 +102,34 @@ export default function KnowledgeBase() {
 
       <div className="container mx-auto px-4 max-w-4xl pb-16">
         
-        <Card className="mb-12 border-2 border-[#6EA6FF]" data-testid="card-toc">
+        <Card className="mb-12 border-2 border-[#97ACCA]" data-testid="card-toc">
           <CardContent className="pt-6">
             <h2 className="text-2xl font-bold text-[#0000FF] mb-4" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif' }}>
               Quick Navigation
             </h2>
             <div className="grid md:grid-cols-2 gap-3">
-              <a href="#what-we-do" className="text-[#0000FF] hover:text-[#FF6B00] hover:underline" data-testid="link-toc-what-we-do">
+              <a href="#what-we-do" className="text-[#0000FF] hover:text-[#FF6B00] underline" data-testid="link-toc-what-we-do">
                 → What We Do
               </a>
-              <a href="#digital-iq" className="text-[#0000FF] hover:text-[#FF6B00] hover:underline" data-testid="link-toc-digital-iq">
+              <a href="#digital-iq" className="text-[#0000FF] hover:text-[#FF6B00] underline" data-testid="link-toc-digital-iq">
                 → Your Digital IQ Score
               </a>
-              <a href="#understanding-score" className="text-[#0000FF] hover:text-[#FF6B00] hover:underline" data-testid="link-toc-understanding">
+              <a href="#understanding-score" className="text-[#0000FF] hover:text-[#FF6B00] underline" data-testid="link-toc-understanding">
                 → Understanding Your Score
               </a>
-              <a href="#prescription" className="text-[#0000FF] hover:text-[#FF6B00] hover:underline" data-testid="link-toc-prescription">
+              <a href="#prescription" className="text-[#0000FF] hover:text-[#FF6B00] underline" data-testid="link-toc-prescription">
                 → Your Custom Prescription
               </a>
-              <a href="#coach-blue" className="text-[#0000FF] hover:text-[#FF6B00] hover:underline" data-testid="link-toc-coach-blue">
+              <a href="#coach-blue" className="text-[#0000FF] hover:text-[#FF6B00] underline" data-testid="link-toc-coach-blue">
                 → Meet Coach Blue
               </a>
-              <a href="#how-it-works" className="text-[#0000FF] hover:text-[#FF6B00] hover:underline" data-testid="link-toc-how-it-works">
+              <a href="#how-it-works" className="text-[#0000FF] hover:text-[#FF6B00] underline" data-testid="link-toc-how-it-works">
                 → How The Process Works
               </a>
-              <a href="#why-it-works" className="text-[#0000FF] hover:text-[#FF6B00] hover:underline" data-testid="link-toc-why-it-works">
+              <a href="#why-it-works" className="text-[#0000FF] hover:text-[#FF6B00] underline" data-testid="link-toc-why-it-works">
                 → Why This Approach Works
               </a>
-              <a href="#faq" className="text-[#0000FF] hover:text-[#FF6B00] hover:underline" data-testid="link-toc-faq">
+              <a href="#faq" className="text-[#0000FF] hover:text-[#FF6B00] underline" data-testid="link-toc-faq">
                 → Frequently Asked Questions
               </a>
             </div>
@@ -146,7 +142,7 @@ export default function KnowledgeBase() {
           </h2>
           
           <p className="text-lg text-gray-700 mb-6">
-            BusinessBlueprint.io helps local businesses improve their online presence and grow revenue through:
+            businessblueprint.io helps local businesses improve their online presence and grow revenue through:
           </p>
 
           <div className="grid md:grid-cols-3 gap-6 mb-8">
@@ -181,7 +177,7 @@ export default function KnowledgeBase() {
             </Card>
           </div>
 
-          <Card className="bg-[#EEFBFF] border-2 border-[#6EA6FF]">
+          <Card className="bg-[#EEFBFF] border-2 border-[#97ACCA]">
             <CardContent className="pt-6">
               <p className="text-lg font-semibold text-[#0000FF]">
                 <CheckCircle2 className="inline w-6 h-6 mr-2 text-green-500" />
@@ -200,7 +196,7 @@ export default function KnowledgeBase() {
             <CardContent className="pt-6">
               <h3 className="text-2xl font-bold text-[#0000FF] mb-4">What Is It?</h3>
               <p className="text-lg text-gray-700">
-                Your Digital IQ Score (0-140 points) measures how effectively your business shows up online and converts visitors into customers.
+                Your Digital IQ Score measures how effectively your business shows up online and converts visitors into customers.
               </p>
             </CardContent>
           </Card>
@@ -217,7 +213,7 @@ export default function KnowledgeBase() {
                     </div>
                     <div className="flex-1">
                       <h4 className="text-lg font-bold text-[#0000FF] mb-1">
-                        {area.title} <span className="text-[#FF6B00]">({area.points} points)</span>
+                        {area.title} <span className="text-[#FF6B00]">({area.points} pts)</span>
                       </h4>
                       <p className="text-gray-600">{area.desc}</p>
                     </div>
@@ -233,15 +229,14 @@ export default function KnowledgeBase() {
             Understanding Your Score
           </h2>
 
-          <div className="grid grid-cols-3 md:grid-cols-9 gap-2 md:gap-4">
-            {GRADE_RANGES.map((grade) => (
-              <Card key={grade.grade} className="text-center" data-testid={`card-grade-${grade.grade}`}>
+          <div className="grid grid-cols-3 md:grid-cols-5 gap-2 md:gap-4">
+            {SCORE_RANGES.map((item) => (
+              <Card key={item.range} className="text-center" data-testid={`card-score-${item.range}`}>
                 <CardContent className="p-3 md:pt-6">
-                  <div className={`inline-block px-3 py-1 md:px-4 md:py-2 rounded-full text-white font-bold text-lg md:text-2xl mb-1 md:mb-2 ${grade.color}`}>
-                    {grade.grade}
+                  <div className={`inline-block px-3 py-1 md:px-4 md:py-2 rounded-full text-white font-bold text-sm md:text-lg mb-1 md:mb-2 ${item.color}`}>
+                    {item.range}
                   </div>
-                  <p className="text-xs text-gray-600 hidden md:block">{grade.range}</p>
-                  <p className="text-xs md:text-sm font-semibold text-[#0000FF]">{grade.label}</p>
+                  <p className="text-xs md:text-sm font-semibold text-[#0000FF]">{item.label}</p>
                 </CardContent>
               </Card>
             ))}
@@ -324,7 +319,7 @@ export default function KnowledgeBase() {
             </Card>
           </div>
 
-          <Card className="mt-6 bg-[#EEFBFF] border-2 border-[#6EA6FF]">
+          <Card className="mt-6 bg-[#EEFBFF] border-2 border-[#97ACCA]">
             <CardContent className="pt-6">
               <p className="text-gray-700">
                 <strong className="text-[#0000FF]">Important:</strong> Your phases are customized based on whether you're a new or established business and whether you need cash fast or proper setup.
@@ -435,7 +430,7 @@ export default function KnowledgeBase() {
                   <div className="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center font-bold flex-shrink-0">4</div>
                   <div>
                     <h3 className="text-xl font-bold text-[#0000FF] mb-2">Start Implementing</h3>
-                    <p className="text-gray-600 mb-3">Choose the DIY path (follow your prescription with Coach Blue's guidance) or the Managed Services path (we implement everything for you with professional execution).</p>
+                    <p className="text-gray-600 mb-3">Follow your Directions for Use — a step-by-step setup plan built from your prescription. Coach Blue walks you through each step and tells you exactly what to do next.</p>
                   </div>
                 </div>
               </CardContent>
@@ -532,7 +527,7 @@ export default function KnowledgeBase() {
 
           <div className="space-y-4">
             {FAQ_ITEMS.map((faq, i) => (
-              <Card key={i} className="border-l-4 border-l-[#6EA6FF]" data-testid={`card-faq-${i}`}>
+              <Card key={i} className="border-l-4 border-l-[#97ACCA]" data-testid={`card-faq-${i}`}>
                 <CardContent className="pt-6">
                   <h3 className="text-lg font-bold text-[#0000FF] mb-2 flex items-start gap-2">
                     <HelpCircle className="w-5 h-5 text-[#FF6B00] mt-0.5 flex-shrink-0" />
@@ -566,7 +561,7 @@ export default function KnowledgeBase() {
         </section>
 
         <div className="text-center mt-8 text-gray-500 text-sm">
-          <p><strong className="text-[#0000FF]">BusinessBlueprint.io</strong> - We Assess. We Prescribe. You Grow.</p>
+          <p><strong className="text-[#0000FF]">businessblueprint.io</strong> - We Assess. We Prescribe. You Grow.</p>
           <p className="mt-1">Last Updated: January 2026</p>
         </div>
       </div>

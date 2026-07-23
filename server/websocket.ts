@@ -8,6 +8,7 @@ import {
 } from '@shared/schema';
 import { eq, and, desc } from 'drizzle-orm';
 import { jwtService } from './services/jwt';
+import { logContactActivity } from './services/timeline-logger';
 
 interface SocketData {
   userId?: number;
@@ -19,8 +20,8 @@ interface SocketData {
 export function setupWebSocket(server: HTTPServer) {
   const io = new Server(server, {
     cors: {
-      origin: process.env.NODE_ENV === 'production' 
-        ? ['https://*.replit.app', 'https://*.replit.dev']
+      origin: process.env.NODE_ENV === 'production'
+        ? ['https://businessblueprint.io', 'https://www.businessblueprint.io']
         : ['http://localhost:5000', 'http://127.0.0.1:5000'],
       credentials: true
     },
@@ -241,6 +242,34 @@ export function setupWebSocket(server: HTTPServer) {
           messageId: message.id,
           conversationId: data.conversationId
         });
+
+        // Log to / connect timeline
+        // TODO: match contactIdentifier to CRM contact for contactId
+        // For now, log with conversationId in metadata
+        if (conversation.primaryChannelType === 'livechat') {
+          const { crmContacts } = await import('@shared/schema');
+          const [contact] = await db.select({ id: crmContacts.id })
+            .from(crmContacts)
+            .where(and(
+              eq(crmContacts.clientId, data.clientId),
+              eq(crmContacts.email, conversation.contactIdentifier),
+            ))
+            .limit(1);
+          if (contact) {
+            logContactActivity({
+              clientId: data.clientId,
+              contactId: contact.id,
+              eventType: 'chat_message',
+              eventSubtype: 'outbound',
+              title: 'You replied in live chat',
+              description: data.message.substring(0, 200),
+              sourceApp: 'engage',
+              sourceEntityType: 'message',
+              sourceEntityId: String(message.id),
+              metadata: { conversationId: data.conversationId, direction: 'outbound' },
+            });
+          }
+        }
 
       } catch (error) {
         console.error('Error sending agent message:', error);

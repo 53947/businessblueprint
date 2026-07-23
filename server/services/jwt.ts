@@ -36,12 +36,8 @@ export class JWTService {
                             this.keyPair.publicKey.includes('-----BEGIN');
     // Default to HS256 which is simpler and works with JWT_SECRET
     this.algorithm = hasValidRSAKeys ? 'RS256' : 'HS256';
-    console.log(`[JWT Service] v2.0.1 Algorithm selected: ${this.algorithm}`);
-    console.log(`[JWT Service] Private key present: ${!!this.keyPair.privateKey && this.keyPair.privateKey.length > 0}, Public key present: ${!!this.keyPair.publicKey && this.keyPair.publicKey.length > 0}`);
-    
     if (this.algorithm === 'HS256') {
       const hasSecret = !!process.env.JWT_SECRET;
-      console.log(`[JWT Service] JWT_SECRET configured: ${hasSecret}`);
       if (!hasSecret) {
         console.warn('[JWT Service] WARNING: No JWT_SECRET set, using fallback key');
       }

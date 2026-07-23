@@ -6,12 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { NMIPaymentForm, PaymentFormData } from "@/components/nmi-payment-form";
+import { SwipesBluePaymentForm, PaymentFormData } from "@/components/swipesblue-payment-form";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { ShoppingCart, Shield, Lock, CreditCard } from "lucide-react";
 import { BrandLogo, BrandIcon } from "@/components/brand-logo";
-import airswipedLogo from "@assets/swipesblue/swipesblue brandmark.png";
 
 interface CartItem {
   id: string;
@@ -235,7 +234,7 @@ export default function MarketplaceCheckoutPage() {
                   </div>
                 </div>
 
-                <NMIPaymentForm
+                <SwipesBluePaymentForm
                   onPaymentToken={handlePaymentToken}
                   onError={handlePaymentError}
                   amount={total}

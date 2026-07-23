@@ -12,6 +12,7 @@ import { Footer } from "@/components/footer";
 import { ScansBlueResults } from "@/components/scansblue-results";
 import { ProductCategorySection } from "@/components/product-recommendation-card";
 import { CoachBlueCTA } from "@/components/coach-blue-cta";
+import { getDisplayScore as sharedGetDisplayScore } from "@shared/score-utils";
 import { 
   BarChart3, 
   Star, 
@@ -88,10 +89,10 @@ export default function Dashboard() {
 
   const getBundleAdvantage = (category: string): string | null => {
     if (['Email & SMS Marketing', 'Social Media Content', 'Customer Response & Timing', 'Live Chat'].includes(category)) {
-      return 'Get all communication tools in the CommVerse bundle for $99/month - that\'s all four apps in one integrated platform. Save $37 compared to buying separately.';
+      return 'Get all communication tools in the Compass Suite for $99/month - that\'s all four apps in one integrated platform. Save $37 compared to buying separately.';
     }
     if (['Business Listings', 'Reputation Management', 'Google Business Profile'].includes(category)) {
-      return 'Get complete local SEO control with LocalBlue for $59/month - includes listings management, reputation monitoring, and Google Business Profile optimization. Save $19/month.';
+      return 'Get complete local SEO control with the Anchor Suite for $99/month - includes listings management, reputation monitoring, and Google Business Profile optimization.';
     }
     return null;
   };
@@ -267,20 +268,15 @@ export default function Dashboard() {
     }
   };
 
-  // Digital IQ calculation functions
-  const getDigitalIQ = (score: number): number => {
-    // Convert 0-100 score to IQ scale (70-140 range)
-    // 100 = 100 IQ (average), scale appropriately
-    return Math.round(70 + (score * 0.7));
-  };
+  const getDisplayScore = sharedGetDisplayScore;
 
-  const getDigitalIQDescription = (iq: number): { label: string; color: string } => {
-    if (iq >= 130) return { label: "Digital Genius", color: "text-purple-600" };
-    if (iq >= 120) return { label: "Digital Expert", color: "text-blue-600" };
-    if (iq >= 110) return { label: "Above Average Digital Presence", color: "text-green-600" };
-    if (iq >= 90) return { label: "Average Digital Presence", color: "text-gray-600" };
-    if (iq >= 80) return { label: "Below Average", color: "text-yellow-600" };
-    if (iq >= 70) return { label: "Significant Digital Gaps", color: "text-orange-600" };
+  const getDigitalIQDescription = (displayScore: number): { label: string; color: string } => {
+    if (displayScore >= 130) return { label: "Digital Genius", color: "text-purple-600" };
+    if (displayScore >= 120) return { label: "Digital Expert", color: "text-blue-600" };
+    if (displayScore >= 110) return { label: "Above Average Digital Presence", color: "text-green-600" };
+    if (displayScore >= 90) return { label: "Average Digital Presence", color: "text-gray-600" };
+    if (displayScore >= 80) return { label: "Below Average", color: "text-yellow-600" };
+    if (displayScore >= 70) return { label: "Significant Digital Gaps", color: "text-orange-600" };
     return { label: "Major Digital Presence Issues", color: "text-red-600" };
   };
 
@@ -334,11 +330,11 @@ export default function Dashboard() {
                   Welcome to your Digital Blueprint!
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  You've been added to our Customer Relationship Manager (/relationships). 
+                  You've been added to our Customer Relationship Manager (/ connect).
                   This is your home base for managing your digital presence journey.
                 </p>
                 <div className="grid sm:grid-cols-3 gap-3">
-                  <Link href="/relationships">
+                  <Link href="/connect">
                     <Button 
                       variant="outline" 
                       className="w-full justify-start border-[#22C55E]/30 hover:bg-[#22C55E]/5 hover:border-[#22C55E]"
@@ -348,7 +344,7 @@ export default function Dashboard() {
                       View Your Profile
                     </Button>
                   </Link>
-                  <Link href="/relationships?view=tasks">
+                  <Link href="/connect?view=tasks">
                     <Button 
                       variant="outline" 
                       className="w-full justify-start border-[#22C55E]/30 hover:bg-[#22C55E]/5 hover:border-[#22C55E]"
@@ -358,14 +354,14 @@ export default function Dashboard() {
                       Your Next Steps
                     </Button>
                   </Link>
-                  <Link href="/ai-coach">
-                    <Button 
-                      variant="outline" 
+                  <Link href="/coach-blue">
+                    <Button
+                      variant="outline"
                       className="w-full justify-start border-blue-300 hover:bg-blue-50 hover:border-blue-500"
-                      data-testid="btn-ai-coach"
+                      data-testid="btn-coach-blue"
                     >
                       <MessageSquare className="w-4 h-4 mr-2 text-blue-600" />
-                      Ask AI Coach
+                      Ask Coach Blue
                     </Button>
                   </Link>
                 </div>
@@ -495,13 +491,13 @@ export default function Dashboard() {
                 {/* Digital IQ Section */}
                 <div className="text-center pb-4 border-b border-blue-200">
                   <div className="text-6xl font-bold text-blue-600 mb-2">
-                    {getDigitalIQ(assessment.digitalScore || 0)}
+                    {getDisplayScore(assessment.digitalScore || 0)}
                   </div>
                   <div className="text-2xl text-gray-600 mb-1">
-                    {getDigitalIQ(assessment.digitalScore || 0)}/{getDigitalIQ(100)}
+                    {getDisplayScore(assessment.digitalScore || 0)}/140
                   </div>
-                  <div className={`text-lg font-semibold mb-1 ${getDigitalIQDescription(getDigitalIQ(assessment.digitalScore || 0)).color}`}>
-                    {getDigitalIQDescription(getDigitalIQ(assessment.digitalScore || 0)).label}
+                  <div className={`text-lg font-semibold mb-1 ${getDigitalIQDescription(getDisplayScore(assessment.digitalScore || 0)).color}`}>
+                    {getDigitalIQDescription(getDisplayScore(assessment.digitalScore || 0)).label}
                   </div>
                   <p className="text-sm text-gray-700 leading-relaxed">
                     {analysisResults?.summary || "Digital assessment analysis in progress..."}
@@ -527,7 +523,7 @@ export default function Dashboard() {
                       <label className="text-sm font-medium text-gray-500">Website</label>
                       <p className="text-sm break-words">
                         <a href={assessment.website} target="_blank" rel="noopener noreferrer" 
-                           className="text-blue-600 hover:underline break-all">
+                           className="text-blue-600 underline break-all">
                           {assessment.website}
                         </a>
                       </p>

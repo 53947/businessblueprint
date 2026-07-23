@@ -47,29 +47,29 @@ const CATEGORY_ICONS: Record<string, typeof Mail> = {
 };
 
 const PRODUCT_INFO: Record<string, { name: string; url: string; color: string }> = {
-  'send': { name: 'Send', url: '/send', color: '#0000FF' },
-  'inbox': { name: 'Inbox', url: '/inbox', color: '#0000FF' },
-  'content': { name: 'Content', url: '/content', color: '#0000FF' },
-  'livechat': { name: 'LiveChat', url: '/livechat', color: '#0000FF' },
-  'listings': { name: 'Listings', url: '/listings', color: '#FF0040' },
-  'reputation': { name: 'Reputation', url: '/reputation', color: '#D59600' },
-  'localblue': { name: 'LocalBlue', url: '/localblue', color: '#0000FF' },
-  'relationships': { name: 'Relationships', url: '/relationships', color: '#22C55E' },
-  'hostsBlue': { name: 'HostsBlue', url: 'https://hostsblue.com', color: '#F97316' },
+  'send': { name: '/ promote', url: '/promote', color: '#FFEF45' },
+  'inbox': { name: '/ respond', url: '/respond', color: '#97ACCA' },
+  'content': { name: '/ post', url: '/post', color: '#FF44CC' },
+  'livechat': { name: '/ engage', url: '/engage', color: '#8000FF' },
+  'listings': { name: '/ publish', url: '/publish', color: '#E00420' },
+  'reputation': { name: '/ elevate', url: '/elevate', color: '#FFD700' },
+  'anchor': { name: 'Anchor Suite', url: '/anchor', color: '#2073E3' },
+  'relationships': { name: '/ connect', url: '/connect', color: '#008060' },
+  'hostsBlue': { name: 'HostsBlue', url: 'https://hostsblue.com', color: '#008060' },
   'scansBlue': { name: 'ScansBlue', url: 'https://scansblue.com', color: '#0000FF' },
-  'swipesBlue': { name: 'SwipesBlue', url: 'https://swipesblue.com', color: '#F97316' },
+  'swipesBlue': { name: 'SwipesBlue', url: 'https://swipesblue.com', color: '#374151' },
 };
 
 const BUNDLE_INFO: Record<string, { name: string; savings: string; products: string[] }> = {
-  'commverse': { 
-    name: 'CommVerse Bundle', 
-    savings: 'Save $37/month', 
-    products: ['Send', 'Inbox', 'Content', 'LiveChat'] 
+  'compass': {
+    name: 'Compass Suite',
+    savings: 'Save $37/month',
+    products: ['/ promote', '/ respond', '/ post', '/ engage']
   },
-  'localblue': { 
-    name: 'LocalBlue Bundle', 
-    savings: 'Save $19/month', 
-    products: ['Listings', 'Reputation', 'GBP Optimization'] 
+  'anchor': {
+    name: 'Anchor Suite',
+    savings: 'Save $19/month',
+    products: ['/ publish', '/ elevate', 'GBP Optimization']
   },
 };
 
@@ -131,7 +131,7 @@ export function ProductRecommendationCard({ recommendation, showBundleAdvantage 
           <ul className="mb-4 space-y-1">
             {recommendation.productBenefits.slice(0, 3).map((benefit, idx) => (
               <li key={idx} className="flex items-center gap-2 text-sm text-gray-700">
-                <span className="w-1.5 h-1.5 bg-[#F97316] rounded-full" />
+                <span className="w-1.5 h-1.5 bg-[#FF6B00] rounded-full" />
                 {benefit}
               </li>
             ))}
@@ -142,7 +142,7 @@ export function ProductRecommendationCard({ recommendation, showBundleAdvantage 
           {product && (
             <Button
               variant="outline"
-              className="border-[#F97316] text-[#F97316] hover:bg-[#F97316] hover:text-white"
+              className="border-[#FF6B00] text-[#FF6B00] hover:bg-[#FF6B00] hover:text-white"
               onClick={() => {
                 if (isExternalUrl(product.url)) {
                   window.open(product.url, '_blank');

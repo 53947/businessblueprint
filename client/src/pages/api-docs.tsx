@@ -370,11 +370,11 @@ function CodeBlock({ code, language }: { code: string; language: string }) {
 
 function MethodBadge({ method }: { method: string }) {
   const colors: Record<string, string> = {
-    GET: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-    POST: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-    PATCH: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
-    PUT: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
-    DELETE: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+    GET: "bg-green-100 text-green-800",
+    POST: "bg-blue-100 text-blue-800",
+    PATCH: "bg-yellow-100 text-yellow-800",
+    PUT: "bg-orange-100 text-orange-800",
+    DELETE: "bg-red-100 text-red-800",
   };
 
   return (
@@ -391,7 +391,7 @@ function EndpointCard({ endpoint, index }: { endpoint: any; index: number }) {
   return (
     <Card className="mb-3" data-testid={`card-endpoint-${endpoint.method.toLowerCase()}-${index}`}>
       <CardHeader 
-        className="py-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
+        className="py-3 cursor-pointer hover:bg-gray-50"
         onClick={() => setExpanded(!expanded)}
         data-testid={`button-toggle-endpoint-${endpoint.method.toLowerCase()}-${index}`}
       >
@@ -421,9 +421,9 @@ function EndpointCard({ endpoint, index }: { endpoint: any; index: number }) {
                 <div className="mt-1 space-y-1">
                   {endpoint.params.map((param: any) => (
                     <div key={param.name} className="flex gap-2 text-sm">
-                      <code className="text-blue-600 dark:text-blue-400">{param.name}</code>
+                      <code className="text-blue-600">{param.name}</code>
                       <span className="text-gray-400">({param.type})</span>
-                      <span className="text-gray-600 dark:text-gray-400">- {param.description}</span>
+                      <span className="text-gray-600">- {param.description}</span>
                     </div>
                   ))}
                 </div>
@@ -432,7 +432,7 @@ function EndpointCard({ endpoint, index }: { endpoint: any; index: number }) {
             {endpoint.body && (
               <div>
                 <Label className="text-xs text-gray-500">Request Body</Label>
-                <pre className="mt-1 bg-gray-100 dark:bg-gray-800 p-2 rounded text-xs font-mono">
+                <pre className="mt-1 bg-gray-100 p-2 rounded text-xs font-mono">
                   {JSON.stringify(endpoint.body, null, 2)}
                 </pre>
               </div>
@@ -448,26 +448,26 @@ export default function ApiDocsPage() {
   const [selectedLang, setSelectedLang] = useState<"curl" | "javascript" | "python">("javascript");
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-950">
+    <div className="min-h-screen flex flex-col bg-white">
       <Header />
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 py-16">
+        <section className="bg-[#E9ECF0] py-16">
           <div className="container max-w-6xl mx-auto px-4">
             <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-              <Link href="/relationships" className="hover:text-blue-600" data-testid="link-breadcrumb-relationships">Relationships CRM</Link>
+              <Link href="/connect" className="hover:text-blue-600" data-testid="link-breadcrumb-relationships">/ connect CRM</Link>
               <span>/</span>
               <span>API Documentation</span>
             </div>
             <div className="flex items-center gap-4 mb-4">
-              <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-lg">
-                <Code2 className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+              <div className="p-3 bg-blue-100 rounded-lg">
+                <Code2 className="h-8 w-8 text-blue-600" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold" data-testid="text-api-docs-title">API Reference</h1>
-                <p className="text-xl text-gray-600 dark:text-gray-400 mt-1">
-                  Build integrations with the BusinessBlueprint CRM API
+                <h1 className="text-4xl font-bold font-['Archivo_Semi_Expanded',sans-serif]" data-testid="text-api-docs-title">API Reference</h1>
+                <p className="text-xl text-gray-600 mt-1">
+                  Build integrations with the businessblueprint.io CRM API
                 </p>
               </div>
             </div>
@@ -492,11 +492,11 @@ export default function ApiDocsPage() {
                     <h3 className="font-semibold text-sm text-gray-500 uppercase tracking-wider mb-3">
                       Getting Started
                     </h3>
-                    <a href="#authentication" className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" data-testid="link-auth-section">
+                    <a href="#authentication" className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-100" data-testid="link-auth-section">
                       <Key className="h-4 w-4" />
                       Authentication
                     </a>
-                    <a href="#rate-limits" className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" data-testid="link-rate-limits">
+                    <a href="#rate-limits" className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-100" data-testid="link-rate-limits">
                       <Clock className="h-4 w-4" />
                       Rate Limits
                     </a>
@@ -504,19 +504,19 @@ export default function ApiDocsPage() {
                     <h3 className="font-semibold text-sm text-gray-500 uppercase tracking-wider mb-3 mt-6">
                       Core Resources
                     </h3>
-                    <a href="#contacts" className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" data-testid="link-contacts-section">
+                    <a href="#contacts" className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-100" data-testid="link-contacts-section">
                       <Users className="h-4 w-4" />
                       Contacts
                     </a>
-                    <a href="#companies" className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" data-testid="link-companies-section">
+                    <a href="#companies" className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-100" data-testid="link-companies-section">
                       <Building2 className="h-4 w-4" />
                       Companies
                     </a>
-                    <a href="#deals" className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" data-testid="link-deals-section">
+                    <a href="#deals" className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-100" data-testid="link-deals-section">
                       <Target className="h-4 w-4" />
                       Deals
                     </a>
-                    <a href="#tasks" className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" data-testid="link-tasks-section">
+                    <a href="#tasks" className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-100" data-testid="link-tasks-section">
                       <CheckSquare className="h-4 w-4" />
                       Tasks
                     </a>
@@ -524,15 +524,15 @@ export default function ApiDocsPage() {
                     <h3 className="font-semibold text-sm text-gray-500 uppercase tracking-wider mb-3 mt-6">
                       Webhooks
                     </h3>
-                    <a href="#webhooks" className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" data-testid="link-webhooks-section">
+                    <a href="#webhooks" className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-100" data-testid="link-webhooks-section">
                       <Webhook className="h-4 w-4" />
                       Webhook Setup
                     </a>
-                    <a href="#webhook-events" className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" data-testid="link-webhook-events">
+                    <a href="#webhook-events" className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-100" data-testid="link-webhook-events">
                       <Zap className="h-4 w-4" />
                       Event Types
                     </a>
-                    <a href="#webhook-security" className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" data-testid="link-webhook-security">
+                    <a href="#webhook-security" className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-100" data-testid="link-webhook-security">
                       <Shield className="h-4 w-4" />
                       Signature Verification
                     </a>
@@ -557,12 +557,12 @@ export default function ApiDocsPage() {
                     <CardContent className="space-y-6">
                       <div>
                         <h4 className="font-semibold mb-2">API Keys</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                          Generate API keys from your CRM Settings page. Keys are prefixed with <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">bb_</code> and 
+                        <p className="text-sm text-gray-600 mb-4">
+                          Generate API keys from your CRM Settings page. Keys are prefixed with <code className="bg-gray-100 px-1 rounded">bb_</code> and 
                           include scoped permissions for different resources.
                         </p>
-                        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-                          <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                          <p className="text-sm text-yellow-800">
                             <strong>Security Note:</strong> Keep your API keys secure. Never expose them in 
                             client-side code or public repositories.
                           </p>
@@ -571,8 +571,8 @@ export default function ApiDocsPage() {
 
                       <div>
                         <h4 className="font-semibold mb-2">Making Requests</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                          Include your API key in the <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">Authorization</code> header:
+                        <p className="text-sm text-gray-600 mb-4">
+                          Include your API key in the <code className="bg-gray-100 px-1 rounded">Authorization</code> header:
                         </p>
                         
                         <Tabs value={selectedLang} onValueChange={(v) => setSelectedLang(v as any)}>
@@ -609,7 +609,7 @@ export default function ApiDocsPage() {
                             { scope: "admin:webhooks", desc: "Manage webhooks" }
                           ].map(({ scope, desc }) => (
                             <div key={scope} className="flex items-center gap-2 text-sm">
-                              <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-xs">{scope}</code>
+                              <code className="bg-gray-100 px-2 py-1 rounded text-xs">{scope}</code>
                               <span className="text-gray-500">- {desc}</span>
                             </div>
                           ))}
@@ -630,16 +630,16 @@ export default function ApiDocsPage() {
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                        <p className="text-sm text-gray-600">
                           API requests are rate-limited to ensure fair usage and system stability.
                         </p>
                         <div className="grid sm:grid-cols-2 gap-4">
-                          <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                          <div className="bg-gray-50 p-4 rounded-lg">
                             <h4 className="font-semibold">Standard Limit</h4>
                             <p className="text-2xl font-bold text-blue-600">100</p>
                             <p className="text-sm text-gray-500">requests per minute</p>
                           </div>
-                          <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                          <div className="bg-gray-50 p-4 rounded-lg">
                             <h4 className="font-semibold">Rate Limit Headers</h4>
                             <div className="text-xs font-mono mt-2 space-y-1">
                               <div>X-RateLimit-Limit</div>
@@ -803,11 +803,11 @@ export default function ApiDocsPage() {
                     <CardContent>
                       <div className="space-y-2">
                         {webhookEvents.map(({ event, description }) => (
-                          <div key={event} className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                            <code className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded text-sm font-mono">
+                          <div key={event} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                            <code className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm font-mono">
                               {event}
                             </code>
-                            <span className="text-sm text-gray-600 dark:text-gray-400 pt-0.5">
+                            <span className="text-sm text-gray-600 pt-0.5">
                               {description}
                             </span>
                           </div>
@@ -850,19 +850,19 @@ export default function ApiDocsPage() {
                     <CardContent className="space-y-6">
                       <div>
                         <h4 className="font-semibold mb-2">Webhook Headers</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                        <p className="text-sm text-gray-600 mb-4">
                           Every webhook request includes these headers for verification:
                         </p>
                         <div className="space-y-2">
-                          <div className="flex gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                          <div className="flex gap-3 p-3 bg-gray-50 rounded-lg">
                             <code className="font-mono text-sm">X-Webhook-Id</code>
                             <span className="text-sm text-gray-500">- Unique identifier for the subscription</span>
                           </div>
-                          <div className="flex gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                          <div className="flex gap-3 p-3 bg-gray-50 rounded-lg">
                             <code className="font-mono text-sm">X-Webhook-Signature</code>
                             <span className="text-sm text-gray-500">- HMAC-SHA256 signature</span>
                           </div>
-                          <div className="flex gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                          <div className="flex gap-3 p-3 bg-gray-50 rounded-lg">
                             <code className="font-mono text-sm">X-Webhook-Timestamp</code>
                             <span className="text-sm text-gray-500">- Unix timestamp of the event</span>
                           </div>
@@ -885,8 +885,8 @@ export default function ApiDocsPage() {
                         </Tabs>
                       </div>
 
-                      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-                        <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                        <p className="text-sm text-yellow-800">
                           <strong>Important:</strong> Always verify signatures before processing webhook payloads. 
                           Use constant-time comparison to prevent timing attacks.
                         </p>
@@ -896,14 +896,14 @@ export default function ApiDocsPage() {
                 </section>
 
                 {/* Getting Started CTA */}
-                <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800">
+                <Card className="bg-[#E9ECF0] border-blue-200">
                   <CardContent className="py-8 text-center">
                     <BookOpen className="h-12 w-12 text-blue-600 mx-auto mb-4" />
                     <h3 className="text-xl font-semibold mb-2">Ready to Build?</h3>
-                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                    <p className="text-gray-600 mb-4">
                       Generate your API key and start integrating with the CRM API today.
                     </p>
-                    <Link href="/relationships" data-testid="link-go-to-crm">
+                    <Link href="/connect" data-testid="link-go-to-crm">
                       <Button size="lg" data-testid="button-go-to-crm">
                         <Terminal className="h-4 w-4 mr-2" />
                         Go to CRM Settings

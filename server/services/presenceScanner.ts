@@ -18,6 +18,9 @@ import * as ipaddr from 'ipaddr.js';
 import { googlePlacesService } from './googlePlaces';
 import { yelpApiService } from './yelpApi';
 import { scansBlueService } from './scansblue';
+import { db } from '../db';
+import { socialMediaAccounts } from '@shared/schema';
+import { eq, and } from 'drizzle-orm';
 
 interface ScansBluesFastCheck {
   overallScore: number;
@@ -71,6 +74,15 @@ interface WebsiteScan {
     hasBusinessHours: boolean;
   };
   score: number;
+  detections: {
+    emailCapture: { detected: boolean; platform: string | null; method: string };
+    chatWidget: { detected: boolean; platform: string | null };
+    crm: { detected: boolean; platform: string | null };
+    automation: { detected: boolean; platform: string | null };
+    blog: { detected: boolean; lastPostDate: string | null; estimatedFrequency: string | null };
+    smsMarketing: { detected: boolean; platform: string | null };
+    lastUpdate: { estimatedDate: string | null; method: string };
+  };
 }
 
 interface SocialMediaScan {
@@ -498,6 +510,16 @@ export class PresenceScannerService {
       const contentData = this.analyzeContent(html);
       const isMobileFriendly = this.checkMobileFriendly(html);
 
+      // Run all detections on the same HTML
+      const emailCapture = this.detectEmailCapture(html);
+      const chatWidget = this.detectChatWidget(html);
+      const crmAndAutomation = this.detectCRMAndAutomation(html);
+      const blog = this.detectBlog(html);
+      const smsMarketing = this.detectSMSMarketing(html);
+      const lastUpdate = this.detectLastUpdate(html);
+
+      console.log(`[PresenceScanner] Detections: email=${emailCapture.detected ? emailCapture.platform || 'form' : 'none'}, chat=${chatWidget.detected ? chatWidget.platform : 'none'}, crm=${crmAndAutomation.crmDetected ? crmAndAutomation.crmPlatform : 'none'}, blog=${blog.detected}, sms=${smsMarketing.detected}`);
+
       const score = this.calculateWebsiteScore({
         hasSSL,
         isMobileFriendly,
@@ -514,6 +536,15 @@ export class PresenceScannerService {
         seo: seoData,
         content: contentData,
         score,
+        detections: {
+          emailCapture,
+          chatWidget,
+          crm: { detected: crmAndAutomation.crmDetected, platform: crmAndAutomation.crmPlatform },
+          automation: { detected: crmAndAutomation.automationDetected, platform: crmAndAutomation.automationPlatform },
+          blog,
+          smsMarketing,
+          lastUpdate,
+        },
       };
     } catch (error) {
       console.error('Website scan error:', error);
@@ -570,6 +601,302 @@ export class PresenceScannerService {
   }
 
   /**
+   * Detect email collection mechanisms on the website.
+   * Checks for: email marketing platform scripts, newsletter signup forms,
+   * email input fields with subscribe/signup context.
+   */
+  private detectEmailCapture(html: string): {
+    detected: boolean;
+    platform: string | null;
+    method: string;
+  } {
+    const platforms: Record<string, RegExp[]> = {
+      'mailchimp': [/mc\.js/i, /list-manage\.com/i, /chimpstatic/i],
+      'constant_contact': [/constantcontact\.com/i, /cc\.js/i],
+      'convertkit': [/convertkit\.com/i, /ck\.js/i],
+      'klaviyo': [/klaviyo\.com/i, /klviyo/i],
+      'activecampaign': [/activecampaign\.com/i],
+      'hubspot': [/js\.hs-scripts\.com/i, /hbspt\.forms/i, /hsforms/i],
+      'drip': [/getdrip\.com/i],
+      'mailerlite': [/mailerlite\.com/i, /ml\.js/i],
+      'brevo': [/brevo\.com/i, /sendinblue\.com/i, /sibforms/i],
+      'campaign_monitor': [/createsend\.com/i, /campaignmonitor\.com/i],
+      'aweber': [/aweber\.com/i],
+      'getresponse': [/getresponse\.com/i],
+      'beehiiv': [/beehiiv\.com/i],
+      'substack': [/substack\.com/i, /substackapi/i],
+    };
+
+    for (const [name, patterns] of Object.entries(platforms)) {
+      if (patterns.some(p => p.test(html))) {
+        return { detected: true, platform: name, method: 'embedded_script' };
+      }
+    }
+
+    // Check for generic email signup forms
+    const hasEmailInput = /<input[^>]*type=["']email["'][^>]*>/i.test(html);
+    const hasNewsletterContext = /newsletter|subscribe|sign.?up|email.?list|mailing.?list|stay.?in.?touch|get.?updates|join.*list/i.test(html);
+    const hasFormWithEmail = /<form[^>]*>[\s\S]{0,2000}?<input[^>]*type=["']email["']/i.test(html);
+
+    if (hasFormWithEmail && hasNewsletterContext) {
+      return { detected: true, platform: null, method: 'signup_form' };
+    }
+
+    return { detected: false, platform: null, method: 'none' };
+  }
+
+  /**
+   * Detect live chat widgets on the website.
+   */
+  private detectChatWidget(html: string): {
+    detected: boolean;
+    platform: string | null;
+  } {
+    // Script-based detection — catches widgets loaded via inline script tags
+    const platforms: Record<string, RegExp[]> = {
+      'intercom': [/intercom/i, /intercomSettings/i, /widget\.intercom\.io/i, /intercom-container/i, /intercom-lightweight-app/i],
+      'drift': [/drift\.com/i, /driftt\.com/i, /js\.driftt/i, /drift-widget/i, /drift-frame-controller/i],
+      'tawk': [/tawk\.to/i, /embed\.tawk/i, /tawk-min/i],
+      'livechat': [/livechatinc\.com/i, /cdn\.livechatinc/i, /livechat-widget/i, /__lc_inited/i],
+      'zendesk_chat': [/zopim/i, /static\.zdassets/i, /zendesk.*chat/i, /zE\(/i, /zESettings/i],
+      'crisp': [/crisp\.chat/i, /client\.crisp/i, /crisp-client/i, /CRISP_WEBSITE_ID/i],
+      'tidio': [/tidio\.co/i, /code\.tidio/i, /tidio-chat/i, /tidioChatCode/i],
+      'olark': [/olark\.com/i, /static\.olark/i],
+      'hubspot_chat': [/js\.usemessages\.com/i, /HubSpotConversations/i, /hubspot-messages-iframe/i, /hs-script-loader/i],
+      'freshchat': [/wchat\.freshchat/i, /freshdesk\.com.*widget/i, /freshchat-widget/i],
+      'facebook_messenger': [/customerchat/i, /facebook.*messenger.*plugin/i, /fb-customerchat/i],
+      'chatwoot': [/chatwoot/i, /app\.chatwoot/i],
+      'gorgias': [/gorgias/i],
+      'helpscout': [/beacon-v2/i, /helpscout/i],
+      'generic_chat': [/chat-widget/i, /chatWidget/i, /live-chat/i, /livechat-/i, /chat-container/i, /chat-bubble/i, /chat-launcher/i, /chat-button/i],
+    };
+
+    for (const [name, patterns] of Object.entries(platforms)) {
+      if (patterns.some(p => p.test(html))) {
+        return { detected: true, platform: name === 'generic_chat' ? 'unknown' : name };
+      }
+    }
+
+    // DOM element detection — catch widgets by their container elements even
+    // when the JavaScript hasn't loaded (container divs are often in the
+    // server-rendered HTML)
+    const domPatterns: Record<string, RegExp[]> = {
+      'intercom': [/id="intercom-container"/i, /class="intercom/i],
+      'drift': [/id="drift-widget"/i, /class="drift-/i],
+      'tawk': [/id="tawkchat-/i, /class="tawk-/i],
+      'zendesk_chat': [/id="launcher"/i, /id="webWidget"/i],
+      'crisp': [/id="crisp-chatbox"/i, /class="crisp-/i],
+      'tidio': [/id="tidio-chat"/i],
+      'hubspot_chat': [/id="hubspot-messages-iframe-container"/i],
+      'freshchat': [/id="freshchat-container"/i],
+    };
+
+    for (const [name, patterns] of Object.entries(domPatterns)) {
+      if (patterns.some(p => p.test(html))) {
+        return { detected: true, platform: name };
+      }
+    }
+
+    // GTM check — if Google Tag Manager is present, the chat widget may be
+    // loaded via tag manager (undetectable without JS rendering). Log it for
+    // awareness but don't flag as detected — too many false positives.
+    if (/googletagmanager\.com\/gtm\.js/i.test(html) || /GTM-[A-Z0-9]+/i.test(html)) {
+      console.log('[PresenceScanner] GTM detected — chat widget may be loaded via tag manager (undetectable without JS rendering)');
+    }
+
+    return { detected: false, platform: null };
+  }
+
+  /**
+   * Detect CRM tracking codes and marketing automation platforms.
+   */
+  private detectCRMAndAutomation(html: string): {
+    crmDetected: boolean;
+    crmPlatform: string | null;
+    automationDetected: boolean;
+    automationPlatform: string | null;
+  } {
+    const crmPlatforms: Record<string, RegExp[]> = {
+      'hubspot': [/js\.hs-scripts\.com/i, /js\.hs-analytics/i, /hbspt/i],
+      'salesforce': [/force\.com/i, /salesforce.*tracking/i, /sfdc/i],
+      'zoho': [/zoho.*crm/i, /salesiq\.zoho/i],
+      'pipedrive': [/pipedrive/i, /leadbooster/i],
+      'keap': [/keap\.com/i, /infusionsoft/i],
+      'freshsales': [/freshsales/i, /freshmarketer/i],
+    };
+
+    const automationPlatforms: Record<string, RegExp[]> = {
+      'hubspot': [/js\.hs-scripts\.com/i, /hbspt/i],
+      'marketo': [/marketo\.com/i, /munchkin/i, /mkto/i],
+      'pardot': [/pardot\.com/i, /pi\.pardot/i],
+      'activecampaign': [/activecampaign\.com.*tracking/i, /trackcmp/i],
+      'drip': [/getdrip\.com/i],
+      'klaviyo': [/klaviyo\.com.*track/i],
+      'customer_io': [/customer\.io/i, /customeriotracking/i],
+      'autopilot': [/autopilothq/i],
+    };
+
+    let crmResult = { detected: false, platform: null as string | null };
+    let autoResult = { detected: false, platform: null as string | null };
+
+    for (const [name, patterns] of Object.entries(crmPlatforms)) {
+      if (patterns.some(p => p.test(html))) {
+        crmResult = { detected: true, platform: name };
+        break;
+      }
+    }
+
+    for (const [name, patterns] of Object.entries(automationPlatforms)) {
+      if (patterns.some(p => p.test(html))) {
+        autoResult = { detected: true, platform: name };
+        break;
+      }
+    }
+
+    return {
+      crmDetected: crmResult.detected,
+      crmPlatform: crmResult.platform,
+      automationDetected: autoResult.detected,
+      automationPlatform: autoResult.platform,
+    };
+  }
+
+  /**
+   * Detect blog/content section and estimate posting frequency.
+   */
+  private detectBlog(html: string): {
+    detected: boolean;
+    lastPostDate: string | null;
+    estimatedFrequency: string | null;
+  } {
+    // Check for blog links in navigation or page content
+    const blogLinkPattern = /href=["'][^"']*\/(blog|news|articles|insights|posts|journal|stories|resources\/blog)[/"']/i;
+    const hasBlogLink = blogLinkPattern.test(html);
+
+    // Check for article structured data
+    const hasArticleSchema = /"@type"\s*:\s*"(BlogPosting|NewsArticle|Article)"/i.test(html);
+    const hasArticleTag = /<article[\s>]/i.test(html);
+
+    // Try to find dates in article/blog content
+    // ISO dates
+    const isoDatePattern = /datetime=["'](\d{4}-\d{2}-\d{2})/g;
+    const dates: Date[] = [];
+    let match;
+
+    while ((match = isoDatePattern.exec(html)) !== null) {
+      const d = new Date(match[1]);
+      if (!isNaN(d.getTime()) && d.getFullYear() >= 2020) dates.push(d);
+    }
+
+    // Schema.org datePublished
+    const schemaDatePattern = /"datePublished"\s*:\s*"(\d{4}-\d{2}-\d{2})/g;
+    while ((match = schemaDatePattern.exec(html)) !== null) {
+      const d = new Date(match[1]);
+      if (!isNaN(d.getTime()) && d.getFullYear() >= 2020) dates.push(d);
+    }
+
+    if (!hasBlogLink && !hasArticleSchema && !hasArticleTag && dates.length === 0) {
+      return { detected: false, lastPostDate: null, estimatedFrequency: null };
+    }
+
+    const sortedDates = dates.sort((a, b) => b.getTime() - a.getTime());
+    const lastPostDate = sortedDates[0] || null;
+
+    let frequency: string | null = null;
+    if (lastPostDate) {
+      const daysSince = Math.floor((Date.now() - lastPostDate.getTime()) / (1000 * 60 * 60 * 24));
+      if (daysSince <= 10) frequency = 'yes_weekly';
+      else if (daysSince <= 45) frequency = 'yes_monthly';
+      else if (daysSince <= 180) frequency = 'yes_inconsistent';
+      else frequency = 'no_planning';
+    } else if (hasBlogLink || hasArticleSchema) {
+      frequency = 'yes_inconsistent';
+    }
+
+    return {
+      detected: hasBlogLink || hasArticleSchema || hasArticleTag,
+      lastPostDate: lastPostDate ? lastPostDate.toISOString().split('T')[0] : null,
+      estimatedFrequency: frequency,
+    };
+  }
+
+  /**
+   * Detect SMS marketing platform presence.
+   */
+  private detectSMSMarketing(html: string): {
+    detected: boolean;
+    platform: string | null;
+  } {
+    const platforms: Record<string, RegExp[]> = {
+      'twilio': [/twilio\.com/i],
+      'eztexting': [/eztexting\.com/i],
+      'simpletexting': [/simpletexting\.com/i],
+      'slicktext': [/slicktext\.com/i],
+      'textmagic': [/textmagic\.com/i],
+      'postscript': [/postscript\.io/i],
+      'attentive': [/attentivemobile\.com/i, /attn\.tv/i],
+    };
+
+    for (const [name, patterns] of Object.entries(platforms)) {
+      if (patterns.some(p => p.test(html))) {
+        return { detected: true, platform: name };
+      }
+    }
+
+    // Check for "Text KEYWORD to SHORTCODE" patterns
+    const textToPattern = /text\s+\w+\s+to\s+\d{5,6}/i;
+    if (textToPattern.test(html)) {
+      return { detected: true, platform: 'shortcode_detected' };
+    }
+
+    return { detected: false, platform: null };
+  }
+
+  /**
+   * Estimate when the website was last updated.
+   */
+  private detectLastUpdate(html: string): {
+    estimatedDate: string | null;
+    method: string;
+  } {
+    // Check for copyright year in footer
+    const copyrightPattern = /©\s*(\d{4})|copyright\s*(\d{4})/i;
+    const copyrightMatch = html.match(copyrightPattern);
+    const copyrightYear = copyrightMatch ? parseInt(copyrightMatch[1] || copyrightMatch[2]) : null;
+
+    // Check for recent dates in content
+    const allDates: Date[] = [];
+
+    // ISO format dates
+    const isoPattern = /(\d{4}-\d{2}-\d{2})/g;
+    let match;
+    while ((match = isoPattern.exec(html)) !== null) {
+      const d = new Date(match[1]);
+      if (!isNaN(d.getTime()) && d.getFullYear() >= 2020 && d.getTime() <= Date.now()) {
+        allDates.push(d);
+      }
+    }
+
+    // Schema dateModified
+    const modifiedPattern = /"dateModified"\s*:\s*"(\d{4}-\d{2}-\d{2})/g;
+    while ((match = modifiedPattern.exec(html)) !== null) {
+      const d = new Date(match[1]);
+      if (!isNaN(d.getTime())) allDates.push(d);
+    }
+
+    if (allDates.length > 0) {
+      const mostRecent = allDates.sort((a, b) => b.getTime() - a.getTime())[0];
+      return { estimatedDate: mostRecent.toISOString().split('T')[0], method: 'content_date' };
+    }
+
+    if (copyrightYear) {
+      return { estimatedDate: `${copyrightYear}-06-15`, method: 'copyright_year' };
+    }
+
+    return { estimatedDate: null, method: 'unknown' };
+  }
+
+  /**
    * Check if website is mobile-friendly
    */
   private checkMobileFriendly(html: string): boolean {
@@ -583,33 +910,231 @@ export class PresenceScannerService {
   }
 
   /**
-   * Scan social media presence
-   * NOTE: This is a placeholder implementation. Real implementation requires:
-   * - Facebook Graph API integration
-   * - Instagram Basic Display API
-   * - Twitter API v2
-   * - LinkedIn API
-   * - YouTube Data API
+   * Scan social media presence using available APIs
+   *
+   * Checks: Facebook (Graph API), Instagram (via FB), Twitter/X (HTTP probe),
+   * LinkedIn (HTTP probe), YouTube (Data API)
    */
   private async scanSocialMedia(businessName: string): Promise<SocialMediaScan> {
-    console.log(`ℹ️ Social media scanning not yet implemented for: ${businessName}`);
-    
-    // TODO: Implement real social media discovery
-    // For now, return neutral scores to avoid misleading data
-    const platforms = {
-      facebook: { exists: false, isActive: false },
-      instagram: { exists: false, isActive: false },
-      twitter: { exists: false, isActive: false },
-      linkedin: { exists: false, isActive: false },
-      youtube: { exists: false, isActive: false },
-    };
+    console.log(`🔍 Scanning social media for: ${businessName}`);
 
-    return {
-      platforms,
-      totalPresence: 0,
-      activeProfiles: 0,
-      score: 50, // Neutral score (not 0 to avoid penalizing unknowns)
-    };
+    const businessSlug = businessName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '')
+      .slice(0, 60);
+
+    // Run all platform checks in parallel
+    const [facebook, instagram, twitter, linkedin, youtube] = await Promise.all([
+      this.checkFacebook(businessName),
+      this.checkInstagram(businessName),
+      this.checkTwitter(businessSlug),
+      this.checkLinkedIn(businessSlug),
+      this.checkYouTube(businessName),
+    ]);
+
+    const platforms = { facebook, instagram, twitter, linkedin, youtube };
+
+    const totalPresence = Object.values(platforms).filter(p => p.exists).length;
+    const activeProfiles = Object.values(platforms).filter(p => p.isActive).length;
+
+    // Score: each platform found = 15 points, active bonus = 5 points each
+    const score = Math.min(100, totalPresence * 15 + activeProfiles * 5);
+
+    console.log(`📊 Social media scan: ${totalPresence}/5 present, ${activeProfiles} active, score: ${score}/100`);
+
+    return { platforms, totalPresence, activeProfiles, score };
+  }
+
+  /**
+   * Check Facebook page existence via Graph API search
+   */
+  private async checkFacebook(businessName: string): Promise<PlatformPresence> {
+    const appId = process.env.META_APP_ID;
+    const appSecret = process.env.META_APP_SECRET;
+
+    if (!appId || !appSecret) {
+      console.log('ℹ️ META_APP_ID / META_APP_SECRET not set — skipping Facebook check');
+      return { exists: false, isActive: false };
+    }
+
+    try {
+      const appToken = `${appId}|${appSecret}`;
+      const searchUrl = `https://graph.facebook.com/v21.0/pages/search?q=${encodeURIComponent(businessName)}&access_token=${encodeURIComponent(appToken)}&fields=name,link,fan_count&limit=5`;
+      const response = await fetch(searchUrl, { signal: AbortSignal.timeout(8000) });
+
+      if (!response.ok) {
+        console.warn(`⚠️ Facebook Graph API returned ${response.status}`);
+        return { exists: false, isActive: false };
+      }
+
+      const data = await response.json() as any;
+      const pages = data?.data || [];
+
+      if (pages.length === 0) {
+        return { exists: false, isActive: false };
+      }
+
+      // Pick the best match (first result from the API is usually most relevant)
+      const page = pages[0];
+      return {
+        exists: true,
+        url: page.link || `https://www.facebook.com/${page.id}`,
+        followers: page.fan_count || undefined,
+        isActive: true, // If the page exists in search, it's active
+      };
+    } catch (error) {
+      console.warn('⚠️ Facebook check failed:', error instanceof Error ? error.message : error);
+      return { exists: false, isActive: false };
+    }
+  }
+
+  /**
+   * Check Instagram presence via Facebook Graph API (linked IG account)
+   * Falls back to false if no Meta credentials are available.
+   */
+  private async checkInstagram(businessName: string): Promise<PlatformPresence> {
+    const appId = process.env.META_APP_ID;
+    const appSecret = process.env.META_APP_SECRET;
+
+    if (!appId || !appSecret) {
+      return { exists: false, isActive: false };
+    }
+
+    try {
+      // Instagram Business Discovery requires a page-scoped token, which we don't have
+      // for arbitrary businesses. Use the pages/search result and check for instagram_business_account.
+      // The app token can search pages but can't access IG fields on other pages,
+      // so we do a lightweight username probe instead.
+      const slug = businessName.toLowerCase().replace(/[^a-z0-9]/g, '');
+      const probeUrl = `https://www.instagram.com/${slug}/`;
+      const response = await fetch(probeUrl, {
+        method: 'HEAD',
+        redirect: 'follow',
+        signal: AbortSignal.timeout(8000),
+        headers: { 'User-Agent': 'BusinessBlueprint-Scanner/1.0' },
+      });
+
+      // Instagram returns 200 for existing profiles and 404 for missing ones
+      if (response.ok) {
+        return {
+          exists: true,
+          url: probeUrl,
+          isActive: true,
+        };
+      }
+      return { exists: false, isActive: false };
+    } catch (error) {
+      console.warn('⚠️ Instagram check failed:', error instanceof Error ? error.message : error);
+      return { exists: false, isActive: false };
+    }
+  }
+
+  /**
+   * Check Twitter/X presence via HTTP probe
+   * No API key required — uses a HEAD request to x.com/{slug}
+   */
+  private async checkTwitter(businessSlug: string): Promise<PlatformPresence> {
+    try {
+      const probeUrl = `https://x.com/${businessSlug}`;
+      const response = await fetch(probeUrl, {
+        method: 'HEAD',
+        redirect: 'follow',
+        signal: AbortSignal.timeout(8000),
+        headers: { 'User-Agent': 'BusinessBlueprint-Scanner/1.0' },
+      });
+
+      if (response.ok) {
+        return {
+          exists: true,
+          url: probeUrl,
+          isActive: true,
+        };
+      }
+      return { exists: false, isActive: false };
+    } catch (error) {
+      console.warn('⚠️ Twitter/X check failed:', error instanceof Error ? error.message : error);
+      return { exists: false, isActive: false };
+    }
+  }
+
+  /**
+   * Check LinkedIn company page via HTTP probe (HEAD request)
+   */
+  private async checkLinkedIn(businessSlug: string): Promise<PlatformPresence> {
+    try {
+      const probeUrl = `https://www.linkedin.com/company/${businessSlug}`;
+      const response = await fetch(probeUrl, {
+        method: 'HEAD',
+        redirect: 'follow',
+        signal: AbortSignal.timeout(8000),
+        headers: { 'User-Agent': 'BusinessBlueprint-Scanner/1.0' },
+      });
+
+      // LinkedIn returns 200 for existing company pages
+      if (response.ok) {
+        return {
+          exists: true,
+          url: probeUrl,
+          isActive: true,
+        };
+      }
+      return { exists: false, isActive: false };
+    } catch (error) {
+      console.warn('⚠️ LinkedIn check failed:', error instanceof Error ? error.message : error);
+      return { exists: false, isActive: false };
+    }
+  }
+
+  /**
+   * Check YouTube channel presence via YouTube Data API v3
+   * Uses GOOGLE_PLACES_API_KEY (same Google Cloud project key works for YouTube Data API)
+   */
+  private async checkYouTube(businessName: string): Promise<PlatformPresence> {
+    const apiKey = process.env.GOOGLE_PLACES_API_KEY || process.env.GOOGLE_API_KEY;
+
+    if (!apiKey) {
+      console.log('ℹ️ No Google API key available — skipping YouTube check');
+      return { exists: false, isActive: false };
+    }
+
+    try {
+      const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(businessName)}&type=channel&maxResults=3&key=${apiKey}`;
+      const response = await fetch(searchUrl, { signal: AbortSignal.timeout(8000) });
+
+      if (!response.ok) {
+        // 403 usually means YouTube Data API isn't enabled on this key — not an error
+        if (response.status === 403) {
+          console.log('ℹ️ YouTube Data API not enabled for this key — skipping');
+        } else {
+          console.warn(`⚠️ YouTube API returned ${response.status}`);
+        }
+        return { exists: false, isActive: false };
+      }
+
+      const data = await response.json() as any;
+      const channels = data?.items || [];
+
+      if (channels.length === 0) {
+        return { exists: false, isActive: false };
+      }
+
+      // Check if any result closely matches the business name
+      const nameLower = businessName.toLowerCase();
+      const match = channels.find((ch: any) =>
+        ch.snippet?.title?.toLowerCase().includes(nameLower) ||
+        nameLower.includes(ch.snippet?.title?.toLowerCase() || '')
+      ) || channels[0]; // Fall back to top result
+
+      const channelId = match.snippet?.channelId || match.id?.channelId;
+      return {
+        exists: true,
+        url: channelId ? `https://www.youtube.com/channel/${channelId}` : undefined,
+        isActive: true,
+      };
+    } catch (error) {
+      console.warn('⚠️ YouTube check failed:', error instanceof Error ? error.message : error);
+      return { exists: false, isActive: false };
+    }
   }
 
   /**
@@ -646,17 +1171,30 @@ export class PresenceScannerService {
         claimed: yelpResult.isClaimed || false, 
         isConsistent: true 
       },
-      facebook: { exists: false, claimed: false, isConsistent: true }, // TODO: Add Facebook API
-      yellowPages: { exists: false, claimed: false, isConsistent: true }, // TODO: Add scraping
-      bbb: { exists: false, claimed: false, isConsistent: true }, // TODO: Add scraping
+      facebook: { exists: false, claimed: false, isConsistent: true }, // Covered by social media scan; directory listing not separately checked
+      // Yellow Pages and BBB: These directories don't offer public APIs.
+      // Scraping their pages is fragile, violates their ToS, and breaks frequently.
+      // We intentionally leave these as unknown rather than returning unreliable data.
+      yellowPages: { exists: false, claimed: false, isConsistent: true },
+      bbb: { exists: false, claimed: false, isConsistent: true },
     };
 
     const totalListings = Object.values(platforms).filter(p => p.exists).length;
     const claimedListings = Object.values(platforms).filter(p => p.claimed).length;
     
-    // Consistency check (compare business info across platforms)
-    const consistency = 100; // TODO: Implement NAP consistency check
-    
+    // NAP consistency check — compare name/address/phone across platforms
+    const napEntries: { name?: string; address?: string; phone?: string }[] = [];
+    if (params.businessName) {
+      napEntries.push({ name: params.businessName, address: params.address, phone: params.phone });
+    }
+    if (googleResult.exists) {
+      napEntries.push({ name: googleResult.name, address: googleResult.address, phone: googleResult.phone });
+    }
+    if (yelpResult.exists) {
+      napEntries.push({ name: yelpResult.name, address: yelpResult.address, phone: yelpResult.phone });
+    }
+    const consistency = this.calculateNapConsistency(napEntries);
+
     // Score based on platforms we ACTUALLY check (Google + Yelp = 2)
     // Don't penalize businesses for platforms we don't check yet
     const SUPPORTED_PLATFORMS = 2; // Google + Yelp (we check these)
@@ -699,27 +1237,34 @@ export class PresenceScannerService {
     );
 
     const platforms = {
-      google: { 
+      google: {
         exists: googleResult.exists && (googleResult.reviewCount || 0) > 0,
         reviewCount: googleResult.reviewCount || 0,
         averageRating: googleResult.rating || 0,
         recentReviews: (googleResult.reviews || []).length,
-        responseRate: 0, // TODO: Calculate response rate
+        // Google Places API returns up to 5 reviews and doesn't expose owner_response
+        // in the basic fields we fetch. Response rate can't be reliably calculated
+        // from partial data, so we leave it at 0 (unknown) rather than guessing.
+        responseRate: 0,
       },
-      yelp: { 
+      yelp: {
         exists: yelpResult.exists && (yelpResult.reviewCount || 0) > 0,
         reviewCount: yelpResult.reviewCount || 0,
         averageRating: yelpResult.rating || 0,
         recentReviews: (yelpResult.reviews || []).length,
-        responseRate: 0, // TODO: Calculate response rate
+        // Yelp API v3 does not include business owner responses in review data.
+        // Response rate can't be calculated from available data.
+        responseRate: 0,
       },
-      facebook: { 
-        exists: false, 
-        reviewCount: 0, 
-        averageRating: 0, 
-        recentReviews: 0, 
-        responseRate: 0 
-      }, // TODO: Add Facebook Graph API
+      facebook: {
+        exists: false,
+        reviewCount: 0,
+        averageRating: 0,
+        recentReviews: 0,
+        // Facebook page reviews require a page access token from the business owner.
+        // Not available during a public scan.
+        responseRate: 0,
+      },
     };
 
     // Calculate totals
@@ -734,7 +1279,11 @@ export class PresenceScannerService {
       ? ratingsWithCounts.reduce((sum, p) => sum + (p.rating * p.count), 0) / totalReviews
       : 0;
 
-    const responseRate = 0; // TODO: Calculate based on review responses
+    // Calculate aggregate response rate from platforms that report it
+    const platformsWithReviews = [platforms.google, platforms.yelp].filter(p => p.reviewCount > 0);
+    const responseRate = platformsWithReviews.length > 0
+      ? platformsWithReviews.reduce((sum, p) => sum + p.responseRate, 0) / platformsWithReviews.length
+      : 0;
 
     // Calculate score
     const score = this.calculateReviewScore({ totalReviews, averageRating, responseRate });
@@ -830,6 +1379,10 @@ export class PresenceScannerService {
     crmPlatform?: string | null;
     lastCRMFollowup?: string | null;
     hasAutomation?: string | null;
+    // Advertising & Paid Media (Q28-Q30)
+    runsAds?: string | null;
+    lastAdCampaign?: string | null;
+    monthlyAdBudget?: string | null;
   }): number {
     // Define scoring tables: maps answer values to points (0-10 per question, normalized at end)
     // IMPORTANT: Values must match exactly what the form produces
@@ -974,6 +1527,24 @@ export class PresenceScannerService {
       'dont_know': 3,
     };
 
+    const runsAdsScores: Record<string, number> = {
+      'yes_both': 10,
+      'yes_google': 8,
+      'yes_meta': 8,
+      'yes_other': 6,
+      'no_interested': 3,
+      'no_not_interested': 0,
+    };
+
+    const adBudgetScores: Record<string, number> = {
+      '5000_plus': 10,
+      '2500_5000': 8,
+      '1000_2500': 6,
+      '500_1000': 4,
+      'under_500': 2,
+      'none': 0,
+    };
+
     // Helper to get score with fallback
     const getScore = (value: string | null | undefined, scoreTable: Record<string, number>): number => {
       if (!value) return 0;
@@ -1019,17 +1590,13 @@ export class PresenceScannerService {
       getScore(operationalData.chatResponseTime, responseTimeScores)
     ) / 30 * 7.78;
 
-    // Business Listings (2 questions) - 7.78 points max
-    const listingsRaw = (
+    // Business Listings & GBP (4 questions: Q18-Q21 — old listings + old GBP merged) - 7.78 points max
+    const publishRaw = (
       getScore(operationalData.lastListingUpdate, recencyScores) +
-      getScore(operationalData.listingConsistency, listingConsistencyScores)
-    ) / 20 * 7.78;
-
-    // Google Business Profile (2 questions) - 7.78 points max
-    const gbpRaw = (
+      getScore(operationalData.listingConsistency, listingConsistencyScores) +
       getScore(operationalData.lastGBPPost, recencyScores) +
       getScore(operationalData.lastGBPPhoto, recencyScores)
-    ) / 20 * 7.78;
+    ) / 40 * 7.78;
 
     // Website & SEO (2 questions) - 7.78 points max
     const websiteRaw = (
@@ -1045,12 +1612,19 @@ export class PresenceScannerService {
       getScore(operationalData.hasAutomation, automationScores)
     ) / 40 * 7.78;
 
+    // Advertising & Paid Media (3 questions: Q28-Q30) - 7.78 points max
+    const amplifyRaw = (
+      getScore(operationalData.runsAds, runsAdsScores) +
+      getScore(operationalData.lastAdCampaign, recencyScores) +
+      getScore(operationalData.monthlyAdBudget, adBudgetScores)
+    ) / 30 * 7.78;
+
     const operationalTotal = Math.round(
-      emailSmsRaw + socialRaw + reputationRaw + responseRaw + 
-      chatRaw + listingsRaw + gbpRaw + websiteRaw + crmRaw
+      emailSmsRaw + socialRaw + reputationRaw + responseRaw +
+      chatRaw + publishRaw + websiteRaw + crmRaw + amplifyRaw
     );
 
-    console.log(`📊 Operational Score Breakdown: Email/SMS=${emailSmsRaw.toFixed(1)}, Social=${socialRaw.toFixed(1)}, Reputation=${reputationRaw.toFixed(1)}, Response=${responseRaw.toFixed(1)}, Chat=${chatRaw.toFixed(1)}, Listings=${listingsRaw.toFixed(1)}, GBP=${gbpRaw.toFixed(1)}, Website=${websiteRaw.toFixed(1)}, CRM=${crmRaw.toFixed(1)}, Total=${operationalTotal}/70`);
+    console.log(`📊 Operational Score Breakdown: Promote=${emailSmsRaw.toFixed(1)}, Post=${socialRaw.toFixed(1)}, Elevate=${reputationRaw.toFixed(1)}, Respond=${responseRaw.toFixed(1)}, Engage=${chatRaw.toFixed(1)}, Publish=${publishRaw.toFixed(1)}, Optimize=${websiteRaw.toFixed(1)}, Connect=${crmRaw.toFixed(1)}, Amplify=${amplifyRaw.toFixed(1)}, Total=${operationalTotal}/70`);
 
     return Math.min(70, Math.max(0, operationalTotal));
   }
@@ -1144,6 +1718,23 @@ export class PresenceScannerService {
       recommendations.push('Establish active presence on key social media platforms');
     }
 
+    // Detection-based recommendations
+    if (data.website?.detections) {
+      const d = data.website.detections;
+
+      if (!d.emailCapture.detected) {
+        recommendations.push('Add an email signup form to your website to capture leads');
+      }
+      if (!d.chatWidget.detected) {
+        recommendations.push('Add a live chat widget to your website to engage visitors in real time');
+      }
+      if (!d.blog.detected) {
+        recommendations.push('Start a blog to improve SEO and demonstrate expertise');
+      } else if (d.blog.estimatedFrequency === 'yes_inconsistent' || d.blog.estimatedFrequency === 'no_planning') {
+        recommendations.push('Your blog exists but hasn\'t been updated recently — consistent posting improves search rankings');
+      }
+    }
+
     return recommendations.slice(0, 10); // Top 10 recommendations
   }
 
@@ -1198,6 +1789,47 @@ export class PresenceScannerService {
   }
 
   /**
+   * Calculate NAP (Name, Address, Phone) consistency across platforms
+   * Returns 0-100 score
+   */
+  private calculateNapConsistency(entries: { name?: string; address?: string; phone?: string }[]): number {
+    if (entries.length < 2) return 100; // Can't compare with fewer than 2 sources
+
+    const normalize = (val?: string) => (val || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    let matches = 0;
+    let comparisons = 0;
+
+    // Compare each field across all pairs
+    for (let i = 0; i < entries.length; i++) {
+      for (let j = i + 1; j < entries.length; j++) {
+        // Name comparison (fuzzy — check if one contains the other)
+        const n1 = normalize(entries[i].name);
+        const n2 = normalize(entries[j].name);
+        if (n1 && n2) {
+          comparisons++;
+          if (n1 === n2 || n1.includes(n2) || n2.includes(n1)) matches++;
+        }
+        // Phone comparison (digits only)
+        const p1 = (entries[i].phone || '').replace(/\D/g, '').slice(-10);
+        const p2 = (entries[j].phone || '').replace(/\D/g, '').slice(-10);
+        if (p1 && p2) {
+          comparisons++;
+          if (p1 === p2) matches++;
+        }
+        // Address comparison (normalized)
+        const a1 = normalize(entries[i].address);
+        const a2 = normalize(entries[j].address);
+        if (a1 && a2) {
+          comparisons++;
+          if (a1 === a2 || a1.includes(a2) || a2.includes(a1)) matches++;
+        }
+      }
+    }
+
+    return comparisons > 0 ? Math.round((matches / comparisons) * 100) : 100;
+  }
+
+  /**
    * Helper: Get empty website scan
    */
   private getEmptyWebsiteScan(): WebsiteScan {
@@ -1222,6 +1854,15 @@ export class PresenceScannerService {
         hasBusinessHours: false,
       },
       score: 0,
+      detections: {
+        emailCapture: { detected: false, platform: null, method: 'none' },
+        chatWidget: { detected: false, platform: null },
+        crm: { detected: false, platform: null },
+        automation: { detected: false, platform: null },
+        blog: { detected: false, lastPostDate: null, estimatedFrequency: null },
+        smsMarketing: { detected: false, platform: null },
+        lastUpdate: { estimatedDate: null, method: 'unknown' },
+      },
     };
   }
 }

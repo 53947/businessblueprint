@@ -35,7 +35,7 @@ export function CrmEmptyState({
             {description}
           </p>
         </div>
-        <Link href="/relationships">
+        <Link href="/connect">
           <Button size="sm" className="bg-[#22C55E] hover:bg-[#16A34A]" data-testid="btn-inline-add-contacts">
             Add Contacts
             <ArrowRight className="w-4 h-4 ml-1" />
@@ -60,7 +60,7 @@ export function CrmEmptyState({
               {description}
             </p>
           </div>
-          <Link href="/relationships">
+          <Link href="/connect">
             <Button className="bg-[#22C55E] hover:bg-[#16A34A]" data-testid="btn-compact-add-contacts">
               Open CRM Hub
               <ArrowRight className="w-4 h-4 ml-2" />
@@ -107,7 +107,7 @@ export function CrmEmptyState({
           )}
           
           <div className="flex flex-col gap-2 pt-4">
-            <Link href="/relationships">
+            <Link href="/connect">
               <Button className="w-full bg-[#22C55E] hover:bg-[#16A34A]" data-testid="btn-full-add-contacts">
                 <Users className="w-4 h-4 mr-2" />
                 Open CRM Hub
@@ -161,6 +161,15 @@ export const CRM_EMPTY_CONFIGS = {
       "Connect reviews to customer records"
     ]
   },
+  list: {
+    appName: "List",
+    description: "Add your business to the CRM to sync your presence across directories.",
+    benefits: [
+      "Keep business info consistent everywhere",
+      "Track which listings drive contacts",
+      "Connect reviews to customer records"
+    ]
+  },
   reputation: {
     appName: "Reputation",
     description: "Link reviews to customer records for personalized response strategies.",
@@ -168,6 +177,33 @@ export const CRM_EMPTY_CONFIGS = {
       "Match reviews to existing customers",
       "Track reviewer sentiment over time",
       "Respond with customer context"
+    ]
+  },
+  review: {
+    appName: "Review",
+    description: "Link reviews to customer records for personalized response strategies.",
+    benefits: [
+      "Match reviews to existing customers",
+      "Track reviewer sentiment over time",
+      "Respond with customer context"
+    ]
+  },
+  post: {
+    appName: "Post",
+    description: "Connect your audience data to publish content that reaches the right people.",
+    benefits: [
+      "Target posts to customer segments",
+      "Track engagement by audience type",
+      "Personalize content for different groups"
+    ]
+  },
+  respond: {
+    appName: "Respond",
+    description: "Import your contacts to see customer context when conversations arrive.",
+    benefits: [
+      "View customer history in conversations",
+      "Auto-link messages to contact records",
+      "Track all interactions in one timeline"
     ]
   }
 };

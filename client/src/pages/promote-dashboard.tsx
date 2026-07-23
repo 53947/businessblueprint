@@ -1,0 +1,874 @@
+import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  Mail, 
+  MessageSquare, 
+  Users, 
+  TrendingUp, 
+  Plus, 
+  Send, 
+  FileText,
+  CheckCircle2,
+  Activity,
+  BarChart3,
+  Settings,
+  Link2,
+  ExternalLink,
+  Filter
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { useLocation } from "wouter";
+import { BrandLogo } from "@/components/brand-logo";
+import { SectionHeader } from "@/components/section-header";
+import { useToast } from "@/hooks/use-toast";
+import { CrmEmptyState, CRM_EMPTY_CONFIGS } from "@/components/crm-empty-state";
+import { useCrmPresence } from "@/hooks/use-crm-presence";
+
+interface DashboardMetrics {
+  totalContacts: number;
+  contactsGrowth: number;
+  emailsSent: number;
+  emailsDelivered: number;
+  emailsOpened: number;
+  emailsClicked: number;
+  smsSent: number;
+  smsDelivered: number;
+  avgOpenRate: number;
+  avgClickRate: number;
+  avgDeliverability: number;
+}
+
+interface ActivityItem {
+  id: number;
+  type: 'campaign' | 'contact' | 'automation';
+  name: string;
+  status: string;
+  time: string;
+  recipients?: number;
+  triggered?: number;
+}
+
+export default function PromoteDashboard() {
+  const [, setLocation] = useLocation();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [activeTab, setActiveTab] = useState('overview');
+  const [autoSyncTriggered, setAutoSyncTriggered] = useState(false);
+
+  const crmPresence = useCrmPresence();
+  const crmContactsFromHook = crmPresence.contacts;
+
+  const storedClientId = typeof window !== "undefined" ? sessionStorage.getItem("clientId") : null;
+  const clientId = storedClientId ? parseInt(storedClientId) : null;
+
+  // Fetch / promote send contacts (separate from CRM contacts) for empty-state detection
+  const { data: sendContactsData } = useQuery<{ contacts: any[] }>({
+    queryKey: [`/api/send/contacts`],
+    enabled: !!clientId,
+  });
+
+  const syncCrmContacts = async () => {
+    if (!clientId) return;
+    try {
+      const res = await apiRequest("POST", `/api/send/${clientId}/sync-crm`);
+      const result = await res.json();
+      if (result?.success) {
+        queryClient.invalidateQueries({ queryKey: [`/api/send/contacts`] });
+        toast({
+          title: "CRM Contacts Synced",
+          description: `${result.synced} synced, ${result.skipped} skipped (already in / promote).`,
+        });
+      } else {
+        toast({ title: "Sync failed", description: result?.error || "Unknown error", variant: "destructive" });
+      }
+    } catch (error: any) {
+      toast({ title: "Sync failed", description: error?.message || "Could not reach server", variant: "destructive" });
+    }
+  };
+
+  // Auto-sync from CRM on first visit when / promote contact list is empty
+  useEffect(() => {
+    if (
+      !autoSyncTriggered &&
+      clientId &&
+      sendContactsData &&
+      Array.isArray(sendContactsData.contacts) &&
+      sendContactsData.contacts.length === 0 &&
+      crmContactsFromHook &&
+      crmContactsFromHook.length > 0
+    ) {
+      setAutoSyncTriggered(true);
+      apiRequest("POST", `/api/send/${clientId}/sync-crm`)
+        .then(() => {
+          queryClient.invalidateQueries({ queryKey: [`/api/send/contacts`] });
+        })
+        .catch((err) => console.error("CRM auto-sync failed:", err));
+    }
+  }, [sendContactsData, clientId, autoSyncTriggered, crmContactsFromHook, queryClient]);
+
+  // Fetch dashboard metrics
+  const { data: metrics, isLoading: metricsLoading } = useQuery<DashboardMetrics>({
+    queryKey: ['/api/send/metrics'],
+  });
+
+  // Fetch recent campaigns
+  const { data: recentCampaigns, isLoading: campaignsLoading } = useQuery<ActivityItem[]>({
+    queryKey: ['/api/send/campaigns/recent'],
+  });
+
+  // Use shared CRM data from hook (avoids duplicate queries)
+  const crmContacts = crmPresence.contacts;
+  const crmSegments = crmPresence.segments;
+  const crmContactsLoading = crmPresence.state === 'loading';
+  const crmSegmentsLoading = crmPresence.state === 'loading';
+
+  // Show CRM empty state for unauthenticated users or when CRM has no data
+  const showCrmEmptyState = crmPresence.state === 'unauthenticated' || crmPresence.state === 'empty';
+
+  const emptyMetrics: DashboardMetrics = {
+    totalContacts: 0,
+    contactsGrowth: 0,
+    emailsSent: 0,
+    emailsDelivered: 0,
+    emailsOpened: 0,
+    emailsClicked: 0,
+    smsSent: 0,
+    smsDelivered: 0,
+    avgOpenRate: 0,
+    avgClickRate: 0,
+    avgDeliverability: 0,
+  };
+
+  const displayMetrics = metrics || emptyMetrics;
+  const displayActivity = recentCampaigns || [];
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
+      <SectionHeader 
+        title="/ promote - Email + SMS Marketing"
+        tabs={[
+          { 
+            label: 'Overview', 
+            icon: BarChart3, 
+            active: activeTab === 'overview',
+            onClick: () => setActiveTab('overview'),
+            testId: 'tab-overview'
+          },
+          {
+            label: 'Campaigns',
+            icon: Mail,
+            active: activeTab === 'campaigns',
+            onClick: () => setActiveTab('campaigns'),
+            testId: 'tab-campaigns'
+          },
+          {
+            label: 'Contacts',
+            icon: Users,
+            active: activeTab === 'contacts',
+            onClick: () => setActiveTab('contacts'),
+            testId: 'tab-contacts'
+          },
+          {
+            label: 'Analytics',
+            icon: TrendingUp,
+            active: activeTab === 'analytics',
+            onClick: () => setActiveTab('analytics'),
+            testId: 'tab-analytics'
+          }
+        ]}
+        actions={
+          <>
+            <Button
+              onClick={() => setActiveTab('overview')}
+              variant="ghost"
+              size="sm"
+              data-testid="button-settings"
+            >
+              <Settings className="h-4 w-4" />
+            </Button>
+            <Button
+              onClick={() => setLocation('/promote/campaigns/new')}
+              size="sm"
+              className="bg-[#1844A6] hover:bg-[#133a8a] text-white"
+              data-testid="button-new-campaign"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              New Campaign
+            </Button>
+          </>
+        }
+        showHomeButton={true}
+        homeRoute="/portal"
+      />
+
+      <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+
+        {/* CRM Empty State - Show for unauthenticated users OR when CRM has no data */}
+        {showCrmEmptyState && (
+          <div className="mb-6">
+            <CrmEmptyState {...CRM_EMPTY_CONFIGS.send} variant="compact" />
+          </div>
+        )}
+
+        {/* Key Metrics */}
+        {metricsLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {[1, 2, 3, 4].map((i) => (
+              <Card key={i}>
+                <CardHeader className="pb-3">
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-24"></div>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-32"></div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Contacts</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-baseline justify-between">
+                  <div className="text-3xl font-bold text-gray-900 dark:text-white" data-testid="metric-total-contacts">
+                    {displayMetrics.totalContacts.toLocaleString()}
+                  </div>
+                  <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300" data-testid="badge-contacts-growth">
+                    <TrendingUp className="w-3 h-3 mr-1" />
+                    +{displayMetrics.contactsGrowth}%
+                  </Badge>
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">vs last month</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Avg Open Rate</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-baseline justify-between">
+                  <div className="text-3xl font-bold text-gray-900 dark:text-white" data-testid="metric-open-rate">
+                    {displayMetrics.avgOpenRate}%
+                  </div>
+                  <Mail className="w-8 h-8 text-[#E5A100]" />
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Industry avg: 21.5%</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Avg Click Rate</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-baseline justify-between">
+                  <div className="text-3xl font-bold text-gray-900 dark:text-white" data-testid="metric-click-rate">
+                    {displayMetrics.avgClickRate}%
+                  </div>
+                  <Activity className="w-8 h-8 text-[#E5A100]" />
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Industry avg: 2.6%</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Deliverability</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-baseline justify-between">
+                  <div className="text-3xl font-bold text-gray-900 dark:text-white" data-testid="metric-deliverability">
+                    {displayMetrics.avgDeliverability}%
+                  </div>
+                  <CheckCircle2 className="w-8 h-8 text-green-500" />
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Excellent performance</p>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Phase D: / convert form-links-sent metric */}
+        <FormLinksSentCard />
+
+        {/* Main Content Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="overview" data-testid="tab-overview">Overview</TabsTrigger>
+            <TabsTrigger value="contacts" data-testid="tab-contacts-list">Contacts</TabsTrigger>
+            <TabsTrigger value="campaigns" data-testid="tab-campaigns">Recent Campaigns</TabsTrigger>
+            <TabsTrigger value="analytics" data-testid="tab-analytics">Analytics</TabsTrigger>
+          </TabsList>
+
+          {/* Overview Tab */}
+          <TabsContent value="overview" className="space-y-6">
+            <div className="grid lg:grid-cols-3 gap-6">
+              {/* Recent Activity */}
+              <div className="lg:col-span-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Recent Activity</CardTitle>
+                    <CardDescription>Latest campaigns, imports, and automations</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {campaignsLoading ? (
+                      <div className="space-y-4">
+                        {[1, 2, 3].map((i) => (
+                          <div key={i} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                            <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-3/4 mb-2"></div>
+                            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-1/2"></div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {displayActivity.map((activity) => (
+                          <div key={activity.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg" data-testid={`activity-${activity.id}`}>
+                            <div className="flex items-center gap-3">
+                              {activity.type === 'campaign' && <Send className="w-5 h-5 text-[#E5A100]" />}
+                              {activity.type === 'contact' && <Users className="w-5 h-5 text-green-500" />}
+                              {activity.type === 'automation' && <Activity className="w-5 h-5 text-[#E5A100]" />}
+                              <div>
+                                <p className="font-medium text-gray-900 dark:text-white" data-testid={`activity-name-${activity.id}`}>{activity.name}</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400" data-testid={`activity-time-${activity.id}`}>{activity.time}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {activity.recipients && (
+                                <span className="text-sm text-gray-600 dark:text-gray-400" data-testid={`activity-recipients-${activity.id}`}>
+                                  {activity.recipients.toLocaleString()} recipients
+                                </span>
+                              )}
+                              {activity.triggered && (
+                                <span className="text-sm text-gray-600 dark:text-gray-400" data-testid={`activity-triggered-${activity.id}`}>
+                                  {activity.triggered} triggered
+                                </span>
+                              )}
+                              <Badge variant={
+                                activity.status === 'sent' ? 'default' :
+                                activity.status === 'completed' ? 'default' :
+                                activity.status === 'active' ? 'default' :
+                                'secondary'
+                              } data-testid={`activity-status-${activity.id}`}>
+                                {activity.status}
+                              </Badge>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Quick Actions */}
+              <div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Quick Actions</CardTitle>
+                    <CardDescription>Common tasks and tools</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <Button 
+                      className="w-full justify-start" 
+                      variant="outline"
+                      onClick={() => setLocation('/promote/campaigns/new')}
+                      data-testid="button-create-campaign"
+                    >
+                      <Mail className="w-4 h-4 mr-2" />
+                      Create Email Campaign
+                    </Button>
+                    <Button 
+                      className="w-full justify-start" 
+                      variant="outline"
+                      onClick={() => setLocation('/promote/campaigns/new?type=sms')}
+                      data-testid="button-create-sms"
+                    >
+                      <MessageSquare className="w-4 h-4 mr-2" />
+                      Send SMS Campaign
+                    </Button>
+                    <Button 
+                      className="w-full justify-start" 
+                      variant="outline"
+                      onClick={() => setLocation('/promote/contacts/import')}
+                      data-testid="button-import-contacts"
+                    >
+                      <Users className="w-4 h-4 mr-2" />
+                      Import Contacts
+                    </Button>
+                    <Button 
+                      className="w-full justify-start" 
+                      variant="outline"
+                      onClick={() => setLocation('/promote/templates')}
+                      data-testid="button-templates"
+                    >
+                      <FileText className="w-4 h-4 mr-2" />
+                      Email Templates
+                    </Button>
+                    <Button 
+                      className="w-full justify-start" 
+                      variant="outline"
+                      onClick={() => setLocation('/promote/automations')}
+                      data-testid="button-automations"
+                    >
+                      <Activity className="w-4 h-4 mr-2" />
+                      Automation Workflows
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* CRM Integration Card */}
+                <Card className="mt-6 border-green-200 dark:border-green-800 bg-green-50/50 dark:bg-green-900/20">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-2">
+                      <Link2 className="w-5 h-5 text-green-600" />
+                      <CardTitle className="text-base">CRM Integration</CardTitle>
+                    </div>
+                    <CardDescription>Pull contacts from / connect</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {crmContactsLoading ? (
+                      <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    ) : (
+                      <>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600 dark:text-gray-400">CRM Contacts</span>
+                          <span className="font-semibold text-green-700 dark:text-green-400" data-testid="crm-contacts-count">
+                            {(crmContacts?.length || 0).toLocaleString()}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600 dark:text-gray-400">Segments</span>
+                          <span className="font-semibold text-green-700 dark:text-green-400" data-testid="crm-segments-count">
+                            {crmSegments.length}
+                          </span>
+                        </div>
+                      </>
+                    )}
+                    <Button 
+                      className="w-full justify-center mt-2" 
+                      variant="outline"
+                      onClick={() => setLocation('/connect')}
+                      data-testid="button-manage-crm"
+                    >
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      Manage in / connect
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+
+            {/* Performance Summary */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Performance Summary</CardTitle>
+                <CardDescription>Email and SMS delivery metrics for the last 30 days</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* Email Metrics */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">Email Performance</h4>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Sent</span>
+                        <span className="font-medium text-gray-900 dark:text-white" data-testid="metric-emails-sent">{displayMetrics.emailsSent.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Delivered</span>
+                        <span className="font-medium text-gray-900 dark:text-white" data-testid="metric-emails-delivered">{displayMetrics.emailsDelivered.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Opened</span>
+                        <span className="font-medium text-gray-900 dark:text-white" data-testid="metric-emails-opened">{displayMetrics.emailsOpened.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Clicked</span>
+                        <span className="font-medium text-gray-900 dark:text-white" data-testid="metric-emails-clicked">{displayMetrics.emailsClicked.toLocaleString()}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* SMS Metrics */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">SMS Performance</h4>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Sent</span>
+                        <span className="font-medium text-gray-900 dark:text-white" data-testid="metric-sms-sent">{displayMetrics.smsSent.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Delivered</span>
+                        <span className="font-medium text-gray-900 dark:text-white" data-testid="metric-sms-delivered">{displayMetrics.smsDelivered.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Delivery Rate</span>
+                        <span className="font-medium text-green-600 dark:text-green-400" data-testid="metric-sms-delivery-rate">
+                          {((displayMetrics.smsDelivered / displayMetrics.smsSent) * 100).toFixed(1)}%
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Contacts Tab - CRM Integration */}
+          <TabsContent value="contacts" className="space-y-6">
+            <div className="grid lg:grid-cols-3 gap-6">
+              {/* Contact List from CRM */}
+              <div className="lg:col-span-2">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle>CRM Contacts</CardTitle>
+                        <CardDescription>Contacts synced from / connect</CardDescription>
+                      </div>
+                      <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
+                        <Link2 className="w-3 h-3 mr-1" />
+                        Performance
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    {crmContactsLoading ? (
+                      <div className="space-y-3">
+                        {[1, 2, 3, 4, 5].map((i) => (
+                          <div key={i} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                            <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-3/4 mb-2"></div>
+                            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-1/2"></div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : crmContacts && crmContacts.length > 0 ? (
+                      <div className="space-y-2 max-h-96 overflow-y-auto">
+                        {crmContacts.slice(0, 20).map((contact) => (
+                          <div key={contact.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg" data-testid={`crm-contact-${contact.id}`}>
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                                <span className="text-green-700 dark:text-green-300 text-sm font-medium">
+                                  {contact.firstName?.[0]?.toUpperCase() || '?'}
+                                </span>
+                              </div>
+                              <div>
+                                <p className="font-medium text-gray-900 dark:text-white">
+                                  {contact.firstName} {contact.lastName}
+                                </p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{contact.email}</p>
+                              </div>
+                            </div>
+                            {contact.lifecycleStage && (
+                              <Badge variant="outline" className="capitalize">{contact.lifecycleStage}</Badge>
+                            )}
+                          </div>
+                        ))}
+                        {crmContacts.length > 20 && (
+                          <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-2">
+                            Showing 20 of {crmContacts.length} contacts
+                          </p>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                        <p className="text-gray-500 dark:text-gray-400 mb-4">No contacts in CRM yet</p>
+                        <Button onClick={() => setLocation('/connect')} data-testid="button-add-crm-contacts">
+                          Add Contacts in / connect
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Segments for Targeting */}
+              <div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Filter className="w-4 h-4" />
+                      Segments
+                    </CardTitle>
+                    <CardDescription>Target specific audiences</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {crmSegmentsLoading ? (
+                      <div className="space-y-3">
+                        {[1, 2, 3].map((i) => (
+                          <div key={i} className="h-12 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                        ))}
+                      </div>
+                    ) : crmSegments.length > 0 ? (
+                      <div className="space-y-2">
+                        {crmSegments.map((segment) => (
+                          <div key={segment.id} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" data-testid={`segment-${segment.id}`}>
+                            <div className="flex items-center justify-between">
+                              <span className="font-medium text-gray-900 dark:text-white">{segment.name}</span>
+                              <Badge variant="secondary">{segment.memberCount || 0}</Badge>
+                            </div>
+                            {segment.description && (
+                              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{segment.description}</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-6">
+                        <Filter className="w-10 h-10 text-gray-400 mx-auto mb-3" />
+                        <p className="text-gray-500 dark:text-gray-400 text-sm mb-3">No segments created yet</p>
+                        <Button variant="outline" size="sm" onClick={() => setLocation('/connect')} data-testid="button-create-segment">
+                          Create Segment
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <Card className="mt-6">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base">Manage Contacts</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <Button 
+                      className="w-full justify-start" 
+                      variant="outline"
+                      onClick={() => setLocation('/connect')}
+                      data-testid="button-go-to-crm"
+                    >
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      Open / connect CRM
+                    </Button>
+                    <Button
+                      className="w-full justify-start"
+                      variant="outline"
+                      onClick={syncCrmContacts}
+                      data-testid="button-sync-contacts"
+                    >
+                      <Link2 className="w-4 h-4 mr-2" />
+                      Sync CRM Contacts
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Campaigns Tab */}
+          <TabsContent value="campaigns" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Campaigns</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">View and manage your email and SMS campaigns</p>
+              </div>
+              <Button
+                onClick={() => setLocation('/promote/campaigns/new')}
+                size="sm"
+                className="bg-[#1844A6] hover:bg-[#133a8a] text-white"
+                data-testid="button-new-campaign-tab"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                New Campaign
+              </Button>
+            </div>
+            <Card>
+              <CardContent className="pt-6">
+                {campaignsLoading ? (
+                  <div className="space-y-3">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-3/4 mb-2"></div>
+                        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-1/2"></div>
+                      </div>
+                    ))}
+                  </div>
+                ) : displayActivity.length > 0 ? (
+                  <div className="space-y-3">
+                    {displayActivity.filter((a) => a.type === 'campaign').map((campaign) => (
+                      <div key={campaign.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg" data-testid={`campaign-row-${campaign.id}`}>
+                        <div className="flex items-center gap-3">
+                          <Send className="w-5 h-5 text-[#E5A100]" />
+                          <div>
+                            <p className="font-medium text-gray-900 dark:text-white">{campaign.name}</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{campaign.time}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          {campaign.recipients && (
+                            <span className="text-sm text-gray-600 dark:text-gray-400">
+                              {campaign.recipients.toLocaleString()} recipients
+                            </span>
+                          )}
+                          <Badge variant={campaign.status === 'sent' ? 'default' : 'secondary'}>
+                            {campaign.status}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                    {displayActivity.filter((a) => a.type !== 'campaign').length > 0 && displayActivity.filter((a) => a.type === 'campaign').length === 0 && (
+                      <div className="text-center py-8">
+                        <Mail className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                        <p className="text-gray-500 dark:text-gray-400 mb-4">No campaigns created yet</p>
+                        <Button onClick={() => setLocation('/promote/campaigns/new')} data-testid="button-first-campaign">
+                          Create Your First Campaign
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Mail className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500 dark:text-gray-400 mb-4">No campaigns created yet</p>
+                    <Button onClick={() => setLocation('/promote/campaigns/new')} data-testid="button-first-campaign">
+                      Create Your First Campaign
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Analytics Tab */}
+          <TabsContent value="analytics" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Campaign Performance</CardTitle>
+                <CardDescription>Email and SMS delivery metrics for the last 30 days</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Open Rate</p>
+                    <p className="text-3xl font-bold text-gray-900 dark:text-white" data-testid="analytics-open-rate">
+                      {displayMetrics.avgOpenRate}%
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">Industry avg: 21.5%</p>
+                  </div>
+                  <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Click Rate</p>
+                    <p className="text-3xl font-bold text-gray-900 dark:text-white" data-testid="analytics-click-rate">
+                      {displayMetrics.avgClickRate}%
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">Industry avg: 2.6%</p>
+                  </div>
+                  <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Deliverability</p>
+                    <p className="text-3xl font-bold text-green-600 dark:text-green-400" data-testid="analytics-deliverability">
+                      {displayMetrics.avgDeliverability}%
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">Excellent</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <div className="grid md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Email Breakdown</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Sent</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{displayMetrics.emailsSent.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Delivered</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{displayMetrics.emailsDelivered.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Opened</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{displayMetrics.emailsOpened.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Clicked</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{displayMetrics.emailsClicked.toLocaleString()}</span>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">SMS Breakdown</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Sent</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{displayMetrics.smsSent.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Delivered</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{displayMetrics.smsDelivered.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Delivery Rate</span>
+                    <span className="font-medium text-green-600 dark:text-green-400">
+                      {displayMetrics.smsSent > 0 ? ((displayMetrics.smsDelivered / displayMetrics.smsSent) * 100).toFixed(1) : '0.0'}%
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+
+      <Footer />
+    </div>
+  );
+}
+
+/**
+ * Phase D: shows the total number of campaign sends across any campaigns that
+ * include a {{formUrl:...}} variable in their content. Hides itself when the
+ * count is zero so the dashboard doesn't show a cold metric.
+ */
+function FormLinksSentCard() {
+  const { data } = useQuery<{ success: boolean; formLinksSent: number; campaignCount: number }>({
+    queryKey: ["/api/send/forms-sent"],
+  });
+
+  if (!data?.success || data.formLinksSent === 0) return null;
+
+  return (
+    <Card className="mb-8 border-2" style={{ borderColor: "#8000FF" }}>
+      <CardContent className="pt-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: "#8000FF" }}>
+                <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+              </div>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Form Links Sent</p>
+            </div>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white" data-testid="metric-form-links-sent">
+              {data.formLinksSent.toLocaleString()}
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              across {data.campaignCount} campaign{data.campaignCount === 1 ? "" : "s"} with / convert form links
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            asChild
+            style={{ borderColor: "#8000FF", color: "#8000FF" }}
+          >
+            <a href="/convert/dashboard" data-testid="link-open-convert">Open / convert</a>
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

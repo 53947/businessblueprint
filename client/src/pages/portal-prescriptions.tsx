@@ -5,15 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
 import { Header } from "@/components/header";
+import { SectionHeader } from "@/components/section-header";
 import { Footer } from "@/components/footer";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { 
-  FileText, 
-  CheckCircle, 
-  Clock, 
+import { getDisplayScore as sharedGetDisplayScore, getScoreLabel, getScoreColor as sharedGetScoreColor } from "@shared/score-utils";
+import {
+  FileText,
+  CheckCircle,
+  Clock,
   AlertTriangle,
   ArrowRight,
   TrendingUp,
@@ -22,7 +23,9 @@ import {
   ChevronLeft,
   Target,
   Sparkles,
-  BarChart3
+  BarChart3,
+  ClipboardList,
+  Loader2,
 } from "lucide-react";
 
 interface Prescription {
@@ -53,6 +56,9 @@ interface Recommendation {
   priority: string;
   estimatedImpact: string | null;
   estimatedEffort: string | null;
+  currentScore: number | null;
+  projectedScore: number | null;
+  scoreImprovement: number | null;
 }
 
 interface PrescriptionData {
@@ -76,16 +82,13 @@ function getStatusBadge(status: string) {
   }
 }
 
-function getGradeInfo(score: number): { grade: string; color: string; textColor: string } {
-  if (score >= 126) return { grade: 'A+', color: 'bg-green-500', textColor: 'text-green-600' };
-  if (score >= 112) return { grade: 'A', color: 'bg-green-500', textColor: 'text-green-600' };
-  if (score >= 98) return { grade: 'B+', color: 'bg-blue-500', textColor: 'text-blue-600' };
-  if (score >= 84) return { grade: 'B', color: 'bg-blue-500', textColor: 'text-blue-600' };
-  if (score >= 70) return { grade: 'C+', color: 'bg-orange-500', textColor: 'text-orange-600' };
-  if (score >= 56) return { grade: 'C', color: 'bg-orange-500', textColor: 'text-orange-600' };
-  if (score >= 42) return { grade: 'D+', color: 'bg-red-500', textColor: 'text-red-600' };
-  if (score >= 28) return { grade: 'D', color: 'bg-red-500', textColor: 'text-red-600' };
-  return { grade: 'F', color: 'bg-red-600', textColor: 'text-red-600' };
+// Use shared score utilities
+const getDisplayScore = sharedGetDisplayScore;
+function getScoreColorClass(displayScore: number): string {
+  if (displayScore >= 120) return 'text-green-600';
+  if (displayScore >= 100) return 'text-blue-600';
+  if (displayScore >= 85) return 'text-orange-600';
+  return 'text-red-600';
 }
 
 function PrescriptionsList() {
@@ -200,6 +203,33 @@ function PrescriptionDetail({ prescriptionId, token }: { prescriptionId?: string
     enabled: !!(prescriptionId || token),
   });
 
+  // Check if Directions for Use tasks already exist
+  const { data: setupProgressData } = useQuery<{ totalTasks: number }>({
+    queryKey: ['/api/setup-tasks/progress'],
+    enabled: !token,
+  });
+
+  const generateTasksMutation = useMutation({
+    mutationFn: async (prescriptionId: number) => {
+      const res = await apiRequest('POST', '/api/setup-tasks/generate', { prescriptionId });
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/setup-tasks/progress'] });
+      toast({
+        title: "Your Directions for Use are ready!",
+        description: "Your step-by-step setup plan has been created.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Generation Failed",
+        description: "Could not generate your setup tasks. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const progressMutation = useMutation({
     mutationFn: async (progress: number) => {
       return await apiRequest('PATCH', `/api/portal/prescriptions/${data?.prescription.id}/progress`, {
@@ -251,16 +281,39 @@ function PrescriptionDetail({ prescriptionId, token }: { prescriptionId?: string
   }
 
   const { prescription, assessment, recommendations } = data;
-  const gradeInfo = assessment?.digitalScore ? getGradeInfo(assessment.digitalScore) : null;
-  const highPriority = recommendations.filter(r => r.priority === 'high');
-  const mediumPriority = recommendations.filter(r => r.priority === 'medium');
-  const lowPriority = recommendations.filter(r => r.priority === 'low');
+  const displayScore = assessment?.digitalScore ? getDisplayScore(assessment.digitalScore) : null;
+  const APP_COLORS: Record<string, string> = {
+    'Email & SMS Marketing': '#1844A6',
+    'Social Media Content': '#FF44CC',
+    'Reputation Management': '#E9B307',
+    'Unified Inbox & Response': '#001882',
+    'Live Chat': '#660099',
+    'Business Listings & GBP': '#064A6C',
+    'Website & SEO': '#374151',
+    'CRM & Customer Management': '#008060',
+    'Advertising & Paid Media': '#97ACCA',
+  };
+
+  const APP_NAMES: Record<string, string> = {
+    'Email & SMS Marketing': '/ promote',
+    'Social Media Content': '/ post',
+    'Reputation Management': '/ elevate',
+    'Unified Inbox & Response': '/ respond',
+    'Live Chat': '/ engage',
+    'Business Listings & GBP': '/ publish',
+    'Website & SEO': '/ optimize',
+    'CRM & Customer Management': '/ connect',
+    'Advertising & Paid Media': '/ amplify',
+  };
+
+  const getAppColor = (category: string) => APP_COLORS[category] || '#374151';
+  const getAppName = (category: string) => APP_NAMES[category] || category;
 
   return (
     <div className="space-y-6">
       {!token && (
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           onClick={() => setLocation('/portal/prescriptions')}
           className="mb-4"
           data-testid="button-back"
@@ -270,219 +323,226 @@ function PrescriptionDetail({ prescriptionId, token }: { prescriptionId?: string
         </Button>
       )}
 
-      <Card className="overflow-hidden" data-testid="card-prescription-header">
-        <div className="bg-gradient-to-r from-[#0000FF] to-[#3B82F6] p-6 text-white">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-bold font-['Archivo_Semi_Expanded',sans-serif] mb-2">
-                {prescription.title}
-              </h1>
-              {assessment && (
-                <p className="text-blue-100">
-                  Assessment for {assessment.businessName} • {assessment.industry}
-                </p>
-              )}
-            </div>
-            {assessment?.digitalScore && gradeInfo && (
-              <div className="text-center bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                <div className="text-sm text-blue-100 mb-1">Digital IQ Score</div>
-                <div className="text-4xl font-bold font-['Archivo_Semi_Expanded',sans-serif]">
-                  {assessment.digitalScore}
-                </div>
-                <div className="text-sm text-blue-100">out of 140</div>
-                <Badge className={`mt-2 ${gradeInfo.color} text-white`}>
-                  Grade: {gradeInfo.grade}
-                </Badge>
-              </div>
-            )}
-          </div>
+      <div className="relative bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
+        {/* Grid pattern overlay */}
+        <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.5 }}>
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="prescription-grid" width="30" height="30" patternUnits="userSpaceOnUse">
+                <path d="M 0 0 L 30 0" fill="none" stroke="#064A6C" strokeWidth="0.5"/>
+                <path d="M 0 0 L 0 30" fill="none" stroke="#064A6C" strokeWidth="0.5"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#prescription-grid)" />
+          </svg>
         </div>
-        <CardContent className="p-6">
-          <div className="flex flex-wrap gap-4 items-center justify-between">
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-500">
-                <Calendar className="w-4 h-4 inline mr-1" />
-                Created: {new Date(prescription.createdAt).toLocaleDateString()}
-              </span>
-              {getStatusBadge(prescription.status)}
-            </div>
+
+        <div className="relative z-10 px-8 py-10 md:px-12 md:py-14">
+
+          {/* HEADER */}
+          <div className="mb-10">
+            <h1 className="text-3xl md:text-4xl font-bold font-['Archivo_Semi_Expanded',sans-serif] text-[#09080E] mb-2">
+              Your Digital Prescription
+            </h1>
+            {assessment && (
+              <p className="text-lg text-gray-600 font-['Archivo_Semi_Expanded',sans-serif]">
+                Prepared for {assessment.businessName} • {assessment.industry}
+              </p>
+            )}
+            <p className="text-sm text-gray-400 mt-1">
+              {new Date(prescription.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </p>
           </div>
-          {prescription.summary && (
-            <div className="mt-4 p-4 bg-[#EEFBFF] rounded-lg border border-blue-100">
-              <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-[#FF6B00]" />
-                Executive Summary
-              </h3>
-              <p className="text-gray-700 whitespace-pre-line">{prescription.summary}</p>
+
+          {/* SECTION 1 — What You're Doing Right */}
+          {assessment?.analysisResults?.strengthsNarrative && (
+            <div className="mb-12">
+              <h2 className="text-xl font-bold text-[#09080E] font-['Archivo_Semi_Expanded',sans-serif] mb-4">
+                What You're Doing Right
+              </h2>
+              <div className="prose prose-gray max-w-none">
+                {assessment.analysisResults.strengthsNarrative.split('\n\n').map((paragraph: string, i: number) => (
+                  <p key={i} className="text-gray-700 leading-relaxed mb-4 text-[15px]">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
             </div>
           )}
-        </CardContent>
-      </Card>
 
-      {!token && (
-        <Card data-testid="card-progress-tracker">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Target className="w-5 h-5 text-[#FF6B00]" />
-              Implementation Progress
-            </CardTitle>
-            <CardDescription>
-              Track your progress as you implement the recommendations
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-lg font-semibold">{prescription.implementationProgress}% Complete</span>
-                {prescription.implementationProgress === 100 && (
-                  <Badge className="bg-green-500 text-white">
-                    <CheckCircle className="w-4 h-4 mr-1" />
-                    Completed
-                  </Badge>
-                )}
+          {/* SECTION 2 — Your Prescription (narrative) */}
+          {assessment?.analysisResults?.prescriptionNarrative && (
+            <div className="mb-12">
+              <h2 className="text-xl font-bold text-[#09080E] font-['Archivo_Semi_Expanded',sans-serif] mb-4">
+                Your Prescription
+              </h2>
+              <div className="prose prose-gray max-w-none">
+                {assessment.analysisResults.prescriptionNarrative.split('\n\n').map((paragraph: string, i: number) => (
+                  <p key={i} className="text-gray-700 leading-relaxed mb-4 text-[15px]">
+                    {paragraph}
+                  </p>
+                ))}
               </div>
-              <Progress value={prescription.implementationProgress} className="h-3" />
-              <div className="pt-4">
-                <label className="text-sm text-gray-600 mb-2 block">Update your progress:</label>
-                <div className="flex items-center gap-4">
-                  <Slider
-                    value={[prescription.implementationProgress]}
-                    onValueCommit={(value) => progressMutation.mutate(value[0])}
-                    max={100}
-                    step={5}
-                    className="flex-1"
-                    disabled={progressMutation.isPending}
-                    data-testid="slider-progress"
-                  />
-                  <Button 
-                    size="sm" 
-                    disabled={progressMutation.isPending}
-                    onClick={() => progressMutation.mutate(100)}
-                    className="bg-green-500 hover:bg-green-600"
-                    data-testid="button-mark-complete"
-                  >
-                    Mark Complete
+            </div>
+          )}
+
+          {/* FALLBACK — If no narrative exists (old assessments), show recommendations */}
+          {!assessment?.analysisResults?.prescriptionNarrative && recommendations.length > 0 && (
+            <div className="mb-12">
+              <h2 className="text-xl font-bold text-[#09080E] font-['Archivo_Semi_Expanded',sans-serif] mb-4">
+                Your Prescription
+              </h2>
+              {recommendations
+                .sort((a, b) => {
+                  const order = ['high', 'critical', 'medium', 'low'];
+                  return order.indexOf(a.priority) - order.indexOf(b.priority);
+                })
+                .map((rec) => (
+                  <div key={rec.id} className="mb-6 pl-4 border-l-2 border-[#064A6C]/30">
+                    <h3 className="font-semibold text-[#09080E] text-[15px] mb-1">{rec.title}</h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">{rec.description}</p>
+                    {rec.scoreImprovement != null && rec.scoreImprovement > 0 && (
+                      <span className="inline-block mt-2 text-xs font-medium text-[#064A6C] bg-[#064A6C]/10 px-2 py-0.5 rounded">
+                        est. +{rec.scoreImprovement} pts
+                      </span>
+                    )}
+                  </div>
+                ))
+              }
+            </div>
+          )}
+
+          {/* SECTION 3 — Your Action Items */}
+          {recommendations.length > 0 && (
+            <div className="mb-12">
+              <h2 className="text-xl font-bold text-[#09080E] font-['Archivo_Semi_Expanded',sans-serif] mb-4">
+                Your Action Items
+              </h2>
+              <p className="text-gray-500 text-sm mb-6">
+                Each action below has been added to your Directions for Use with a suggested timeline.
+                All dates are estimates — adjust them to fit your schedule.
+              </p>
+              <div className="space-y-3">
+                {recommendations
+                  .filter(r => r.priority === 'high' || r.priority === 'critical')
+                  .concat(recommendations.filter(r => r.priority === 'medium'))
+                  .concat(recommendations.filter(r => r.priority === 'low'))
+                  .map((rec, i) => (
+                    <div key={rec.id} className="flex items-start gap-3 py-3 border-b border-gray-100 last:border-0">
+                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#064A6C]/10 flex items-center justify-center mt-0.5">
+                        <span className="text-xs font-bold text-[#064A6C]">{i + 1}</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-medium text-[#09080E] text-sm">{rec.title}</span>
+                          <Badge variant="outline" className="text-xs px-1.5 py-0"
+                            style={{
+                              borderColor: getAppColor(rec.category),
+                              color: getAppColor(rec.category),
+                            }}>
+                            {getAppName(rec.category)}
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="flex-shrink-0 text-right">
+                        {rec.scoreImprovement != null && rec.scoreImprovement > 0 && (
+                          <span className="text-sm font-semibold text-[#008060]">
+                            +{rec.scoreImprovement} pts
+                          </span>
+                        )}
+                        <div className="text-xs text-gray-400">est.</div>
+                      </div>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+          )}
+
+          {/* SECTION 4 — Score Summary */}
+          {assessment?.digitalScore != null && displayScore != null && (
+            <div className="mb-10 p-6 bg-[#09080E]/[0.03] rounded-xl">
+              <h2 className="text-xl font-bold text-[#09080E] font-['Archivo_Semi_Expanded',sans-serif] mb-6">
+                Your Digital IQ Summary
+              </h2>
+              <div className="flex flex-col md:flex-row items-center justify-center gap-8 mb-6">
+                <div className="text-center">
+                  <div className="text-sm text-gray-500 mb-1">Current Score</div>
+                  <div className={`text-5xl font-bold font-['Archivo_Semi_Expanded',sans-serif] ${getScoreColorClass(displayScore)}`}>
+                    {displayScore}
+                  </div>
+                  <div className="text-sm text-gray-500 mt-1">{getScoreLabel(displayScore)}</div>
+                </div>
+                {(() => {
+                  const totalImprovement = recommendations
+                    .filter(r => r.scoreImprovement != null)
+                    .reduce((sum, r) => sum + (r.scoreImprovement || 0), 0);
+                  if (totalImprovement <= 0) return null;
+                  const projectedRaw = Math.min(140, (assessment.digitalScore || 0) + totalImprovement);
+                  const projectedDisplay = getDisplayScore(projectedRaw);
+                  return (
+                    <>
+                      <div className="text-3xl text-gray-300 hidden md:block">→</div>
+                      <div className="text-center">
+                        <div className="text-sm text-gray-500 mb-1">Projected Score</div>
+                        <div className="text-5xl font-bold font-['Archivo_Semi_Expanded',sans-serif] text-[#008060]">
+                          {projectedDisplay}
+                        </div>
+                        <div className="text-sm text-gray-500 mt-1">{getScoreLabel(projectedDisplay)}</div>
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
+              <p className="text-xs text-gray-400 text-center">
+                Your Digital IQ Score reflects your business's online presence strength on a scale of 70 to 140.
+                Projected score is an estimate based on completing the actions in your prescription.
+              </p>
+            </div>
+          )}
+
+          {/* SECTION 5 — Directions for Use confirmation */}
+          {!token && (
+            <div className="p-6 bg-white rounded-xl border border-[#064A6C]/20">
+              <div className="flex items-start gap-4">
+                <ClipboardList className="w-6 h-6 text-[#064A6C] flex-shrink-0 mt-1" />
+                <div className="flex-1">
+                  <h3 className="font-bold text-[#09080E] text-lg mb-1">
+                    These steps are in your Directions for Use
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-4">
+                    Every action item above has been added to your step-by-step setup plan with suggested dates.
+                    You're welcome to adjust the timeline — it's your plan, built at your pace.
+                  </p>
+                  <Button asChild className="bg-[#09080E] hover:bg-[#09080E]/80 text-white">
+                    <Link href="/portal/directions">
+                      Open Your Directions for Use
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Link>
                   </Button>
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      )}
-
-      <Card data-testid="card-recommendations">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <ListTodo className="w-5 h-5 text-[#0000FF]" />
-            Recommendations ({recommendations.length})
-          </CardTitle>
-          <CardDescription>
-            Prioritized actions to improve your digital presence
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {highPriority.length > 0 && (
-            <div>
-              <h3 className="font-semibold text-red-600 mb-3 flex items-center gap-2">
-                <Badge className="bg-red-100 text-red-700 border-red-200">High Priority</Badge>
-                Focus on these first for maximum impact
-              </h3>
-              <div className="space-y-3">
-                {highPriority.map(rec => (
-                  <RecommendationCard key={rec.id} recommendation={rec} />
-                ))}
-              </div>
-            </div>
           )}
-          
-          {mediumPriority.length > 0 && (
-            <div>
-              <h3 className="font-semibold text-orange-600 mb-3 flex items-center gap-2">
-                <Badge className="bg-orange-100 text-orange-700 border-orange-200">Medium Priority</Badge>
-                Important for continued growth
-              </h3>
-              <div className="space-y-3">
-                {mediumPriority.map(rec => (
-                  <RecommendationCard key={rec.id} recommendation={rec} />
-                ))}
+
+          {/* Coach Blue CTA */}
+          {!token && (
+            <div className="mt-8 p-6 bg-[#0000FF]/5 rounded-xl border border-[#0000FF]/15">
+              <div className="flex items-start gap-4">
+                <img src="https://cdn.triadblue.com/brands/coachblue/logo-image.png" alt="Coach Blue" className="w-10 h-10 rounded-lg flex-shrink-0" />
+                <div>
+                  <h3 className="font-bold text-[#09080E] text-lg mb-1">
+                    Coach Blue is ready when you are
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    Your AI business coach has read your prescription and knows exactly where you stand.
+                    Ask him anything about your next steps.
+                  </p>
+                </div>
               </div>
             </div>
           )}
 
-          {lowPriority.length > 0 && (
-            <div>
-              <h3 className="font-semibold text-blue-600 mb-3 flex items-center gap-2">
-                <Badge className="bg-blue-100 text-blue-700 border-blue-200">Low Priority</Badge>
-                Nice to have when time permits
-              </h3>
-              <div className="space-y-3">
-                {lowPriority.map(rec => (
-                  <RecommendationCard key={rec.id} recommendation={rec} />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {recommendations.length === 0 && (
-            <p className="text-gray-500 text-center py-8">
-              No recommendations available yet.
-            </p>
-          )}
-        </CardContent>
-      </Card>
-
-      {!token && (
-        <Card className="bg-gradient-to-r from-[#FF6B00]/10 to-[#0000FF]/10 border-[#FF6B00]/30">
-          <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row items-center gap-4">
-              <div className="flex-1">
-                <h3 className="font-semibold text-lg mb-1">Need Help Implementing?</h3>
-                <p className="text-gray-600">
-                  Coach Blue can guide you through each recommendation step-by-step.
-                </p>
-              </div>
-              <Button asChild className="bg-[#0000FF] hover:bg-blue-700">
-                <Link href="/ai-coach">
-                  Talk to Coach Blue
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Link>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-    </div>
-  );
-}
-
-function RecommendationCard({ recommendation }: { recommendation: Recommendation }) {
-  return (
-    <div 
-      className="p-4 bg-gray-50 rounded-lg border-l-4 border-l-[#FF6B00]"
-      data-testid={`card-recommendation-${recommendation.id}`}
-    >
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex-1">
-          <h4 className="font-semibold text-gray-900 mb-1">{recommendation.title}</h4>
-          <p className="text-sm text-gray-600 mb-2">{recommendation.description}</p>
-          <div className="flex flex-wrap gap-2 text-xs">
-            <Badge variant="outline" className="bg-white">
-              <BarChart3 className="w-3 h-3 mr-1" />
-              {recommendation.category}
-            </Badge>
-            {recommendation.estimatedImpact && (
-              <Badge variant="outline" className="bg-white">
-                <TrendingUp className="w-3 h-3 mr-1" />
-                Impact: {recommendation.estimatedImpact}
-              </Badge>
-            )}
-            {recommendation.estimatedEffort && (
-              <Badge variant="outline" className="bg-white">
-                <Clock className="w-3 h-3 mr-1" />
-                Effort: {recommendation.estimatedEffort}
-              </Badge>
-            )}
-          </div>
         </div>
       </div>
     </div>
@@ -495,8 +555,14 @@ export default function PortalPrescriptions() {
   const [matchToken, tokenParams] = useRoute("/portal/prescription/:token");
 
   return (
-    <div className="min-h-screen bg-[#EEFBFF]">
+    <div className="min-h-screen bg-[#E9ECF0]">
       <Header />
+      <SectionHeader
+        title="Digital IQ Prescriptions"
+        subtitle="Your personalized growth prescriptions"
+        showHomeButton={true}
+        homeRoute="/portal"
+      />
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {matchToken ? (
           <PrescriptionDetail token={tokenParams?.token} />

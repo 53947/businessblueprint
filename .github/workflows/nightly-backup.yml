@@ -1,0 +1,99 @@
+name: Nightly Database Backup
+
+# Runs every night at 3 AM Eastern (7 AM UTC)
+# Dumps the businessblueprint production database, uploads to Backblaze B2,
+# and prunes any backups older than 30 days.
+#
+# Required GitHub secrets (already configured as of 2026-04-19):
+#   BACKUP_DATABASE_URL     - read-only Neon connection string
+#   B2_ACCOUNT_ID           - Backblaze B2 application key ID
+#   B2_APPLICATION_KEY      - Backblaze B2 application key
+#   B2_BUCKET_NAME          - triadblue-backups-businessblueprint
+#
+# See Section 15 of the Master Continuity doc for the backup strategy.
+
+on:
+  schedule:
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+
+jobs:
+  backup:
+    name: Dump, Upload, Prune
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Install PostgreSQL 16 client
+        run: |
+          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+          wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-17
+
+      - name: Install Backblaze B2 CLI
+        run: |
+          python3 -m pip install --upgrade b2
+
+      - name: Authenticate to Backblaze B2
+        env:
+          B2_APPLICATION_KEY_ID: ${{ secrets.B2_ACCOUNT_ID }}
+          B2_APPLICATION_KEY: ${{ secrets.B2_APPLICATION_KEY }}
+        run: |
+          b2 account authorize "$B2_APPLICATION_KEY_ID" "$B2_APPLICATION_KEY"
+
+      - name: Dump database
+        env:
+          BACKUP_DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          export PATH="/usr/lib/postgresql/17/bin:$PATH"
+          DATE=$(date -u +%Y-%m-%d)
+          FILENAME="nightly-backup-${DATE}.sql.gz"
+          echo "Dumping database to $FILENAME"
+          pg_dump "$BACKUP_DATABASE_URL" \
+            --schema=public \
+            --no-owner \
+            --no-privileges \
+            --format=plain \
+            --encoding=UTF8 \
+            | gzip -9 > "$FILENAME"
+          echo "Dump complete:"
+          ls -lh "$FILENAME"
+          SIZE=$(stat -c%s "$FILENAME")
+          if [ "$SIZE" -lt 1024 ]; then
+            echo "ERROR: Dump is only $SIZE bytes - likely failed"
+            exit 1
+          fi
+          echo "FILENAME=$FILENAME" >> "$GITHUB_ENV"
+
+      - name: Upload to Backblaze B2
+        env:
+          B2_BUCKET_NAME: ${{ secrets.B2_BUCKET_NAME }}
+        run: |
+          set -euo pipefail
+          echo "Uploading $FILENAME to b2://$B2_BUCKET_NAME/"
+          b2 file upload "$B2_BUCKET_NAME" "$FILENAME" "$FILENAME"
+          echo "Upload complete"
+
+      - name: Prune backups older than 30 days
+        env:
+          B2_BUCKET_NAME: ${{ secrets.B2_BUCKET_NAME }}
+        run: |
+          set -euo pipefail
+          echo "Pruning backups older than 30 days"
+          CUTOFF=$(date -u -d '30 days ago' +%Y-%m-%d)
+          echo "Cutoff date: $CUTOFF"
+          b2 ls --long "b2://$B2_BUCKET_NAME" | awk '{print $6}' | grep '^nightly-backup-' | while read -r file; do
+            FILE_DATE=$(echo "$file" | sed -E 's/nightly-backup-([0-9]{4}-[0-9]{2}-[0-9]{2})\.sql\.gz/\1/')
+            if [[ "$FILE_DATE" < "$CUTOFF" ]]; then
+              echo "Deleting $file (dated $FILE_DATE)"
+              b2 file delete "b2://$B2_BUCKET_NAME/$file" || true
+            fi
+          done
+          echo "Prune complete"
+
+      - name: Report success
+        run: |
+          echo "Backup completed successfully: $FILENAME"
+          echo "Bucket: ${{ secrets.B2_BUCKET_NAME }}"

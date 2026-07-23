@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Trash2, ShoppingCart, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
 
 interface CartItem {
   id: string;
@@ -64,7 +66,8 @@ export default function Cart() {
 
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12">
+      <div className="min-h-screen bg-gray-50">
+        <Header showNavigation={true} />
         <div className="max-w-4xl mx-auto px-4">
           <Button
             onClick={() => setLocation("/marketplace")}
@@ -88,13 +91,15 @@ export default function Cart() {
             </Button>
           </Card>
         </div>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-4xl mx-auto px-4">
+    <div className="min-h-screen bg-gray-50">
+      <Header showNavigation={true} />
+      <div className="max-w-4xl mx-auto px-4 py-12">
         <Button
           onClick={() => setLocation("/marketplace")}
           variant="ghost"
@@ -204,12 +209,13 @@ export default function Cart() {
               </Button>
 
               <p className="text-xs text-gray-500 mt-4 text-center">
-                Secure payment powered by NMI
+                Secure payment powered by SwipesBlue
               </p>
             </Card>
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

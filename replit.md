@@ -241,4 +241,52 @@ npm run db:push
 
 ---
 
+## 💬 Live Chat System (/ chat) - Jan 2026
+
+**Purpose:** Multi-tenant SaaS live chat platform integrated into BusinessBlueprint.io. Stores visitor data on BB servers and syncs contacts to customers' /relationships CRM accounts.
+
+### Architecture
+- **Widget API** (`server/routes/chat.ts`) - Public endpoints for embeddable widget
+- **Dashboard API** (`server/routes/chat.ts`) - Authenticated endpoints for conversation management
+- **Distributable Widget** (`client/public/chat-widget.js`) - Vanilla JS widget for WordPress/Shopify/embed
+- **Dashboard UI** (`client/src/pages/chat-dashboard.tsx`) - React-based conversation management
+
+### Database Schema (in `shared/schema.ts`)
+- `livechatWidgetSettings` - Per-client widget customization (colors, position, welcome message)
+- `livechatSessions` - Visitor sessions with page URL, referrer, user agent
+- `livechatAgents` - Support agents with availability status
+- `chatAnalyticsEvents` - Widget opens, messages, conversions tracking
+- Uses existing `inboxConversations` and `inboxMessages2` for message storage
+- CRM sync: Creates/updates `crmContacts` when visitor provides email
+
+### Widget Installation
+Customers embed the widget using:
+```html
+<script src="https://businessblueprint.io/chat-widget.js" data-client-id="CLIENT_ID"></script>
+```
+
+### Security Model
+- CORS middleware on all widget endpoints (allows cross-origin requests)
+- Client validation: Widget endpoints verify client exists before processing
+- Dashboard uses sessionStorage for clientId (production should use authenticated tenant)
+
+### Key Routes
+| Endpoint | Purpose |
+|----------|---------|
+| `GET /api/chat/widget/settings/:clientId` | Load widget configuration |
+| `POST /api/chat/widget/sessions` | Create/resume chat session |
+| `POST /api/chat/widget/messages` | Send message from visitor |
+| `GET /api/chat/widget/messages/:sessionId` | Get message history |
+| `POST /api/chat/widget/analytics` | Track widget events |
+| `GET /api/chat/dashboard/conversations/:clientId` | List client conversations |
+| `GET /api/chat/dashboard/analytics/:clientId` | Get analytics summary |
+
+### Production Enhancements (TODO)
+1. Implement signed client tokens for widget authentication
+2. Add domain allowlist per client for CORS validation
+3. Enforce server-side tenant auth for dashboard routes
+4. Add real-time Socket.IO for instant message delivery
+
+---
+
 **Remember:** This file governs **how we work together**. For **what we're building**, see the technical docs referenced above.

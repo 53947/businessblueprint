@@ -2,36 +2,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLocation, Link } from "wouter";
 import { AICoachIcon } from "@/components/pathway-icons";
-import compassIcon from "@assets/icons/compass.svg";
-import { HowItWorks } from "@/components/how-it-works";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { BrandLogo } from "@/components/brand-logo";
-import { ClipboardCheck, FileText, Layers, Wrench, Rocket } from "lucide-react";
-import { DigitalAssessmentIcon, DigitalIQIcon, CommverseIcon, CoachBlueIcon, BasePlanIcon, ActionPlanIcon, BuildMethodIcon } from "@/components/brand-icons";
-import bbIcon from "@assets/Blueprint_Favicon_1762489845363.png";
-import bbLogo from "@assets/Blueprint_Favicon_1762489845363.png";
-import webhostedIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
-import webhostedLogo from "@assets/hostsblue assets/hostsblue URL.png";
-import airswipedLogo from "@assets/swipesblue/swipesblue brandmark.png";
-import blueprintToGrowthIcon from "@assets/digital iq assessment_1764056639965.png";
-import badge2 from "@assets/Get Your Prescribed Blueprint (2)_1763874287090.png";
-import badge3 from "@assets/LocalBlue Bundle (3)_1763874287091.png";
-import badge4 from "@assets/Coach Blue as Blue(4)_1763874287091.png";
-import badge5 from "@assets/Commverse (5)_1763874287091.png";
-import sendIcon from "@assets/native icons and favicons/: send app icon.png";
-import sendLogo from "@assets/logos and wordmarks/: send app logo.png";
-import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
-import inboxLogo from "@assets/logos and wordmarks/: inbox app logo.png";
-import livechatIcon from "@assets/native icons and favicons/: livechat app icon.png";
-import livechatLogo from "@assets/logos and wordmarks/: livechat app logo.png";
-import contentIcon from "@assets/native icons and favicons/: content app icon.png";
-import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
-import commverseBundle from "@assets/_ commverse bundle logo_1762731789054.png";
-import commverseIcon from "@assets/Commverse_1762731195351.png";
-import localBlueLogo from "@assets/localblue-logo.png";
-import heroAssessmentIcon from "@assets/digital iq assessment_1764056639965.png";
-import heroCoachIcon from "@assets/Coach Blue as Blue(4)_1763874287091.png";
+import { ClipboardCheck, FileText, Layers, Wrench, Rocket, Star, MessageCircle, Mail, Target, GraduationCap, ArrowRight, CheckCircle2 } from "lucide-react";
+import { DigitalAssessmentIcon, DigitalIQIcon, CoachBlueIcon, BasePlanIcon, ActionPlanIcon, BuildMethodIcon } from "@/components/brand-icons";
+const coachBlueLarge = "https://cdn.triadblue.com/brands/coachblue/logo-image.png";
+import { AppName, AppIcon, BundleHeader } from "@/components/app-name";
+const coachBlueStepIcon = "https://cdn.triadblue.com/brands/coachblue/logo-image.png";
+import {
+  APP_REGISTRY, BUNDLE_REGISTRY, CONNECT_CRM, COACH_BLUE, DIGITAL_IQ,
+  HOW_IT_WORKS_STEPS, getAppsByBundle,
+} from "@/config/app-registry";
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -45,216 +27,105 @@ export default function Home() {
       <Header showNavigation={true} />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-blue-50 via-white to-gray-50 py-12 lg:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative py-12 lg:py-20 border-b-[0.5px] border-[#09080E]/50 overflow-hidden" style={{ backgroundColor: "#E9ECF0" }}>
+        {/* Blueprint Grid Lines — full section */}
+        <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.25 }}>
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="blueprint-grid" width="30" height="30" patternUnits="userSpaceOnUse">
+                <path d="M 0 0 L 30 0" fill="none" stroke="#064A6C" strokeWidth="1"/>
+                <path d="M 0 0 L 0 30" fill="none" stroke="#064A6C" strokeWidth="1"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#blueprint-grid)" />
+          </svg>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
             <div className="mb-8 lg:mb-0">
-              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 leading-tight">
+              <h1 className="text-3xl lg:text-4xl font-bold mb-6 leading-tight" style={{ color: "#09080E" }}>
                 We Assess. We Prescribe. You Grow.
               </h1>
-              
+
               {/* Desktop copy */}
-              <p className="hidden lg:block text-xl text-gray-600 mb-8 leading-relaxed">
-                Powered by our Business IQ Scanner, your full digital footprint is analyzed using Google Business Intelligence to expose gaps, opportunities, and revenue-ready action steps. Our AI then delivers your prescribed Digital Blueprint — a custom, data-driven plan with the exact apps, actions, and pricing your business needs to grow.
+              <p className="hidden lg:block text-xl mb-8 leading-relaxed" style={{ color: "rgba(9,8,14,0.7)" }}>
+                Your full digital footprint is scored across six categories — website performance, reviews, social media presence, local search rankings, directory accuracy, and overall visibility. Our AI then delivers your prescribed Digital Blueprint — a custom, data-driven plan with the exact apps, actions, and pricing your business needs to grow.
               </p>
-              
+
               {/* Mobile copy */}
-              <p className="lg:hidden text-xl text-gray-600 mb-8 leading-relaxed">
-                Your full digital footprint analyzed by Business IQ Scanner with Google Business Intelligence. Get your prescribed Digital Blueprint — the apps, actions, and pricing your business needs to grow.
+              <p className="lg:hidden text-xl mb-8 leading-relaxed" style={{ color: "rgba(9,8,14,0.7)" }}>
+                Your digital footprint scored across six categories. Get your prescribed Digital Blueprint — the apps, actions, and pricing your business needs to grow.
               </p>
-              
+
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Button 
-                  onClick={startAssessment} 
-                  size="lg" 
+                <Button
+                  onClick={startAssessment}
+                  size="lg"
                   variant="outline"
                   className="border-2 border-[#0000FF] bg-white hover:bg-gray-50 text-[#A00028] font-semibold"
                   data-testid="button-start-assessment"
                 >
-                  <img src={heroAssessmentIcon} alt="" className="w-6 h-6 mr-2" />
-                  Start Free Blueprint to Your Growth
+                  <AppIcon name="ClipboardCheck" size={24} color="#A00028" />
+                  <span className="ml-2">Start Here</span>
                 </Button>
-                <Link href="/ai-coach">
-                  <Button 
-                    size="lg" 
+                <Link href="/coach-blue">
+                  <Button
+                    size="lg"
                     variant="outline"
                     className="border-2 border-[#0000FF] bg-white hover:bg-gray-50 text-[#FF6B00] font-semibold w-full sm:w-auto"
                     data-testid="button-ai-coach"
                   >
-                    <img src={heroCoachIcon} alt="" className="w-6 h-6 mr-2" />
+                    <img src={coachBlueStepIcon} alt="" className="w-6 h-6 mr-2 rounded" />
                     AI Business Coach
                   </Button>
                 </Link>
               </div>
-              <div className="flex items-center space-x-6 text-sm text-gray-500">
+              <div className="flex items-center space-x-6 text-sm" style={{ color: "rgba(9,8,14,0.6)" }}>
                 <div className="flex items-center">
-                  <span className="text-green-500 mr-2">✓</span>
+                  <CheckCircle2 className="w-4 h-4 text-green-600 mr-2" />
                   No Credit Card Required
                 </div>
                 <div className="flex items-center">
-                  <span className="text-green-500 mr-2">⏱️</span>
-                  Results in 24 Hours
-                </div>
-                <div className="flex items-center">
-                  <span className="text-green-500 mr-2">🛡️</span>
+                  <CheckCircle2 className="w-4 h-4 text-green-600 mr-2" />
                   100% Secure
                 </div>
               </div>
             </div>
             <div className="lg:text-center">
-              <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-100 relative overflow-hidden">
-                {/* Blueprint Paper Grid Lines */}
-                <div className="absolute inset-0 opacity-10 pointer-events-none">
-                  <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                      <pattern id="blueprint-grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#3B82F6" strokeWidth="0.5"/>
-                      </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#blueprint-grid)" />
-                  </svg>
-                </div>
-                
-                <h3 className="text-xl font-bold text-gray-900 mb-2 relative z-10">A Blueprint to Your Growth</h3>
-                <p className="text-xs text-gray-600 mb-4 relative z-10">
+              <div className="p-4">
+                <h3 className="text-xl font-bold mb-2" style={{ color: "#09080E" }}>A Blueprint to Your Growth</h3>
+                <p className="text-xs mb-4" style={{ color: "rgba(9,8,14,0.7)" }}>
                   Custom digital growth plan built from AI analysis of your business.
                 </p>
-                {/* Desktop Version - Full Text */}
-                <div className="hidden md:block space-y-3 relative z-10">
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4" style={{ borderColor: '#A00028' }}>
-                    <div className="flex-shrink-0 -mt-2">
-                      <img src={blueprintToGrowthIcon} alt="Step 1" className="w-10 h-10 object-contain" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900">Step 1 — Complete Your Digital IQ Assessment</div>
-                      <p className="text-xs text-gray-600">
-                        You start with a quick assessment, and we generate your custom blueprint.
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-yellow-500">
-                    <div className="flex-shrink-0 -mt-2">
-                      <img src={badge2} alt="Step 2" className="w-10 h-10 object-contain" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900">Step 2 — Prescribed Blueprint</div>
-                      <p className="text-xs text-gray-600">
-                        Your custom action plan with SEO, content strategy, and revenue-focused steps.
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-blue-500">
-                    <div className="flex-shrink-0 -mt-2">
-                      <img src={badge3} alt="Step 3" className="w-10 h-10 object-contain" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900 flex items-center gap-2">
-                        <span>Step 3 —</span>
-                        <img src={localBlueLogo} alt="LocalBlue" className="h-4" />
+                <div className="space-y-3">
+                  {[
+                    { title: "", titleJsx: <>Complete your Digital Assessment — <Link href="/assessment"><AppName appId="assess" size="sm" iconSize={0} /></Link></>, desc: "Free. Five minutes. We score your website, your reviews, your social presence, and how consistently your business information appears across the web.", descJsx: null, color: "#960D71" },
+                    { title: "", titleJsx: <>Get Your Custom Blueprint — <Link href="/prescriptions"><span style={{ fontFamily: "Archivo Semi Expanded, Archivo, sans-serif", fontWeight: 700 }}><span style={{ color: "#09080E" }}>/</span>{" "}<span style={{ color: "#FFA402" }}>prescribe</span></span></Link></>, desc: "Your scores tell the AI what's broken. It builds a prescription specific to your business — not a generic checklist, not a sales pitch.", descJsx: null, color: "#FFA402" },
+                    { title: "", titleJsx: <>Build Your Foundation — <Link href="/connect"><AppName appId="connect" size="sm" iconSize={0} /></Link></>, desc: "", descJsx: <><Link href="/connect"><AppName appId="connect" size="sm" iconSize={0} /></Link> is your CRM — the central record for every customer, conversation, and deal. Every app you activate feeds into it automatically.</>, color: "#008060" },
+                    { title: "", titleJsx: <>Own Your Local Presence — <Link href="/anchor"><span style={{ fontFamily: "Archivo Semi Expanded, Archivo, sans-serif", fontWeight: 700 }}><span style={{ color: "#09080E" }}>/</span>{" "}<span style={{ color: "#2073E3" }}>anchor suite</span></span></Link></>, desc: "Claim your Google Business listing. Register your D&B DUNS number. Get listed everywhere your customers are looking — all from one place.", descJsx: null, color: "#2073E3" },
+                    { title: "", titleJsx: <>Activate Your Communications — <Link href="/compass"><span style={{ fontFamily: "Archivo Semi Expanded, Archivo, sans-serif", fontWeight: 700 }}><span style={{ color: "#09080E" }}>/</span>{" "}<span style={{ color: "#FF6B00" }}>compass suite</span></span></Link></>, desc: "Email campaigns, live chat on your website, one inbox for every message channel, and social media scheduling — all connected, all talking to each other.", descJsx: null, color: "#FF6B00" },
+                    { title: "", titleJsx: <>Never Grow Alone — <Link href="/coach-blue"><span style={{ fontFamily: "Archivo Semi Expanded, Archivo, sans-serif", fontWeight: 700, color: "#001BB2" }}>Coach Blue</span></Link></>, desc: "", descJsx: <><Link href="/coach-blue"><span style={{ fontFamily: "Archivo Semi Expanded, Archivo, sans-serif", fontWeight: 700, color: "#001BB2" }}>Coach Blue</span></Link> watches your data, guides your setup, and tells you exactly what needs attention before it becomes a problem.</>, color: "#001BB2", isPng: true },
+                  ].map((step, i) => (
+                    <div key={i} className="flex items-start gap-2 p-2 rounded-lg border-l-4 backdrop-blur-sm" style={{ borderColor: step.color, backgroundColor: "rgba(255,255,255,0.5)" }}>
+                      <div className="flex-shrink-0 -mt-2">
+                        {step.isPng ? (
+                          <img src={coachBlueStepIcon} alt="Coach Blue" width={40} height={40} style={{ borderRadius: 8, objectFit: "contain" }} />
+                        ) : (
+                          <AppIcon name={HOW_IT_WORKS_STEPS[i].icon} size={40} color={step.color} />
+                        )}
                       </div>
-                      <p className="text-xs text-gray-600">
-                        Listings management + reputation building for stronger local visibility.
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-purple-500">
-                    <div className="flex-shrink-0 -mt-2">
-                      <img src={badge4} alt="Step 4" className="w-10 h-10 object-contain" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900">Step 4 — Coach Blue</div>
-                      <p className="text-xs text-gray-600">
-                        24/7 AI business coach guiding you through every step of your growth journey.
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-green-500">
-                    <div className="flex-shrink-0 -mt-2">
-                      <img src={badge5} alt="Step 5" className="w-10 h-10 object-contain" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900 flex items-center gap-2">
-                        <span>Step 5 —</span>
-                        <img src={commverseBundle} alt="CommVerse" className="h-5" />
+                      <div className="text-left">
+                        <div className="font-bold text-sm" style={{ color: "#09080E" }}>Step {i + 1} — {step.titleJsx || step.title}</div>
+                        <p className="text-xs" style={{ color: "rgba(9,8,14,0.75)" }}>{step.descJsx || step.desc}</p>
                       </div>
-                      <p className="text-xs text-gray-600">
-                        Complete communication suite: /send, /inbox, /livechat, /content.
-                      </p>
                     </div>
-                  </div>
+                  ))}
                 </div>
-
-                {/* Mobile Version - Short Text */}
-                <div className="block md:hidden space-y-3 relative z-10">
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4" style={{ borderColor: '#A00028' }}>
-                    <div className="flex-shrink-0 -mt-2">
-                      <img src={blueprintToGrowthIcon} alt="Step 1" className="w-10 h-10 object-contain" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900">Step 1 — Digital IQ Assessment</div>
-                      <p className="text-xs text-gray-600">
-                        Quick assessment → instant blueprint.
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-yellow-500">
-                    <div className="flex-shrink-0 -mt-2">
-                      <img src={badge2} alt="Step 2" className="w-10 h-10 object-contain" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900">Step 2 — Prescribed Blueprint</div>
-                      <p className="text-xs text-gray-600">
-                        Your clear action plan to grow.
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-blue-500">
-                    <div className="flex-shrink-0 -mt-2">
-                      <img src={badge3} alt="Step 3" className="w-10 h-10 object-contain" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900 flex items-center gap-2">
-                        <span>Step 3 —</span>
-                        <img src={localBlueLogo} alt="LocalBlue" className="h-4" />
-                      </div>
-                      <p className="text-xs text-gray-600">
-                        Boost local visibility & reviews.
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-purple-500">
-                    <div className="flex-shrink-0 -mt-2">
-                      <img src={badge4} alt="Step 4" className="w-10 h-10 object-contain" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900">Step 4 — Coach Blue</div>
-                      <p className="text-xs text-gray-600">
-                        Your 24/7 AI business coach.
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-green-500">
-                    <div className="flex-shrink-0 -mt-2">
-                      <img src={badge5} alt="Step 5" className="w-10 h-10 object-contain" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900 flex items-center gap-2">
-                        <span>Step 5 —</span>
-                        <img src={commverseBundle} alt="CommVerse" className="h-5" />
-                      </div>
-                      <p className="text-xs text-gray-600">
-                        Messaging, chat, email, content.
-                      </p>
-                    </div>
-                  </div>
+                <div className="text-center mt-3">
+                  <a href="/journey" style={{ color: '#09080E', fontSize: 13, fontWeight: 600 }}>
+                    Read the full story →
+                  </a>
                 </div>
               </div>
             </div>
@@ -262,623 +133,262 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trust Indicators */}
-      <section className="bg-white py-12 border-b border-gray-100">
+      {/* Sections 1–6 below */}
+
+      {/* Section 1: / connect */}
+      <section className="bg-white py-20 border-b-[0.5px] border-[#09080E]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <p className="text-gray-500 font-medium mb-4">Trusted by 10,000+ businesses worldwide</p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center opacity-60">
-            <div className="flex items-center justify-center space-x-2">
-              <span className="text-2xl text-gray-400">🔍</span>
-              <span className="font-bold text-gray-400">Business</span>
-            </div>
-            <div className="flex items-center justify-center space-x-2">
-              <span className="text-2xl text-gray-400">⭐</span>
-              <span className="font-bold text-gray-400">Reviews</span>
-            </div>
-            <div className="flex items-center justify-center space-x-2">
-              <span className="text-2xl text-gray-400">🔍</span>
-              <span className="font-bold text-gray-400">SEO</span>
-            </div>
-            <div className="flex items-center justify-center space-x-2">
-              <span className="text-2xl text-gray-400">📊</span>
-              <span className="font-bold text-gray-400">Analytics</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* The Prescription - What You Get */}
-      <section className="bg-gradient-to-br from-blue-50 via-white to-blue-50 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <div className="inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
-              💊 YOUR PRESCRIPTION
-            </div>
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Not Generic Advice. <span className="text-shadow-strong" style={{ color: '#FF6B00' }}>Your Custom Blueprint</span>.
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              After analyzing your business with Google Intelligence, we prescribe exactly what you need to succeed online.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            <Card className="border-2 border-blue-200 hover:shadow-xl transition-all" data-testid="card-digital-iq">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-center mb-4">
-                  <DigitalIQIcon size={64} />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Your Digital IQ Score</h3>
-                <p className="text-gray-600 text-sm">
-                  A 0-140 assessment of your current online presence based on Google Business Profile, reviews, listings, and more.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2 border-yellow-200 hover:shadow-xl transition-all" data-testid="card-base-plan">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-center mb-4">
-                  <BasePlanIcon size={64} />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Recommended Base Plan</h3>
-                <p className="text-gray-600 text-sm">
-                  Start ($99), Advanced ($299), or Scale ($999) - prescribed based on your Digital IQ and business needs.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2 border-purple-200 hover:shadow-xl transition-all" data-testid="card-commverse">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-center mb-4">
-                  <CommverseIcon size={64} />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center justify-center gap-2">
-                  <img src={commverseBundle} alt="commverse" className="h-8 inline-block" /> Apps + Paths
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Which apps you need (/send, /inbox, /livechat, /content) and SPECIFIC PATHS tailored to your business type.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2 border-green-200 hover:shadow-xl transition-all" data-testid="card-build-method">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-center mb-4">
-                  <BuildMethodIcon size={64} />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">DIY Service</h3>
-                <p className="text-gray-600 text-sm">
-                  100% Do-It-Yourself platform - you control everything with our guidance and tools
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2 border-orange-200 hover:shadow-xl transition-all" data-testid="card-action-plan">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-center mb-4">
-                  <ActionPlanIcon size={64} />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">30-Day Action Plan</h3>
-                <p className="text-gray-600 text-sm">
-                  Week-by-week priorities so you know exactly what to do first, second, third, and fourth.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2 border-pink-200 hover:shadow-xl transition-all" data-testid="card-ai-coach">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-center mb-4">
-                  <CoachBlueIcon size={64} />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">AI Coach Guidance</h3>
-                <p className="text-gray-600 text-sm">
-                  Coach Blue answers questions and guides you through each step of your personalized blueprint.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="text-center">
-            <Button onClick={startAssessment} size="lg" className="border-2 border-[#FF6B00] text-[#FF6B00] bg-transparent hover:bg-[#FF6B00] hover:text-white transition-all px-8 py-6 text-lg" data-testid="button-get-prescription">
-              <span className="mr-2">📋</span>
-              Get Your Free Prescription Now
-            </Button>
-            <p className="mt-4 text-sm text-gray-500">Takes 2 minutes • No credit card required • Results in 24 hours</p>
-          </div>
-        </div>
-      </section>
-
-      {/* CommVerse Bundle - Featured Section */}
-      <section className="bg-gradient-to-br from-purple-50 via-blue-50 to-purple-50 py-20 border-y border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <div className="inline-block bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
-              💬 COMPLETE COMMUNICATIONS SUITE
-            </div>
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 flex items-center justify-center gap-3 flex-wrap">
-              Talk to the Universe with <img src={commverseBundle} alt="commverse" className="h-16 lg:h-20 inline-block" />
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Get all 4 communication apps together and save $40/month. A complete suite to connect with your customers anywhere, anytime.
-            </p>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-8 items-center mb-12">
-            {/* Individual Apps */}
-            <div className="space-y-4">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Individual Apps ($35/mo each)</h3>
-              
-              <Card className="border-2 border-purple-200 hover:shadow-lg transition-all" data-testid="card-send-app">
-                <CardContent className="p-4 flex items-center gap-4">
-                  <img src={sendIcon} alt="/send icon" className="w-12 h-12 rounded-lg" />
-                  <div className="flex-1">
-                    <img src={sendLogo} alt="/send" className="h-6 mb-2" />
-                    <p className="text-sm text-gray-600">Broadcast messages to customers</p>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-gray-900">$35</div>
-                    <div className="text-xs text-gray-500">/month</div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-2 border-purple-200 hover:shadow-lg transition-all" data-testid="card-inbox-app">
-                <CardContent className="p-4 flex items-center gap-4">
-                  <img src={inboxIcon} alt="/inbox icon" className="w-12 h-12 rounded-lg" />
-                  <div className="flex-1">
-                    <img src={inboxLogo} alt="/inbox" className="h-6 mb-2" />
-                    <p className="text-sm text-gray-600">Manage customer responses</p>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-gray-900">$35</div>
-                    <div className="text-xs text-gray-500">/month</div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-2 border-purple-200 hover:shadow-lg transition-all" data-testid="card-livechat-app">
-                <CardContent className="p-4 flex items-center gap-4">
-                  <img src={livechatIcon} alt="/livechat icon" className="w-12 h-12 rounded-lg" />
-                  <div className="flex-1">
-                    <img src={livechatLogo} alt="/livechat" className="h-6 mb-2" />
-                    <p className="text-sm text-gray-600">Real-time customer chat</p>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-gray-900">$35</div>
-                    <div className="text-xs text-gray-500">/month</div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-2 border-purple-200 hover:shadow-lg transition-all" data-testid="card-content-app">
-                <CardContent className="p-4 flex items-center gap-4">
-                  <img src={contentIcon} alt="/content icon" className="w-12 h-12 rounded-lg" />
-                  <div className="flex-1">
-                    <img src={contentLogo} alt="/content" className="h-6 mb-2" />
-                    <p className="text-sm text-gray-600">Create and publish content</p>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-gray-900">$35</div>
-                    <div className="text-xs text-gray-500">/month</div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <div className="text-right pt-4 border-t-2 border-gray-300">
-                <div className="text-sm text-gray-600">Individual Total:</div>
-                <div className="text-3xl font-bold text-gray-400 line-through">$140/month</div>
-              </div>
-            </div>
-
-            {/* Bundle Offer */}
+          <div className="lg:grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <Card className="border-4 border-purple-500 shadow-2xl bg-gradient-to-br from-white to-purple-50" data-testid="card-commverse-bundle">
-                <CardContent className="p-8">
-                  <div className="text-center mb-6">
-                    <div className="inline-block bg-green-500 text-white px-4 py-2 rounded-full text-sm font-bold mb-4 animate-pulse">
-                      💰 SAVE $40/MONTH
-                    </div>
-                    <div className="flex items-center justify-center mb-4">
-                      <CommverseIcon size={80} />
-                    </div>
-                    <img src={commverseBundle} alt="commverse bundle" className="h-10 mx-auto mb-4" />
-                    <p className="text-gray-600 mb-6">All 4 communication apps included</p>
-                  </div>
-
-                  <div className="text-center mb-6">
-                    <div className="text-6xl font-bold mb-2" style={{ color: '#FF6B00' }}>$100</div>
-                    <div className="text-gray-600 text-lg">/month</div>
-                    <div className="text-sm text-green-600 font-semibold mt-2">
-                      (Instead of $140/month)
-                    </div>
-                  </div>
-
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-center text-sm">
-                      <span className="text-green-500 mr-2">✓</span>
-                      <span className="text-gray-700 flex items-center">
-                        All 4 <img src={commverseBundle} alt="commverse" className="h-6 mx-1" /> apps
-                      </span>
-                    </div>
-                    <div className="flex items-center text-sm">
-                      <span className="text-green-500 mr-2">✓</span>
-                      <span className="text-gray-700">Unified dashboard</span>
-                    </div>
-                    <div className="flex items-center text-sm">
-                      <span className="text-green-500 mr-2">✓</span>
-                      <span className="text-gray-700">Seamless integration</span>
-                    </div>
-                    <div className="flex items-center text-sm">
-                      <span className="text-green-500 mr-2">✓</span>
-                      <span className="text-gray-700">Priority support</span>
-                    </div>
-                  </div>
-
-                  <Button className="w-full border-2 border-[#FF6B00] text-[#FF6B00] bg-transparent hover:bg-[#FF6B00] hover:text-white transition-all text-lg py-6 flex items-center justify-center gap-2" data-testid="button-get-commverse-bundle">
-                    Get <img src={commverseBundle} alt="commverse" className="h-8 inline-block" /> Bundle
-                  </Button>
-                  <p className="text-center text-xs text-gray-500 mt-3">
-                    Prescribed based on your business needs
-                  </p>
-                </CardContent>
-              </Card>
+              <Link href="/connect"><AppName appId="connect" size="lg" iconSize={64} /></Link>
+              <h2 className="text-3xl font-bold text-gray-900 mt-6 mb-4">Every Customer. Every Conversation. One Place.</h2>
+              <p className="text-gray-600 leading-relaxed mb-4">Most business owners keep customer information in their head, in a spreadsheet, or scattered across their phone. When someone asks about a client — there's no clean answer. <Link href="/connect" className="font-semibold hover:underline" style={{color: '#008060'}}>/ connect</Link> changes that. Every contact, every company, every deal, every task in one organized place.</p>
+              <p className="text-gray-600 leading-relaxed mb-4">Every app in businessblueprint.io flows through <Link href="/connect" className="font-semibold hover:underline" style={{color: '#008060'}}>/ connect</Link>. A chat from your website widget logs here automatically. A review response from <Link href="/elevate" className="font-semibold hover:underline" style={{color: '#E9B307'}}>/ elevate</Link> links to the customer's record. An email campaign from <Link href="/promote" className="font-semibold hover:underline" style={{color: '#1844A6'}}>/ promote</Link> draws from your contact list. You don't manage the connections — they happen on their own.</p>
+              <p className="text-gray-600 leading-relaxed mb-8">Start free. 100 contacts, no credit card, no time limit. Unlimited for $29/mo when you're ready.</p>
+              <div className="flex flex-wrap gap-4">
+                <Link href="/connect"><Button style={{ backgroundColor: '#FF6B00' }} className="text-white font-bold">Add to Cart — Free</Button></Link>
+                <Link href="/connect/dashboard"><Button style={{ backgroundColor: '#008060' }} className="text-white">Open Dashboard</Button></Link>
+                <Link href="/pricing"><Button variant="outline" style={{ borderColor: '#008060', color: '#008060' }}>View All Pricing</Button></Link>
+              </div>
             </div>
-          </div>
-
-          <div className="text-center">
-            <p className="text-lg text-gray-700 italic flex items-center justify-center gap-2 flex-wrap">
-              "A complete communications suite that lets you talk to the universe with <img src={commverseBundle} alt="commverse" className="h-8 inline-block" />"
-            </p>
+            <div className="mt-12 lg:mt-0">
+              <div className="relative h-96 flex items-center justify-center">
+                <Link href="/connect"><div className="rounded-full w-24 h-24 flex items-center justify-center text-white text-sm font-bold text-center" style={{ backgroundColor: '#008060' }}>/ connect</div></Link>
+                <Link href="/publish" className="absolute" style={{ top: '0', left: '50%', transform: 'translateX(-50%)' }}><div className="text-xs font-medium px-3 py-2.5 rounded-full shadow-sm" style={{ border: '2px solid #064A6C', backgroundColor: '#064A6C', color: '#E9ECF0', letterSpacing: '0.05em' }}>/ publish</div></Link>
+                <Link href="/elevate" className="absolute" style={{ top: '15%', right: '5%' }}><div className="text-xs font-medium px-3 py-2.5 rounded-full shadow-sm" style={{ border: '2px solid #E9B307', backgroundColor: '#E9B307', color: '#09080E', letterSpacing: '0.05em' }}>/ elevate</div></Link>
+                <Link href="/optimize" className="absolute" style={{ top: '50%', right: '0', transform: 'translateY(-50%)' }}><div className="text-xs font-medium px-3 py-2.5 rounded-full shadow-sm" style={{ border: '2px solid #374151', backgroundColor: '#374151', color: '#E9ECF0', letterSpacing: '0.05em' }}>/ optimize</div></Link>
+                <Link href="/amplify" className="absolute" style={{ bottom: '15%', right: '5%' }}><div className="text-xs font-medium px-3 py-2.5 rounded-full shadow-sm" style={{ border: '2px solid #97ACCA', backgroundColor: '#97ACCA', color: '#09080E', letterSpacing: '0.05em' }}>/ amplify</div></Link>
+                <Link href="/respond" className="absolute" style={{ bottom: '0', left: '50%', transform: 'translateX(-50%)' }}><div className="text-xs font-medium px-3 py-2.5 rounded-full shadow-sm" style={{ border: '2px solid #001882', backgroundColor: '#001882', color: '#E9ECF0', letterSpacing: '0.05em' }}>/ respond</div></Link>
+                <Link href="/engage" className="absolute" style={{ bottom: '15%', left: '5%' }}><div className="text-xs font-medium px-3 py-2.5 rounded-full shadow-sm" style={{ border: '2px solid #660099', backgroundColor: '#660099', color: '#E9ECF0', letterSpacing: '0.05em' }}>/ engage</div></Link>
+                <Link href="/post" className="absolute" style={{ top: '50%', left: '0', transform: 'translateY(-50%)' }}><div className="text-xs font-medium px-3 py-2.5 rounded-full shadow-sm" style={{ border: '2px solid #FF44CC', backgroundColor: '#FF44CC', color: '#09080E', letterSpacing: '0.05em' }}>/ post</div></Link>
+                <Link href="/promote" className="absolute" style={{ top: '15%', left: '5%' }}><div className="text-xs font-medium px-3 py-2.5 rounded-full shadow-sm" style={{ border: '2px solid #1844A6', backgroundColor: '#1844A6', color: '#E9ECF0', letterSpacing: '0.05em' }}>/ promote</div></Link>
+              </div>
+              <p className="text-xs text-gray-400 text-center mt-2">Every app in businessblueprint.io connects through <Link href="/connect" className="font-semibold hover:underline" style={{color: '#008060'}}>/ connect</Link></p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Base Plans Comparison */}
-      <section className="bg-white py-20 border-t border-gray-100">
+      {/* Section 2: / anchor suite */}
+      <section className="bg-gray-50 py-20 border-b-[0.5px] border-[#09080E]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <div className="inline-block bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
-              💰 BASE PLANS
-            </div>
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Three Plans. <span className="text-shadow-strong" style={{ color: '#FF6B00' }}>One Prescription</span>.
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto flex items-center justify-center gap-2 flex-wrap">
-              Choose your base plan based on business size. <img src={commverseBundle} alt="commverse" className="h-7 inline-block" /> apps are prescribed separately and available in our marketplace.
-            </p>
+            <BundleHeader bundleId="anchor" />
+            <h2 className="text-3xl font-bold text-gray-900 mt-4 mb-4">Get Found Before You Do Anything Else</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">There's no point running ads or sending emails if customers can't find accurate information about your business online. The Anchor Suite builds your local presence from the ground up — and keeps it built.</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Start Plan */}
-            <Card className="border-4 border-orange-300 hover:shadow-2xl transition-all relative">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
-                DIGITAL IQ 0-40
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-white shadow-sm rounded-lg p-6 border border-gray-200 border-l-4" style={{ borderColor: '#064A6C' }}>
+              <div className="flex items-center gap-2">
+                <Link href="/publish"><AppName appId="publish" size="md" /></Link>
+                <span className="bg-[#064A6C] text-white text-xs px-2 py-0.5 rounded-full">FEATURED</span>
               </div>
-              <CardContent className="p-8 pt-12">
-                <div className="text-center mb-6">
-                  <h3 className="text-3xl font-bold text-gray-900 mb-2">Start</h3>
-                  <div className="flex items-center justify-center mb-4">
-                    <span className="text-5xl font-bold" style={{ color: '#FFA500' }}>$99</span>
-                    <span className="text-gray-600 ml-2">/month</span>
-                  </div>
-                  <p className="text-gray-600 text-sm">Perfect for small businesses just starting their digital journey</p>
-                </div>
-                <ul className="space-y-3 mb-8">
-                  <li className="flex items-start">
-                    <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">1 Business Location</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">Digital Assessment & IQ Score</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">Custom Prescription Blueprint</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">AI Coach Access</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">Basic Support</span>
-                  </li>
-                </ul>
-                <Button className="w-full border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white transition-all" data-testid="button-choose-start-plan">
-                  Choose Start
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Advanced Plan */}
-            <Card className="border-4 border-blue-400 hover:shadow-2xl transition-all relative transform scale-105">
-              <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-8 py-3 rounded-full text-sm font-bold shadow-xl">
-                🌟 MOST POPULAR
+              <p className="text-gray-600 text-sm mt-3 mb-4">Two listings define whether a local business gets found: your Google Business Profile and your D&B DUNS number. <Link href="/publish" className="font-semibold hover:underline" style={{color: '#064A6C'}}>/ publish</Link> handles both. Google Business — AI-guided setup, every field validated, locked after approval so no one edits it without you. D&B DUNS — the global business identifier that pushes your information to 80+ platforms including Apple Maps, Bing, and Yahoo automatically. After that, <Link href="/publish" className="font-semibold hover:underline" style={{color: '#064A6C'}}>/ publish</Link> manages every major directory and monitors your information for consistency every week.</p>
+              <div className="flex flex-wrap gap-2">
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Google Business Profile</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">D&B DUNS</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">80+ Directories</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Weekly Monitoring</span>
               </div>
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg" style={{ marginTop: '2rem' }}>
-                DIGITAL IQ 41-70
-              </div>
-              <CardContent className="p-8 pt-16">
-                <div className="text-center mb-6">
-                  <h3 className="text-3xl font-bold text-gray-900 mb-2">Advanced</h3>
-                  <div className="flex items-center justify-center mb-4">
-                    <span className="text-5xl font-bold" style={{ color: '#0000FF' }}>$299</span>
-                    <span className="text-gray-600 ml-2">/month</span>
-                  </div>
-                  <p className="text-gray-600 text-sm">For growing businesses ready to scale their digital presence</p>
-                </div>
-                <ul className="space-y-3 mb-8">
-                  <li className="flex items-start">
-                    <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">Everything in Start, plus:</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">Up to 3 Business Locations</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">Marketing Automation</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">Priority AI Coach Support</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">Enhanced Analytics</span>
-                  </li>
-                </ul>
-                <Button className="w-full border-2 border-blue-600 text-blue-600 bg-transparent hover:bg-blue-600 hover:text-white transition-all" data-testid="button-choose-advanced-plan">
-                  Choose Advanced
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Scale Plan */}
-            <Card className="border-4 border-green-300 hover:shadow-2xl transition-all relative">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
-                DIGITAL IQ 71+
-              </div>
-              <CardContent className="p-8 pt-12">
-                <div className="text-center mb-6">
-                  <h3 className="text-3xl font-bold text-gray-900 mb-2">Scale</h3>
-                  <div className="flex items-center justify-center mb-4">
-                    <span className="text-5xl font-bold" style={{ color: '#00FF40' }}>$999</span>
-                    <span className="text-gray-600 ml-2">/month</span>
-                  </div>
-                  <p className="text-gray-600 text-sm">Enterprise-level for multi-location or high-volume businesses</p>
-                </div>
-                <ul className="space-y-3 mb-8">
-                  <li className="flex items-start">
-                    <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">Everything in Advanced, plus:</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">Unlimited Business Locations</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">Multi-location Support</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">Dedicated Account Manager</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">White-label Options</span>
-                  </li>
-                </ul>
-                <Button className="w-full border-2 border-green-600 text-green-600 bg-transparent hover:bg-green-600 hover:text-white transition-all" data-testid="button-choose-scale-plan">
-                  Choose Scale
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Commverse Apps Overview */}
-      <section className="bg-gradient-to-br from-gray-50 via-white to-gray-50 py-20 border-t border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <div className="inline-block bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
-              🚀 COMMVERSE APPS
             </div>
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Not Just Apps. <span className="text-shadow-strong" style={{ color: '#FF6B00' }}>Prescribed Paths</span>.
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8 flex items-center justify-center gap-2 flex-wrap">
-              Based on your Digital IQ, we prescribe which <img src={commverseBundle} alt="commverse" className="h-7 inline-block" /> apps you need AND the specific paths within each app. Available a la carte or as bundles in our marketplace.
-            </p>
-            <div className="bg-orange-50 border-2 border-orange-200 rounded-xl p-6 max-w-2xl mx-auto">
-              <p className="text-orange-900 font-semibold">
-                💡 Example: Not just "/send" - but "/send with Quick Campaign Launch path" prescribed specifically for your business type
-              </p>
+
+            <div className="bg-white shadow-sm rounded-lg p-6 border border-gray-200 border-l-4" style={{ borderColor: '#97ACCA' }}>
+              <div className="flex items-center gap-2">
+                <Link href="/amplify"><AppName appId="amplify" size="md" /></Link>
+                <span className="bg-[#97ACCA] text-white text-xs px-2 py-0.5 rounded-full">FEATURED</span>
+              </div>
+              <p className="text-gray-600 text-sm mt-3 mb-4">Facebook and Google have completely different ad structures — so <Link href="/amplify" className="font-semibold hover:underline" style={{color: '#97ACCA'}}>/ amplify</Link> builds two separate bases, each native to how that platform works, unified by one budget controller and one reporting dashboard. And Reddit is a priority platform inside <Link href="/amplify" className="font-semibold hover:underline" style={{color: '#97ACCA'}}>/ amplify</Link> — because that's where real local conversations happen. Neighbors recommending businesses. Customers asking who to trust. <Link href="/amplify" className="font-semibold hover:underline" style={{color: '#97ACCA'}}>/ amplify</Link> puts you in those conversations the right way.</p>
+              <div className="flex flex-wrap gap-2">
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Meta Ads</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Google Ads</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Reddit Priority</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Unified Budget Control</span>
+              </div>
             </div>
-          </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* /send */}
-            <Card className="border-2 border-yellow-200 hover:shadow-xl transition-all hover:border-yellow-400">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-center mb-4">
-                  <img src={sendIcon} alt="/send icon" className="h-16 w-16 object-contain mr-3" />
-                  <img src={sendLogo} alt="/send" className="h-10 object-contain" />
-                </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-3 text-center">Email & SMS Marketing</h3>
-                <p className="text-gray-600 text-sm mb-4">Send targeted campaigns to your customers via email and text messaging.</p>
-                <div className="bg-yellow-50 p-3 rounded-lg">
-                  <p className="text-xs font-semibold text-yellow-900 mb-2">Example Paths:</p>
-                  <ul className="text-xs text-yellow-800 space-y-1">
-                    <li>• Quick Campaign Launch</li>
-                    <li>• Build Your Audience First</li>
-                    <li>• Re-engagement Flow</li>
-                    <li>• Seasonal Campaign Builder</li>
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="bg-white shadow-sm rounded-lg p-6 border border-gray-200 border-l-4" style={{ borderColor: '#E9B307' }}>
+              <Link href="/elevate"><AppName appId="elevate" size="md" /></Link>
+              <p className="text-gray-600 text-sm mt-3 mb-4">Reviews are the first thing a new customer reads about your business. <Link href="/elevate" className="font-semibold hover:underline" style={{color: '#E9B307'}}>/ elevate</Link> pulls your reviews from Google, Yelp, and Facebook into one dashboard, drafts a response for every new review, and sends review requests after each transaction. Your reputation is managed — you just approve before it goes out.</p>
+              <div className="flex flex-wrap gap-2">
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Google</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Yelp</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Facebook</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Auto-Response</span>
+              </div>
+            </div>
 
-            {/* /inbox */}
-            <Card className="border-2 border-blue-200 hover:shadow-xl transition-all hover:border-blue-400">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-center mb-4">
-                  <img src={inboxIcon} alt="/inbox icon" className="h-16 w-16 object-contain mr-3" />
-                  <img src={inboxLogo} alt="/inbox" className="h-10 object-contain" />
-                </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-3 text-center">Unified Communications</h3>
-                <p className="text-gray-600 text-sm mb-4">Manage email, chat, and social DMs from one central inbox.</p>
-                <div className="bg-blue-50 p-3 rounded-lg">
-                  <p className="text-xs font-semibold text-blue-900 mb-2">Example Paths:</p>
-                  <ul className="text-xs text-blue-800 space-y-1">
-                    <li>• Connect All Channels</li>
-                    <li>• Team Collaboration Setup</li>
-                    <li>• Customer Service Hub</li>
-                    <li>• Sales Pipeline Management</li>
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* /livechat */}
-            <Card className="border-2 border-purple-200 hover:shadow-xl transition-all hover:border-purple-400">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-center mb-4">
-                  <img src={livechatIcon} alt="/livechat icon" className="h-16 w-16 object-contain mr-3" />
-                  <img src={livechatLogo} alt="/livechat" className="h-10 object-contain" />
-                </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-3 text-center">Live Chat Widget</h3>
-                <p className="text-gray-600 text-sm mb-4">Add real-time chat to your website for instant customer support.</p>
-                <div className="bg-purple-50 p-3 rounded-lg">
-                  <p className="text-xs font-semibold text-purple-900 mb-2">Example Paths:</p>
-                  <ul className="text-xs text-purple-800 space-y-1">
-                    <li>• Install & Go Live</li>
-                    <li>• FAQ Automation Setup</li>
-                    <li>• Lead Capture Mode</li>
-                    <li>• Support Ticket Creation</li>
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* /content */}
-            <Card className="border-2 border-pink-200 hover:shadow-xl transition-all hover:border-pink-400">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-center mb-4">
-                  <img src={contentIcon} alt="/content icon" className="h-16 w-16 object-contain mr-3" />
-                  <img src={contentLogo} alt="/content" className="h-10 object-contain" />
-                </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-3 text-center">Social Media Management</h3>
-                <p className="text-gray-600 text-sm mb-4">Schedule and manage content across all your social platforms.</p>
-                <div className="bg-pink-50 p-3 rounded-lg">
-                  <p className="text-xs font-semibold text-pink-900 mb-2">Example Paths:</p>
-                  <ul className="text-xs text-pink-800 space-y-1">
-                    <li>• Content Calendar Quick Start</li>
-                    <li>• Multi-Platform Scheduler</li>
-                    <li>• AI Content Assistant</li>
-                    <li>• Brand Voice Builder</li>
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="bg-white shadow-sm rounded-lg p-6 border border-gray-200 border-l-4" style={{ borderColor: '#374151' }}>
+              <Link href="/optimize"><AppName appId="optimize" size="md" /></Link>
+              <p className="text-gray-600 text-sm mt-3 mb-4">Search rankings change constantly. Most businesses don't know when they slip. <Link href="/optimize" className="font-semibold hover:underline" style={{color: '#374151'}}>/ optimize</Link> tracks where you rank for the local-intent searches your customers actually make. When your ranking drops, you get an alert before you lose the customer. It reads your listing data from <Link href="/publish" className="font-semibold hover:underline" style={{color: '#064A6C'}}>/ publish</Link> and review signals from <Link href="/elevate" className="font-semibold hover:underline" style={{color: '#E9B307'}}>/ elevate</Link> to give you a complete local SEO score.</p>
+              <div className="flex flex-wrap gap-2">
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Keyword Rankings</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Weekly Alerts</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Local SEO Score</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Technical SEO</span>
+              </div>
+            </div>
           </div>
 
           <div className="text-center mt-12">
-            <p className="text-gray-600 mb-6">
-              Your prescription will tell you which apps and which paths are right for YOUR business
-            </p>
-            <Link href="/commverse">
-              <Button size="lg" className="border-2 border-purple-600 text-purple-600 bg-transparent hover:bg-purple-600 hover:text-white transition-all" data-testid="button-explore-applications">
-                Explore All Applications
-              </Button>
-            </Link>
+            <Link href="/anchor"><Button style={{ backgroundColor: '#FF6B00' }} className="text-white font-bold">Add Anchor Suite — $99/mo</Button></Link>
+            <Link href="/anchor"><Button style={{ backgroundColor: '#2073E3' }} className="text-white ml-4">See All 4 Apps</Button></Link>
+            <p className="text-sm text-gray-500 mt-3">Or get each app for $29/mo standalone.</p>
           </div>
         </div>
       </section>
 
-
-      {/* How It Works */}
-      <HowItWorks onStartAssessment={startAssessment} />
-
-      {/* Platform Ecosystem */}
-      <section className="bg-white py-16">
+      {/* Section 3: / compass suite */}
+      <section className="bg-white py-20 border-b-[0.5px] border-[#09080E]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Complete Digital Ecosystem</h2>
-            <p className="text-xl text-gray-600">Three specialized platforms working together for your success</p>
+            <BundleHeader bundleId="compass" />
+            <h2 className="text-3xl font-bold text-gray-900 mt-4 mb-4">Your Customers Are Reaching Out. Are You There?</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">A customer texts. Another sends a Facebook message. A third starts a chat on your website. If those messages live in different apps, some of them don't get answered. The Compass Suite puts every conversation in one place and gives you the tools to start them.</p>
           </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="text-center border-blue-200 hover:shadow-lg transition-shadow p-6">
-              <CardContent className="flex flex-col">
-                <div className="flex justify-center items-center mb-6 h-20">
-                  <div style={{ transform: 'scale(1.2)', transformOrigin: 'center' }}>
-                    <BrandLogo brand="businessblueprint" size="lg" showIcon={true} />
-                  </div>
-                </div>
-                <p className="text-gray-600 mb-4 text-sm sm:text-base">Digital Intelligence Platform</p>
-                <ul className="text-xs sm:text-sm text-gray-500 space-y-1 mb-6">
-                  <li>• AI-powered business analysis</li>
-                  <li>• Personalized coaching</li>
-                  <li>• Client portal dashboard</li>
-                  <li>• /send - Email & SMS Marketing</li>
-                  <li>• /inbox - Unified Communications</li>
-                  <li>• /livechat - Live Chat Widget</li>
-                  <li>• /content - Social Media Mgmt</li>
-                </ul>
-                <Button className="w-full border-2 border-[#FF6B00] text-[#FF6B00] bg-transparent hover:bg-[#FF6B00] hover:text-white transition-all mt-auto">
-                  Start Digital IQ Assessment
-                </Button>
-              </CardContent>
-            </Card>
 
-            <Card className="text-center border-purple-200 hover:shadow-lg transition-shadow p-6">
-              <CardContent className="flex flex-col">
-                <div className="flex justify-center items-center mb-6 h-20">
-                  <div style={{ transform: 'scale(0.85)', transformOrigin: 'center' }}>
-                    <BrandLogo brand="hostsblue" size="md" showIcon={true} />
-                  </div>
-                </div>
-                <p className="text-gray-600 mb-4 text-sm sm:text-base">Web Services Partner</p>
-                <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
-                  <li>• High-performance hosting</li>
-                  <li>• Domain management</li>
-                  <li>• Website Builder</li>
-                </ul>
-                <Button className="w-full border-2 border-[#660099] text-[#660099] bg-transparent hover:bg-[#660099] hover:text-white transition-all mt-auto">
-                  Get Hosting
-                </Button>
-              </CardContent>
-            </Card>
+          <div className="bg-gray-50 rounded-xl p-8 mb-12 max-w-3xl mx-auto">
+            <h3 className="text-xl font-bold text-gray-900 mb-3"><Link href="/engage" className="hover:underline" style={{color: '#660099'}}>/ engage</Link> talks directly to <Link href="/respond" className="hover:underline" style={{color: '#001882'}}>/ respond</Link></h3>
+            <p className="text-gray-600 text-sm mb-4">Install <Link href="/engage" className="font-semibold hover:underline" style={{color: '#660099'}}>/ engage</Link> on your website — one line of code — and every chat your visitors start flows directly into <Link href="/respond" className="font-semibold hover:underline" style={{color: '#001882'}}>/ respond</Link>. You don't check two places. A visitor chats on your website at 2pm, you reply from the same inbox where your Facebook and Instagram messages live. The conversation logs automatically in <Link href="/connect" className="font-semibold hover:underline" style={{color: '#008060'}}>/ connect</Link> against the customer's record. Nothing gets lost.</p>
+            <div className="flex items-center gap-3 flex-wrap">
+              <Link href="/engage"><span className="text-xs bg-white border border-purple-300 text-purple-700 px-3 py-1 rounded-full hover:underline">/ engage — website chat</span></Link>
+              <ArrowRight className="w-4 h-4 text-gray-400" />
+              <Link href="/respond"><span className="text-xs bg-white border border-blue-300 text-blue-700 px-3 py-1 rounded-full hover:underline">/ respond — unified inbox</span></Link>
+            </div>
+          </div>
 
-            <Card className="text-center border-red-200 hover:shadow-lg transition-shadow p-6">
-              <CardContent className="flex flex-col">
-                <div className="flex justify-center items-center mb-6 h-20">
-                  <div style={{ transform: 'scale(0.85)', transformOrigin: 'center' }}>
-                    <BrandLogo brand="swipesblue" size="md" showIcon={true} />
-                  </div>
-                </div>
-                <p className="text-gray-600 mb-4 text-sm sm:text-base">Secure Payment Gateway</p>
-                <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
-                  <li>• Secure payment processing</li>
-                  <li>• Transaction management</li>
-                  <li>• Shopping cart and Checkout</li>
-                </ul>
-                <Button className="w-full border-2 border-[#FF0040] text-[#FF0040] bg-transparent hover:bg-[#FF0040] hover:text-white transition-all mt-auto">
-                  Setup Payments
-                </Button>
-              </CardContent>
-            </Card>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-white shadow-sm rounded-lg p-6 border border-gray-200 border-l-4" style={{ borderColor: '#001882' }}>
+              <Link href="/respond"><AppName appId="respond" size="md" /></Link>
+              <p className="text-gray-600 text-sm mt-3 mb-4"><Link href="/respond" className="font-semibold hover:underline" style={{color: '#001882'}}>/ respond</Link> is the inbox every other Compass app feeds into. Facebook Messenger, Instagram DM, and SMS all arrive here. Set it up first — because without it, the responses from <Link href="/engage" className="font-semibold hover:underline" style={{color: '#660099'}}>/ engage</Link> and <Link href="/promote" className="font-semibold hover:underline" style={{color: '#1844A6'}}>/ promote</Link> have nowhere to go.</p>
+              <div className="flex flex-wrap gap-2">
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Facebook Messenger</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Instagram DM</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">SMS</span>
+              </div>
+            </div>
+
+            <div className="bg-white shadow-sm rounded-lg p-6 border border-gray-200 border-l-4" style={{ borderColor: '#660099' }}>
+              <Link href="/engage"><AppName appId="engage" size="md" /></Link>
+              <p className="text-gray-600 text-sm mt-3 mb-4">One line of code. That's all it takes to add a live chat widget to your website that routes every conversation into <Link href="/respond" className="font-semibold hover:underline" style={{color: '#001882'}}>/ respond</Link> automatically. Most website visitors leave without saying a word. <Link href="/engage" className="font-semibold hover:underline" style={{color: '#660099'}}>/ engage</Link> gives them a reason to stay and a way to reach you.</p>
+              <div className="flex flex-wrap gap-2">
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">One Line of Code</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Custom Widget</span>
+                <Link href="/respond"><span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full hover:underline">Auto-Routes to / respond</span></Link>
+              </div>
+            </div>
+
+            <div className="bg-white shadow-sm rounded-lg p-6 border border-gray-200 border-l-4" style={{ borderColor: '#FF44CC' }}>
+              <Link href="/post"><AppName appId="post" size="md" /></Link>
+              <p className="text-gray-600 text-sm mt-3 mb-4">Write once, schedule once, post everywhere. <Link href="/post" className="font-semibold hover:underline" style={{color: '#FF44CC'}}>/ post</Link> connects Facebook, Instagram, LinkedIn, X, and your Google Business account. Plan your content for the week, set the times, and let it run. Your social presence stays active without requiring you to be.</p>
+              <div className="flex flex-wrap gap-2">
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Facebook</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Instagram</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">LinkedIn</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">X</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Google Business</span>
+              </div>
+            </div>
+
+            <div className="bg-white shadow-sm rounded-lg p-6 border border-gray-200 border-l-4" style={{ borderColor: '#1844A6' }}>
+              <Link href="/promote"><AppName appId="promote" size="md" /></Link>
+              <p className="text-gray-600 text-sm mt-3 mb-4">Email is still the highest-return marketing channel available to small businesses. <Link href="/promote" className="font-semibold hover:underline" style={{color: '#1844A6'}}>/ promote</Link> comes last in the Compass Suite because your best email list comes from the customers already in <Link href="/connect" className="font-semibold hover:underline" style={{color: '#008060'}}>/ connect</Link>. Campaign builder, list segmentation, scheduling, and delivery analytics built in. 1,000 emails per month included. Unused emails roll over.</p>
+              <div className="flex flex-wrap gap-2">
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Campaign Builder</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">List Segmentation</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">1,000 Emails/mo</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center mt-12">
+            <Link href="/compass"><Button style={{ backgroundColor: '#FF6B00' }} className="text-white font-bold">Add Compass Suite — $99/mo</Button></Link>
+            <Link href="/compass"><Button style={{ backgroundColor: '#FF6B00' }} className="text-white ml-4">See All 4 Apps</Button></Link>
+            <p className="text-sm text-gray-500 mt-3">Or get each app for $29/mo standalone.</p>
           </div>
         </div>
       </section>
 
+      {/* Section 4: Coach Blue */}
+      <section className="bg-gray-50 py-20 border-b-[0.5px] border-[#09080E]/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="lg:grid lg:grid-cols-2 gap-16 items-center">
+            <div className="flex justify-center mb-12 lg:mb-0">
+              <img src={coachBlueLarge} alt="Coach Blue" style={{ width: 360, height: 360, objectFit: 'contain' }} />
+            </div>
+            <div>
+              <p className="text-sm font-bold uppercase tracking-widest mb-2" style={{ color: '#0000FF' }}>YOUR AI BUSINESS COACH</p>
+              <h3 className="text-4xl font-bold mb-4" style={{ fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif' }}><Link href="/coach-blue" className="hover:underline" style={{color: '#0000FF'}}>Coach Blue</Link></h3>
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">The Difference Between Data and Direction</h2>
+              <p className="text-gray-600 leading-relaxed mb-4">Every app in businessblueprint.io generates data. Your review scores. Your ranking changes. Your chat volume. Your email open rates. Most platforms give you that data and leave you to figure out what to do with it. <Link href="/coach-blue" className="font-semibold hover:underline" style={{color: '#0000FF'}}>Coach Blue</Link> reads all of it and tells you specifically what to act on today.</p>
+              <p className="text-gray-600 leading-relaxed mb-4">He's built into every authenticated page as a persistent sidebar — not a chatbot, not a help widget. When your listing gets an unauthorized edit, he alerts you. When your review response time slips, he tells you. When you've set up <Link href="/connect" className="font-semibold hover:underline" style={{color: '#008060'}}>/ connect</Link> but haven't started <Link href="/publish" className="font-semibold hover:underline" style={{color: '#064A6C'}}>/ publish</Link> yet, he explains exactly why that needs to happen next and walks you through it.</p>
+              <p className="text-gray-600 leading-relaxed mb-8"><Link href="/coach-blue" className="font-semibold hover:underline" style={{color: '#0000FF'}}>Coach Blue</Link> is $99/mo standalone. With one suite active — Anchor or Compass — he's $59/mo. With both suites active, he's free. The more you build, the less he costs.</p>
+              <div className="flex flex-wrap gap-4">
+                <Link href="/coach-blue"><Button style={{ backgroundColor: '#FF6B00' }} className="text-white font-bold">Add to Cart — $99/mo</Button></Link>
+                <Link href="/coach-blue"><Button style={{ backgroundColor: '#0000FF' }} className="text-white">Meet Coach Blue</Button></Link>
+                <Link href="/pricing"><Button variant="outline" style={{ borderColor: '#0000FF', color: '#0000FF' }}>View All Pricing</Button></Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 5: Integration */}
+      <section className="bg-[#09080E] py-20 border-b-[0.5px] border-[#09080E]/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <p className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">BUILT TO WORK TOGETHER</p>
+            <h2 className="text-3xl font-bold text-white mb-4">We Built the Most Connected Set of Apps We Knew How to Build</h2>
+            <p className="text-gray-300 max-w-3xl mx-auto mb-4">Every app in businessblueprint.io was designed with the others in mind. Not added on later. Not bolted together. Designed from the start to share data, trigger actions, and make each other more powerful.</p>
+            <p className="text-gray-300 max-w-3xl mx-auto">And we priced it the way we did on purpose. Because every small business owner deserves access to the tools that used to cost enterprise budgets — and the future shouldn't only belong to the businesses that can already afford to compete in it.</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <ArrowRight className="w-8 h-8 mb-4 text-[#97ACCA]" />
+              <h4 className="text-gray-900 font-bold mb-2"><Link href="/publish" className="hover:underline" style={{color: '#064A6C'}}>/ publish</Link> hours pause <Link href="/amplify" className="hover:underline" style={{color: '#97ACCA'}}>/ amplify</Link> ads</h4>
+              <p className="text-gray-600 text-sm">Your business hours in <Link href="/publish" className="font-semibold hover:underline" style={{color: '#064A6C'}}>/ publish</Link> automatically sync to your ad schedules in <Link href="/amplify" className="font-semibold hover:underline" style={{color: '#97ACCA'}}>/ amplify</Link>. When you close, your ads pause. When you open, they resume. You stop paying for clicks you can't convert.</p>
+            </div>
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <Star className="w-8 h-8 mb-4 text-[#E9B307]" />
+              <h4 className="text-gray-900 font-bold mb-2"><Link href="/elevate" className="hover:underline" style={{color: '#E9B307'}}>/ elevate</Link> reviews power <Link href="/amplify" className="hover:underline" style={{color: '#97ACCA'}}>/ amplify</Link> ads</h4>
+              <p className="text-gray-600 text-sm">Your current star rating from <Link href="/elevate" className="font-semibold hover:underline" style={{color: '#E9B307'}}>/ elevate</Link> feeds into your <Link href="/amplify" className="font-semibold hover:underline" style={{color: '#97ACCA'}}>/ amplify</Link> ad copy automatically. 'Rated 4.8 stars by 140 customers' — updated in real time as your reviews change. Your best proof point stays current without you touching anything.</p>
+            </div>
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <MessageCircle className="w-8 h-8 mb-4 text-[#660099]" />
+              <h4 className="text-gray-900 font-bold mb-2"><Link href="/engage" className="hover:underline" style={{color: '#660099'}}>/ engage</Link> chats log in <Link href="/connect" className="hover:underline" style={{color: '#008060'}}>/ connect</Link></h4>
+              <p className="text-gray-600 text-sm">Every website chat from <Link href="/engage" className="font-semibold hover:underline" style={{color: '#660099'}}>/ engage</Link> links to a contact record in <Link href="/connect" className="font-semibold hover:underline" style={{color: '#008060'}}>/ connect</Link>. If the visitor becomes a customer, the entire conversation history is already there. No copy-paste. No manual entry. No lost context.</p>
+            </div>
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <Mail className="w-8 h-8 mb-4 text-[#1844A6]" />
+              <h4 className="text-gray-900 font-bold mb-2"><Link href="/promote" className="hover:underline" style={{color: '#1844A6'}}>/ promote</Link> draws from <Link href="/connect" className="hover:underline" style={{color: '#008060'}}>/ connect</Link> lists</h4>
+              <p className="text-gray-600 text-sm">Your email campaigns in <Link href="/promote" className="font-semibold hover:underline" style={{color: '#1844A6'}}>/ promote</Link> use your actual customer lists from <Link href="/connect" className="font-semibold hover:underline" style={{color: '#008060'}}>/ connect</Link>. Segment by industry, by location, by last contact date. The list is always current because <Link href="/connect" className="font-semibold hover:underline" style={{color: '#008060'}}>/ connect</Link> is always current.</p>
+            </div>
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <Target className="w-8 h-8 mb-4 text-gray-300" />
+              <h4 className="text-gray-900 font-bold mb-2"><Link href="/optimize" className="hover:underline" style={{color: '#374151'}}>/ optimize</Link> reads <Link href="/publish" className="hover:underline" style={{color: '#064A6C'}}>/ publish</Link> and <Link href="/elevate" className="hover:underline" style={{color: '#E9B307'}}>/ elevate</Link></h4>
+              <p className="text-gray-600 text-sm">Your local SEO score in <Link href="/optimize" className="font-semibold hover:underline" style={{color: '#374151'}}>/ optimize</Link> is calculated from your listing consistency in <Link href="/publish" className="font-semibold hover:underline" style={{color: '#064A6C'}}>/ publish</Link> and your review signals from <Link href="/elevate" className="font-semibold hover:underline" style={{color: '#E9B307'}}>/ elevate</Link>. Fix your listings — your SEO improves. Get more reviews — it improves further. The apps make each other better.</p>
+            </div>
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <GraduationCap className="w-8 h-8 mb-4 text-blue-400" />
+              <h4 className="text-gray-900 font-bold mb-2"><Link href="/coach-blue" className="hover:underline" style={{color: '#0000FF'}}>Coach Blue</Link> reads everything</h4>
+              <p className="text-gray-600 text-sm"><Link href="/coach-blue" className="font-semibold hover:underline" style={{color: '#0000FF'}}>Coach Blue</Link> has access to data from every app you've activated. He doesn't give generic advice — he gives advice based on what's actually happening in your businessblueprint.io. That's only possible because everything is connected.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 6: Final CTA */}
+      <section className="bg-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Your Business Is Already Out There. The Question Is What It's Saying.</h2>
+            <p className="text-xl text-gray-600 mb-8">Take the Digital IQ Assessment. Free. Five minutes. No credit card. It shows you exactly what the internet says about your business right now — and what to do about it.</p>
+            <Link href="/assessment"><Button style={{ backgroundColor: '#A00028' }} className="text-white font-bold px-10 py-4 text-lg rounded-lg">Start My Free Assessment →</Button></Link>
+            <p className="text-sm text-gray-400 mt-4">Free · No credit card · Results in minutes</p>
+          </div>
+        </div>
+      </section>
 
       <Footer />
     </div>

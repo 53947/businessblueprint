@@ -24,9 +24,9 @@ const diyPlans: PricingPlan[] = [
     features: [
       'Digital IQ Assessment',
       'Personalized Blueprint',
-      '/send Email & SMS Marketing',
-      '/inbox Unified Communications',
-      '/livechat Widget',
+      '/ promote Email and SMS Campaigns Tool',
+      '/ respond Multi-Channel Unified Inbox',
+      '/ engage Live Chat Widget Tool',
       'Basic Analytics',
       'Community Support'
     ]
@@ -64,7 +64,7 @@ const mspPlans: PricingPlan[] = [
       'Content Creation (4/month)',
       'Review Response Management',
       'Local SEO Optimization',
-      'Social Media Management'
+      '/ post Create, Schedule and Post Social Media Tool'
     ]
   },
   {

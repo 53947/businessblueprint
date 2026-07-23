@@ -12,8 +12,9 @@ import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { Header } from '@/components/header';
+import { SectionHeader } from '@/components/section-header';
 import { Footer } from '@/components/footer';
-import { NMIPaymentForm, PaymentFormData } from '@/components/nmi-payment-form';
+import { SwipesBluePaymentForm, PaymentFormData } from '@/components/swipesblue-payment-form';
 import { SubscriptionPlan, SubscriptionAddon } from '@shared/schema';
 import { 
   Check, 
@@ -162,14 +163,20 @@ export default function SubscriptionPage() {
       };
 
       const response = await apiRequest('POST', '/api/subscriptions', subscriptionData);
-      
+      const result = await response.json();
+
+      // Store client session for portal access
+      if (result.clientId) {
+        sessionStorage.setItem('clientId', result.clientId.toString());
+      }
+
       toast({
         title: 'Subscription Created Successfully!',
         description: `Welcome to businessblueprint.io ${selectedPlan.name}! Your account is now active.`,
       });
 
-      // Redirect to dashboard or confirmation page
-      setLocation('/dashboard');
+      // Redirect to client portal
+      setLocation('/portal');
       
     } catch (error) {
       console.error('Subscription creation failed:', error);
@@ -204,7 +211,13 @@ export default function SubscriptionPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header showNavigation={true} />
-      
+      <SectionHeader
+        title="Subscription"
+        subtitle="Manage your plan"
+        showHomeButton={true}
+        homeRoute="/portal"
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
@@ -484,7 +497,7 @@ export default function SubscriptionPage() {
                       </div>
                     </div>
                   ) : (
-                    <NMIPaymentForm
+                    <SwipesBluePaymentForm
                       onPaymentToken={handlePaymentToken}
                       onError={handlePaymentError}
                       amount={pricing.total}

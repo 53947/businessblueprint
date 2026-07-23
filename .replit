@@ -68,8 +68,9 @@ integrations = ["javascript_log_in_with_replit:1.0.0", "agentmail:1.0.0", "javas
 [userenv]
 
 [userenv.shared]
-PAYMENT_PROVIDER = "stripe"
+PAYMENT_PROVIDER = "swipesblue"
 SCANSBLUE_API_URL = "https://scansblue.com/api/businessblueprint"
+WEBHOOK_URL = "https://businessblueprint.io/webhooks/swipesblue"
 
 [objectStorage]
 defaultBucketID = "replit-objstore-5c049a1d-0f1c-4b2d-bf62-fc64a78e0c20"
